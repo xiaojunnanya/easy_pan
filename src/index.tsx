@@ -1,19 +1,46 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
 import App from './App';
-import reportWebVitals from './reportWebVitals';
+
+import '@/assets/css/reset.css'
+import '@/assets/css/common.css'
+
+import { BrowserRouter } from 'react-router-dom'
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+  <BrowserRouter>
+      <Suspense fallback=''>
+        <App />
+      </Suspense>
+    </BrowserRouter>
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+console.log(`
+          _____                                     _____                    _____                    _____  
+          /\\    \\                 ______            |\\    \\                  /\\    \\                  /\\    \\ 
+        /::\\    \\               |::|   |           |:\\____\\                /::\\    \\                /::\\____\\
+        /::::\\    \\              |::|   |           |::|   |                \\:::\\    \\              /:::/    /
+      /::::::\\    \\             |::|   |           |::|   |                 \\:::\\    \\            /:::/    / 
+      /:::/\\:::\\    \\            |::|   |           |::|   |                  \\:::\\    \\          /:::/    /  
+    /:::/  \\:::\\    \\           |::|   |           |::|   |                   \\:::\\    \\        /:::/    /   
+    /:::/    \\:::\\    \\          |::|   |           |::|   |                   /::::\\    \\      /:::/    /    
+  /:::/    / \\:::\\    \\         |::|   |           |::|___|______    _____   /::::::\\    \\    /:::/    /     
+  /:::/    /   \\:::\\    \\  ______|::|___|___ ____   /::::::::\\    \\  /\\    \\ /:::/\\:::\\    \\  /:::/    /      
+/:::/____/     \\:::\\____\\|:::::::::::::::::|    | /::::::::::\\____\\/::\\    /:::/  \\:::\\____\\/:::/____/       
+\\:::\\    \\      \\::/    /|:::::::::::::::::|____|/:::/~~~~/~~      \\:::\\  /:::/    \\::/    /\\:::\\    \\       
+  \\:::\\    \\      \\/____/  ~~~~~~|::|~~~|~~~     /:::/    /          \\:::\\/:::/    / \\/____/  \\:::\\    \\      
+  \\:::\\    \\                    |::|   |       /:::/    /            \\::::::/    /            \\:::\\    \\     
+    \\:::\\    \\                   |::|   |      /:::/    /              \\::::/    /              \\:::\\    \\    
+    \\:::\\    \\                  |::|   |      \\::/    /                \\::/    /                \\:::\\    \\   
+      \\:::\\    \\                 |::|   |       \\/____/                  \\/____/                  \\:::\\    \\  
+      \\:::\\    \\                |::|   |                                                          \\:::\\    \\ 
+        \\:::\\____\\               |::|   |                                                           \\:::\\____\\
+        \\::/    /               |::|___|                                                            \\::/    /
+          \\/____/                 ~~                                                                  \\/____/
+
+个人博客：www.xiaojunnan.cn                                                                                                 
+`);
+
