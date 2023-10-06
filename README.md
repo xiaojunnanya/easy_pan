@@ -10,7 +10,7 @@
 
 ## 前提
 
-- npm版本：8.11.0
+- node版本：16.16.0
 - 安装环境：`npm i`
 - 运行：`npm start`
 - React + TS

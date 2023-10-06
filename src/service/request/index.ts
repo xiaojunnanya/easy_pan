@@ -1,3 +1,12 @@
+/*
+ * @Author: XJN
+ * @Date: 2023-10-06 02:30:44
+ * @LastEditors: xiaojunnanya
+ * @LastEditTime: 2023-10-06 16:48:45
+ * @FilePath: \easy_pan\src\service\request\index.ts
+ * @Description: 
+ * @前端实习生: 鲸落
+ */
 import axios from 'axios'
 import type { AxiosInstance } from 'axios'
 
@@ -13,10 +22,10 @@ class jlRequest{
 
         // 请求拦截器
         this.instance.interceptors.request.use((config)=>{
-            console.log("全局请求成功拦截，这里可以开启loading、header携带token等");
-            if(sessionStorage.getItem('token')){
-                config.headers['Authorization'] = sessionStorage.getItem('token')
-            }
+            // console.log("全局请求成功拦截，这里可以开启loading、header携带token等");
+            // if(sessionStorage.getItem('token')){
+            //     config.headers['Authorization'] = sessionStorage.getItem('token')
+            // }
             return config
         },(error) =>{
             // console.log(error);
@@ -24,7 +33,7 @@ class jlRequest{
 
         // 响应拦截器
         this.instance.interceptors.response.use((res)=>{
-            console.log("全局响应成功拦截，这里可以去掉loading");
+            // console.log("全局响应成功拦截，这里可以去掉loading");
             
             return res
         },(error) =>{
