@@ -2,7 +2,7 @@
  * @Author: XJN
  * @Date: 2023-10-06 15:44:38
  * @LastEditors: xiaojunnanya
- * @LastEditTime: 2023-10-08 20:39:54
+ * @LastEditTime: 2023-10-08 23:04:48
  * @FilePath: \easy_pan\src\views\Home\index.tsx
  * @Description: 首页
  * @前端实习生: 鲸落
@@ -12,11 +12,11 @@ import { HomeStyled } from './style'
 import { AppstoreAddOutlined, CloudUploadOutlined, CustomerServiceOutlined, 
   DeleteOutlined, EllipsisOutlined, FileImageOutlined, 
   FileWordOutlined, HomeOutlined, PlayCircleOutlined, SettingOutlined, 
-  ShareAltOutlined, SwapOutlined } from '@ant-design/icons'
-import { Dropdown, MenuProps, Popover } from 'antd'
+  ShareAltOutlined, SwapOutlined, SyncOutlined } from '@ant-design/icons'
+import { Dropdown, MenuProps, Popover, Progress } from 'antd'
 
-import headerImg from '@/assets/images/1.jpg'
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { headerImg, space } from '@/service/modules/home'
 
 
 const items: MenuProps['items'] = [
@@ -157,6 +157,10 @@ const menus: menuTypes = [
   },
 ];
 
+// console.log(sessionStorage.getItem('userInfo'));
+
+const { nickName, userId } = JSON.parse(sessionStorage.getItem('userInfo') || JSON.stringify(null))
+
 const Home = memo(() => {
   // 跳转
   const naviage = useNavigate()
@@ -166,6 +170,14 @@ const Home = memo(() => {
   const { category } = useParams()
   
   const [ showSecondaryMenu, setShowSecondaryMenu  ] = useState<menuType>()
+  const [ userSpace, setUserSpace ] = useState<{
+    useSpace: number,
+    totalSpace: number
+  }>({
+    useSpace: 0,
+    totalSpace: 0,
+  }) 
+  const [ isSpin, setIsSpin ] = useState<boolean>(false)
 
   let pathnameSplit = pathname.split('/').slice(0,3).join('/')
 
@@ -175,6 +187,8 @@ const Home = memo(() => {
         setShowSecondaryMenu( item )
       }
     }
+
+    getSpace()
   }, [])
 
 
@@ -210,6 +224,18 @@ const Home = memo(() => {
     )
   })
 
+  // 获取空间
+  const getSpace = () =>{
+    setIsSpin(true)
+    space().then(res =>{
+      setUserSpace(res.data.data)
+      setIsSpin(false)
+    })
+  }
+
+  const a = userSpace.useSpace / (1024 * 1024)
+  const b = userSpace.totalSpace / (1024 * 1024)
+
   return (
     <HomeStyled>
       <div className="framework">
@@ -228,11 +254,9 @@ const Home = memo(() => {
             <Dropdown menu={{ items }} placement="bottom" arrow>
               <div className="user-info">
                 <div className="avatar">
-                  <img src={headerImg} alt="" />
+                  <img src={headerImg(userId)} alt="" />
                 </div>
-                <div className="nick-name">
-                  鲸落
-                </div>
+                <div className="nick-name">{ nickName }</div>
               </div>
             </Dropdown>
           </div>
@@ -256,7 +280,25 @@ const Home = memo(() => {
 
               <div className="space-info">
                 <div>空间使用</div>
-                <div className="percent"></div>
+                <div className="percent">
+                  <Progress percent={Number(Math.ceil(userSpace.useSpace / userSpace.totalSpace))} size="small" />
+                </div>
+                <div className="space-use">
+                  <div className="use">
+                    { a.toFixed(2) + 'MB' }
+                    / 
+                    { 
+                      b / 1024 > 1 ?
+                      (
+                        ( b / 1024 ).toFixed(2) + 'GB'
+                      ) : (
+                        b.toFixed(2) + 'MB'
+                      )
+                    }
+                  </div>
+                  {/* <div >2</div> */}
+                  <SyncOutlined className="iconfont icon-refresh" onClick={getSpace} spin={isSpin}/>
+                </div>
               </div>
             </div>
 

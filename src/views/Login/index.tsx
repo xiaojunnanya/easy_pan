@@ -2,7 +2,7 @@
  * @Author: XJN
  * @Date: 2023-10-06 11:19:23
  * @LastEditors: xiaojunnanya
- * @LastEditTime: 2023-10-07 23:24:28
+ * @LastEditTime: 2023-10-08 22:17:58
  * @FilePath: \easy_pan\src\views\Login\index.tsx
  * @Description: 登录页面
  * @前端实习生: 鲸落
@@ -36,14 +36,14 @@ const Login = memo(() => {
         
         const password = spark.end()
         const result = await loginServer(values.username, password, values.checkCode)
-        console.log(result.data);
+        console.log(result);
         messageApi.destroy()
         if( result.data.code === 200 ){
             navigate('/main/home/all')
             messageApi.info('登录成功');
+            sessionStorage.setItem('userInfo', JSON.stringify(result.data.data))
         }else{
             messageApi.error(result.data.info);
-            
         }
         
     };
