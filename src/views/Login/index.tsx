@@ -2,7 +2,7 @@
  * @Author: XJN
  * @Date: 2023-10-06 11:19:23
  * @LastEditors: xiaojunnanya
- * @LastEditTime: 2023-10-06 16:10:25
+ * @LastEditTime: 2023-10-07 23:24:28
  * @FilePath: \easy_pan\src\views\Login\index.tsx
  * @Description: 登录页面
  * @前端实习生: 鲸落
@@ -39,7 +39,7 @@ const Login = memo(() => {
         console.log(result.data);
         messageApi.destroy()
         if( result.data.code === 200 ){
-            navigate('/home')
+            navigate('/main/home/all')
             messageApi.info('登录成功');
         }else{
             messageApi.error(result.data.info);
@@ -73,7 +73,7 @@ const Login = memo(() => {
                         type="password" placeholder="请输入密码" />
                     </Form.Item>
                     <div className='checkCode'>
-                        <Form.Item name="checkCode"
+                        <Form.Item name="checkCode" initialValue={'123450'}
                             rules={[{ required: true, message: '请输入验证码' }]} >
                             <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="请输入验证码" />
                         </Form.Item>
