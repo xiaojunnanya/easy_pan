@@ -2,7 +2,7 @@
  * @Author: XJN
  * @Date: 2023-10-06 15:44:38
  * @LastEditors: xiaojunnanya
- * @LastEditTime: 2023-10-08 23:04:48
+ * @LastEditTime: 2023-10-09 21:18:26
  * @FilePath: \easy_pan\src\views\Home\index.tsx
  * @Description: 首页
  * @前端实习生: 鲸落
@@ -185,6 +185,8 @@ const Home = memo(() => {
     for (const item of menus) {
       if( item.path.includes(pathnameSplit) ){
         setShowSecondaryMenu( item )
+        // 不是很好的方案使用return，路由需要继续优化
+        return
       }
     }
 
@@ -202,6 +204,8 @@ const Home = memo(() => {
     naviage(item.path)
   }
 
+  console.log(menus);
+  
   // 一级菜单
   const firstLevelMenu = menus.map((item ,index) =>{
     return (
@@ -212,6 +216,8 @@ const Home = memo(() => {
     )
   })
 
+  console.log(showSecondaryMenu);
+  
   // 二级菜单
   const SecondaryMenu = showSecondaryMenu?.children.map((item, index) =>{
     return (

@@ -2,7 +2,7 @@
  * @Author: XJN
  * @Date: 2023-10-03 19:29:14
  * @LastEditors: xiaojunnanya
- * @LastEditTime: 2023-10-07 23:33:19
+ * @LastEditTime: 2023-10-09 21:11:46
  * @FilePath: \easy_pan\src\router\index.tsx
  * @Description: 
  * @前端实习生: 鲸落
@@ -33,7 +33,15 @@ const routes : RouteObject[] = [
         children:[
             {
                 path:'/main',
-                element: <Navigate to='/main/home'></Navigate>
+                element: <Navigate to='/main/home/all'></Navigate>
+            },
+            {
+                path:'/main/home',
+                element: <Navigate to='/main/home/all'></Navigate>
+            },
+            {
+                path:'/main/settings',
+                element: <Navigate to='/main/settings/fileList'></Navigate>
             },
             {
                 path:'/main/home/:category',
