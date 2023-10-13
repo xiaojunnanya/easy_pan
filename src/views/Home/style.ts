@@ -51,8 +51,8 @@ export const HomeStyled = styled.div`
                     margin:0px 5px 0px 15px;
 
                     img{
-                        width:40px;
-                        height: 40px;
+                        width:45px;
+                        height: 45px;
                         border-radius: 50%;
                         vertical-align: middle;
                     }
@@ -60,6 +60,7 @@ export const HomeStyled = styled.div`
 
                 .nick-name{
                     color: #05a1f5;
+                    font-size: 14px;
                 }
             }
         }

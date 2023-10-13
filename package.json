@@ -13,6 +13,7 @@
     "@types/react": "^18.2.25",
     "@types/react-dom": "^18.2.10",
     "antd": "^5.9.4",
+    "antd-img-crop": "^4.13.0",
     "axios": "^1.5.1",
     "http-proxy-middleware": "^2.0.6",
     "react": "^18.2.0",

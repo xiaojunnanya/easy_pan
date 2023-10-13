@@ -2,7 +2,7 @@
  * @Author: XJN
  * @Date: 2023-10-03 19:29:14
  * @LastEditors: xiaojunnanya
- * @LastEditTime: 2023-10-09 21:11:46
+ * @LastEditTime: 2023-10-10 20:45:28
  * @FilePath: \easy_pan\src\router\index.tsx
  * @Description: 
  * @前端实习生: 鲸落
@@ -17,6 +17,7 @@ const Main = React.lazy(()=> import("@/views/Main"))
 const Share = React.lazy(()=> import("@/views/Share"))
 const Recycle = React.lazy(()=> import("@/views/Recycle"))
 const Setting = React.lazy(()=> import("@/views/Setting"))
+const NotFound = React.lazy(()=> import("@/views/NotFound"))
 
 const routes : RouteObject[] = [
     {
@@ -61,10 +62,10 @@ const routes : RouteObject[] = [
             },
         ]
     },
-    // {
-    //     path:'/share',
-    //     element: <Share></Share>
-    // },
+    {
+        path:'*',
+        element: <NotFound></NotFound>
+    },
     // {
     //     path:'/recycle',
     //     element: <Recycle></Recycle>

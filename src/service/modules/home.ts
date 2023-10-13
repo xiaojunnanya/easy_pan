@@ -12,3 +12,8 @@ export const space = () =>{
         url:"/getUseSpace",
     })
 }
+
+// 修改头像
+export const changeHeadImg = () =>{
+    return 'http://netdisk.kbws.xyz/api//updateUserAvatar'
+}

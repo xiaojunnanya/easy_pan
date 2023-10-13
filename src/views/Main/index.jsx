@@ -2,7 +2,7 @@
  * @Author: XJN
  * @Date: 2023-10-06 21:40:03
  * @LastEditors: xiaojunnanya
- * @LastEditTime: 2023-10-08 21:34:12
+ * @LastEditTime: 2023-10-09 21:30:49
  * @FilePath: \easy_pan\src\views\Main\index.jsx
  * @Description: 首页
  * @前端实习生: 鲸落
@@ -21,8 +21,7 @@ import Others from './Others'
 const Main = memo(() => {
 
   const { category } = useParams()
-  console.log(category);
-
+  
   const components = {  
     all: <All></All>,
     video: <Video></Video>,  

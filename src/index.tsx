@@ -4,6 +4,7 @@ import App from './App';
 
 import '@/assets/css/reset.css'
 import '@/assets/css/common.css'
+import AuthRouter from './utils/authRouter';
 
 import { BrowserRouter } from 'react-router-dom'
 
@@ -13,9 +14,11 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <BrowserRouter>
-      <Suspense fallback=''>
-        <App />
-      </Suspense>
+      <AuthRouter>
+        <Suspense fallback=''>
+          <App />
+        </Suspense>
+      </AuthRouter>
     </BrowserRouter>
 );
 
