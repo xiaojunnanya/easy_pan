@@ -2,22 +2,24 @@
  * @Author: XJN
  * @Date: 2023-10-06 15:44:38
  * @LastEditors: xiaojunnanya
- * @LastEditTime: 2023-10-09 21:18:26
+ * @LastEditTime: 2023-10-14 02:02:18
  * @FilePath: \easy_pan\src\views\Home\index.tsx
  * @Description: 首页
  * @前端实习生: 鲸落
  */
-import React, { memo, useState, useEffect } from 'react'
+import React, { memo, useState, useEffect, useMemo } from 'react'
 import { HomeStyled } from './style'
 import { AppstoreAddOutlined, CloudUploadOutlined, CustomerServiceOutlined, 
   DeleteOutlined, EllipsisOutlined, FileImageOutlined, 
   FileWordOutlined, HomeOutlined, PlayCircleOutlined, SettingOutlined, 
-  ShareAltOutlined, SwapOutlined, SyncOutlined } from '@ant-design/icons'
-import { Dropdown, MenuProps, Popover, Progress } from 'antd'
+  ShareAltOutlined, SwapOutlined, SyncOutlined, ExclamationCircleFilled } from '@ant-design/icons'
+import { Dropdown, MenuProps, Modal, Popover, Progress } from 'antd'
 
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
-import { headerImg, space } from '@/service/modules/home'
+import { getHeaderImg, space, logout } from '@/service/modules/home'
 
+// 定义：
+const { confirm } = Modal;
 
 const items: MenuProps['items'] = [
   {
@@ -37,7 +39,6 @@ const items: MenuProps['items'] = [
     label: (<span> 退出登录 </span>),
   },
 ];
-
 
 interface menuType{
   name: string,
@@ -157,11 +158,11 @@ const menus: menuTypes = [
   },
 ];
 
-// console.log(sessionStorage.getItem('userInfo'));
-
-const { nickName, userId } = JSON.parse(sessionStorage.getItem('userInfo') || JSON.stringify(null))
+const { nickName, userId } = JSON.parse(sessionStorage.getItem('userInfo') || JSON.stringify({nickName:'', userId:''}))
 
 const Home = memo(() => {
+
+  // 定义：
   // 跳转
   const naviage = useNavigate()
   // 路径
@@ -181,7 +182,13 @@ const Home = memo(() => {
 
   let pathnameSplit = pathname.split('/').slice(0,3).join('/')
 
+
+
+  // useEffect：
   useEffect(()=>{
+
+    getSpace()
+
     for (const item of menus) {
       if( item.path.includes(pathnameSplit) ){
         setShowSecondaryMenu( item )
@@ -189,23 +196,60 @@ const Home = memo(() => {
         return
       }
     }
-
-    getSpace()
   }, [])
 
+
+
+  // 方法：
+  const onClick: MenuProps['onClick'] = ({ key }) => {
+    switch (key) {
+      case '1': break;
+      case '2': break;
+      case '3': break;
+      case '4': 
+        showConfirm()
+        break;
+    
+      default:
+        break;
+    }
+  };
+
+  const showConfirm = () => {
+    confirm({
+      title: '提示',
+      icon: <ExclamationCircleFilled />,
+      content: '你确定要退出登录吗',
+      cancelText:"取消",
+      okText:"确定",
+      onOk() {
+        logout()
+        sessionStorage.removeItem('userInfo')
+        naviage('/login')
+      },
+    });
+  };
 
   const oneMenu = (item: menuType) =>{
     setShowSecondaryMenu(item)
     naviage(item.path)
   }
 
-  const twoMenu = (item: any) =>{
-    // setShowSecondaryMenu(item)
-    naviage(item.path)
+  const twoMenu = (item: any) =>{ naviage(item.path) }
+
+  // 获取空间
+  const getSpace = () =>{
+    setIsSpin(true)
+    space().then(res =>{
+      setUserSpace(res.data.data)
+      setIsSpin(false)
+    })
   }
 
-  console.log(menus);
-  
+
+
+  // 展示区域：
+
   // 一级菜单
   const firstLevelMenu = menus.map((item ,index) =>{
     return (
@@ -216,7 +260,6 @@ const Home = memo(() => {
     )
   })
 
-  console.log(showSecondaryMenu);
   
   // 二级菜单
   const SecondaryMenu = showSecondaryMenu?.children.map((item, index) =>{
@@ -230,17 +273,13 @@ const Home = memo(() => {
     )
   })
 
-  // 获取空间
-  const getSpace = () =>{
-    setIsSpin(true)
-    space().then(res =>{
-      setUserSpace(res.data.data)
-      setIsSpin(false)
-    })
-  }
 
-  const a = userSpace.useSpace / (1024 * 1024)
-  const b = userSpace.totalSpace / (1024 * 1024)
+  const a = useMemo(()=>{
+    return ( userSpace.useSpace / (1024 * 1024) ) 
+  }, [ userSpace.useSpace ])
+  const b = useMemo(()=>{
+    return ( userSpace.totalSpace / (1024 * 1024) ) 
+  }, [ userSpace.totalSpace ])
 
   return (
     <HomeStyled>
@@ -257,10 +296,10 @@ const Home = memo(() => {
               <SwapOutlined className='icon-transfer'/>
             </Popover>
 
-            <Dropdown menu={{ items }} placement="bottom" arrow>
+            <Dropdown menu={{ items, onClick }} placement="bottom" arrow>
               <div className="user-info">
                 <div className="avatar">
-                  <img src={headerImg(userId)} alt="" />
+                  <img src={getHeaderImg(userId)} alt="" />
                 </div>
                 <div className="nick-name">{ nickName }</div>
               </div>
@@ -302,7 +341,7 @@ const Home = memo(() => {
                       )
                     }
                   </div>
-                  {/* <div >2</div> */}
+                  
                   <SyncOutlined className="iconfont icon-refresh" onClick={getSpace} spin={isSpin}/>
                 </div>
               </div>

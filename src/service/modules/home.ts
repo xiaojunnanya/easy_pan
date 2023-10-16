@@ -1,7 +1,7 @@
 import { jlReq } from "..";
 
 // 获取头像
-export const headerImg = ( userId: string ) =>{
+export const getHeaderImg = ( userId: string ) =>{
     return `http://netdisk.kbws.xyz/api//getAvatar/${userId}`
 }
 
@@ -16,4 +16,12 @@ export const space = () =>{
 // 修改头像
 export const changeHeadImg = () =>{
     return 'http://netdisk.kbws.xyz/api//updateUserAvatar'
+}
+
+// 退出登录
+export const logout = () =>{
+    return jlReq.request({
+        method:'get',
+        url:"/logout",
+    })
 }

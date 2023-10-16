@@ -17,7 +17,7 @@ export const HomeStyled = styled.div`
         .logo{
             display: flex;
             align-items: center;
-
+            cursor: pointer;
 
             .icon-pan{
                 font-size: 40px;
