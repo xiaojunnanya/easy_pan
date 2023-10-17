@@ -1,3 +1,12 @@
+/*
+ * @Author: XJN
+ * @Date: 2023-10-06 02:24:25
+ * @LastEditors: xiaojunnanya
+ * @LastEditTime: 2023-10-17 20:12:15
+ * @FilePath: \easy_pan\src\index.tsx
+ * @Description: 
+ * @前端实习生: 鲸落
+ */
 import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
@@ -5,6 +14,7 @@ import App from './App';
 import '@/assets/css/reset.css'
 import '@/assets/css/common.css'
 import AuthRouter from './utils/authRouter';
+import Loading from './views/Loading';
 
 import { BrowserRouter } from 'react-router-dom'
 
@@ -15,7 +25,7 @@ const root = ReactDOM.createRoot(
 root.render(
   <BrowserRouter>
       <AuthRouter>
-        <Suspense fallback=''>
+        <Suspense fallback={<Loading/>}>
           <App />
         </Suspense>
       </AuthRouter>

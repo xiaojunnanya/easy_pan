@@ -2,7 +2,7 @@
  * @Author: XJN
  * @Date: 2023-10-03 19:29:14
  * @LastEditors: xiaojunnanya
- * @LastEditTime: 2023-10-10 20:45:28
+ * @LastEditTime: 2023-10-17 20:16:08
  * @FilePath: \easy_pan\src\router\index.tsx
  * @Description: 
  * @前端实习生: 鲸落
