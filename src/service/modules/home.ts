@@ -25,3 +25,20 @@ export const logout = () =>{
         url:"/logout",
     })
 }
+
+// 获取所有的文件
+interface dataListType{
+    category: string, // 分类
+    filePid: string,  // 父文件ID
+    fileNameFuzzy?: string, // 文件名
+    pageNo?: string, // 页码
+    pageSize?: string // 分页大小
+
+}
+export const getDataList = (data: dataListType) =>{
+    return jlReq.request({
+        method:'post',
+        url:"/file/loadDataList",
+        data
+    })
+}

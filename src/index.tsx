@@ -17,6 +17,8 @@ import AuthRouter from './utils/authRouter';
 import Loading from './views/Loading';
 
 import { BrowserRouter } from 'react-router-dom'
+import { Provider } from 'react-redux';
+import store from './store';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -24,11 +26,13 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <BrowserRouter>
-      <AuthRouter>
-        <Suspense fallback={<Loading/>}>
-          <App />
-        </Suspense>
-      </AuthRouter>
+      <Provider store={store}>
+        <AuthRouter>
+          <Suspense fallback={<Loading/>}>
+            <App />
+          </Suspense>
+        </AuthRouter>
+      </Provider>
     </BrowserRouter>
 );
 

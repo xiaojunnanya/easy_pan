@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const HomeStyled = styled.div`
-
+    
     .header{
         box-shadow: 0px 3px 10px 0 rgb(0 0 0 / 6%);
         height: 56px;
@@ -184,5 +184,9 @@ export const HomeStyled = styled.div`
             width: 0;
             padding-left: 20px;
         }
+    }
+
+    .ant-popover-inner-content .content{
+        width: 300px;
     }
 `

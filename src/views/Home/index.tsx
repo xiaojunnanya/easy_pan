@@ -17,6 +17,9 @@ import { Dropdown, MenuProps, Modal, Popover, Progress } from 'antd'
 
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { getHeaderImg, space, logout } from '@/service/modules/home'
+import setSize from '@/utils/setSize'
+import { useAppDispatch } from '@/store'
+import { changeLoading } from '@/store/modules/home'
 
 // 定义：
 const { confirm } = Modal;
@@ -162,6 +165,8 @@ const { nickName, userId } = JSON.parse(sessionStorage.getItem('userInfo') || JS
 
 const Home = memo(() => {
 
+  const dispatch = useAppDispatch()
+
   // 定义：
   // 跳转
   const naviage = useNavigate()
@@ -235,7 +240,11 @@ const Home = memo(() => {
     naviage(item.path)
   }
 
-  const twoMenu = (item: any) =>{ naviage(item.path) }
+  const twoMenu = (item: any) =>{ 
+    naviage(item.path)
+    // 开启表格加载
+    dispatch(changeLoading(true))
+   }
 
   // 获取空间
   const getSpace = () =>{
@@ -273,14 +282,21 @@ const Home = memo(() => {
     )
   })
 
+  // 上传区域展示
+  const showContent = () =>{
+    return (
+      <div className="content">111</div>
+    )
+  }
+
 
   const a = useMemo(()=>{
-    return ( userSpace.useSpace / (1024 * 1024) ) 
+    return setSize(userSpace.useSpace)
   }, [ userSpace.useSpace ])
   const b = useMemo(()=>{
-    return ( userSpace.totalSpace / (1024 * 1024) ) 
+    return setSize(userSpace.totalSpace)
   }, [ userSpace.totalSpace ])
-
+  
   return (
     <HomeStyled>
       <div className="framework">
@@ -292,7 +308,7 @@ const Home = memo(() => {
           </div>
           <div className="right-panel">
 
-            <Popover content='上传区域' title="上传任务（仅展示本次上传任务）" trigger="click">
+            <Popover content={showContent} title="上传任务（仅展示本次上传任务）" trigger="click">
               <SwapOutlined className='icon-transfer'/>
             </Popover>
 
@@ -330,16 +346,7 @@ const Home = memo(() => {
                 </div>
                 <div className="space-use">
                   <div className="use">
-                    { a.toFixed(2) + 'MB' }
-                    / 
-                    { 
-                      b / 1024 > 1 ?
-                      (
-                        ( b / 1024 ).toFixed(2) + 'GB'
-                      ) : (
-                        b.toFixed(2) + 'MB'
-                      )
-                    }
+                    { a } / { b }
                   </div>
                   
                   <SyncOutlined className="iconfont icon-refresh" onClick={getSpace} spin={isSpin}/>

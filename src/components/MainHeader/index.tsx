@@ -7,10 +7,13 @@ const { Search } = Input;
 
 // isShowFolder为ture显示文件夹
 interface propsType{
-    isShowFolder?: boolean
-  }
+    isShowFolder?: boolean,
+    btnDisabled?: boolean,
+}
 
+// 暂时不用了
 const index: FC<propsType> = memo((props) => {
+    const { isShowFolder, btnDisabled } = props
     const [ isSpin, setIsSpin ] = useState<boolean>(false)
     
     const onSearch = () =>{
@@ -18,23 +21,26 @@ const index: FC<propsType> = memo((props) => {
     }
 
     const upDate = () =>{
-        console.log('1');
         setIsSpin(true)
         setTimeout(()=>{
             setIsSpin(false)
         },2000)
     }
 
+    const upLoad = () =>{
+        console.log('2');
+    }
+
   return (
     <MainHeaderStyled>
         <div>
-            <Button type="primary" icon={<CloudUploadOutlined />} size="middle">
+            <Button type="primary" icon={<CloudUploadOutlined />} size="middle" onClick={upLoad}>
                 上传
             </Button>
         </div>
 
         {
-            props.isShowFolder && (
+            isShowFolder && (
                 <div>
                     <Button type="primary" icon={<SnippetsOutlined />} size="middle" style={{backgroundColor:'#67C23A'}}>
                         新建文件夹
@@ -44,12 +50,12 @@ const index: FC<propsType> = memo((props) => {
         }
     
         <div>
-            <Button type="primary" icon={<DeleteOutlined />} size="middle" style={{backgroundColor:'#F56C6C'}}>
+            <Button type="primary" icon={<DeleteOutlined />} size="middle" style={{backgroundColor:'#F56C6C'}} disabled={btnDisabled}>
                 批量删除
             </Button>
         </div>
         <div>
-            <Button type="primary" icon={<DragOutlined />} size="middle" style={{backgroundColor:'#E6A23C'}}>
+            <Button type="primary" icon={<DragOutlined />} size="middle" style={{backgroundColor:'#E6A23C'}} disabled={btnDisabled}>
                 批量移动
             </Button>
         </div>

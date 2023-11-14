@@ -26,6 +26,7 @@ class jlRequest{
             // if(sessionStorage.getItem('token')){
             //     config.headers['Authorization'] = sessionStorage.getItem('token')
             // }
+            config.headers['Content-Type'] = 'application/x-www-form-urlencoded'
             return config
         },(error) =>{
             // console.log(error);

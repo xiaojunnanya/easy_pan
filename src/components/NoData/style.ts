@@ -1,7 +1,8 @@
 import styled from "styled-components";
 
 export const NoDataStyled = styled.div`
-
+    user-select: none;
+    
     .no-data {
         height: calc(100vh - 150px);
         display: flex;
