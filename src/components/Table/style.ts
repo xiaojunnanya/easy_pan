@@ -38,6 +38,10 @@ export const TableStyled = styled.div<propsType>`
 
         span, img{
             cursor: pointer;
+
+            &:hover{
+                color: #06A7FF;
+            }
         }
 
         img{

@@ -39,6 +39,10 @@ export const getDataList = (data: dataListType) =>{
     return jlReq.request({
         method:'post',
         url:"/file/loadDataList",
-        data
+        data:{
+            ...data,
+            // pageNo : data.pageNo || 1,
+            // pageSize : data.pageSize || 10
+        }
     })
 }

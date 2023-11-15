@@ -184,6 +184,8 @@ const Home = memo(() => {
     totalSpace: 0,
   }) 
   const [ isSpin, setIsSpin ] = useState<boolean>(false)
+  // Popover 是否展示
+  const [ isPopoverShow, setIsPopoverShow ] = useState<boolean>(false)
 
   let pathnameSplit = pathname.split('/').slice(0,3).join('/')
 
@@ -246,7 +248,9 @@ const Home = memo(() => {
     dispatch(changeLoading(true))
    }
 
-  // 获取空间
+  /**
+   * 获取空间
+   */
   const getSpace = () =>{
     setIsSpin(true)
     space().then(res =>{
@@ -285,7 +289,14 @@ const Home = memo(() => {
   // 上传区域展示
   const showContent = () =>{
     return (
-      <div className="content">111</div>
+      <div className="content">
+        <div>
+          <span>11</span>
+          <Progress percent={30} status="active" />
+        </div>
+        <Progress percent={70} status="exception" />
+        <Progress percent={100} />
+      </div>
     )
   }
 
@@ -307,8 +318,11 @@ const Home = memo(() => {
             <div className="name">Easy 云盘</div>
           </div>
           <div className="right-panel">
-
-            <Popover content={showContent} title="上传任务（仅展示本次上传任务）" trigger="click">
+            
+            <Popover content={showContent} title="上传任务（仅展示本次上传任务）" trigger="click" overlayInnerStyle={{
+              width: '500px',
+              marginRight: '10px'
+            }} open={isPopoverShow} onOpenChange={()=>{setIsPopoverShow(!isPopoverShow)}}>
               <SwapOutlined className='icon-transfer'/>
             </Popover>
 

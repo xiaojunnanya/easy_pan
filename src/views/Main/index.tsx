@@ -10,7 +10,7 @@
 import React, { FC, memo, useEffect, useState } from 'react'
 
 import NoData from '@/components/NoData'
-import MainHeader from '@/components/MainHeader'
+import MainHeader from '@/components/HeaderBtn'
 import { AllStyled } from './style'
 
 import Table from '@/components/Table'
@@ -27,7 +27,8 @@ const All: FC= memo(() => {
 
   const dispatch = useAppDispatch()
 
-  const [ data, setData ] = useState<DataType[]>()
+  const [ data, setData ] = useState<DataType[]>([])
+  // 总数
   const [ totalCount, setTotalCount ] = useState(0)
   const { category = 'all' } = useParams()
 
@@ -38,7 +39,8 @@ const All: FC= memo(() => {
     }).then(res =>{
       // 遍历为其添加上key
       const { list } = res.data.data
-
+      console.log(res.data.data);
+      
       for (const item of list) {
         item.key = item.fileId
       }
@@ -53,7 +55,7 @@ const All: FC= memo(() => {
       {
         totalCount ? (
           <div className='table'>
-            <Table data={data} isShowFolder={category === 'all'}></Table>
+            <Table data={data} isShowFolder={category === 'all'} totalCount={totalCount}></Table>
           </div>
         ) : (
           <>

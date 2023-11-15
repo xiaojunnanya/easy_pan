@@ -186,7 +186,4 @@ export const HomeStyled = styled.div`
         }
     }
 
-    .ant-popover-inner-content .content{
-        width: 300px;
-    }
 `

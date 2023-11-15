@@ -6,7 +6,7 @@ import type { ColumnsType } from 'antd/es/table';
 import { TableStyled } from './style';
 import zh_CN from 'antd/es/locale/zh_CN';
 import { useAppSelector } from '@/store';
-import MainHeader from '../MainHeader';
+import MainHeader from '../HeaderBtn';
 
 import setSize from '@/utils/setSize'
 
@@ -40,13 +40,14 @@ export interface DataType {
 
 // isShowFolder为ture显示文件夹按钮
 interface propsType{
-    data?: any,
-    isShowFolder?: boolean
+    data: any,
+    isShowFolder?: boolean,
+    totalCount: number
 }
 // 封装表格
 // 行点击、行选中
 const index: FC<propsType> = memo((props) => {
-  const { data, isShowFolder } = props
+  const { data, isShowFolder, totalCount } = props
   const { isLoading } = useAppSelector(state =>{
     return {
       isLoading: state.home.isLoading
@@ -135,30 +136,46 @@ const index: FC<propsType> = memo((props) => {
 
   // ----- function -----
 
-  // 监听屏幕大小变化（添加防抖会看到滚动条）
+  /**
+   * 监听屏幕大小变化（添加防抖会看到滚动条）
+   */
   const handleResize = () =>{
     setNewHeight(window.innerHeight - 240)
   }
 
-  // 点击多选框的时候触发
+  /**
+   * 点击多选框的时候触发
+   * @param newSelectedRowKeys 
+   */
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     console.log('selectedRowKeys changed: ', newSelectedRowKeys);
     newSelectedRowKeys.length ? setButtonDisabled(false) : setButtonDisabled(true)
     setSelectedRowKeys(newSelectedRowKeys);
   };
 
-  // 获取分页值与数
+  /**
+   * 获取分页值与数
+   * @param page 当前页
+   * @param pageSize 页数
+   */
   const pagiChange = (page: any, pageSize: any) =>{
     console.log(page, pageSize);
   }
 
-  // 五个操作
+  /**
+   * 表格中的五个操作
+   * @param e 
+   * @param record 
+   * @param index 
+   */
   const handleClick = (e: any, record: DataType, index: number) =>{
     e.stopPropagation()
     console.log(record);
   }
 
-  // 点击一列文字的操作
+  /**
+   * 点击表格一列文字的操作，比如进入下一层文件夹或预览文件
+   */
   const folderHandle = () =>{
     console.log('1');
     
@@ -250,7 +267,7 @@ const index: FC<propsType> = memo((props) => {
             position:['bottomRight'],
             showSizeChanger: true,
             showQuickJumper: true,
-            showTotal: (total) => `共 ${total} 条数据`,
+            showTotal: () => `共 ${totalCount} 条数据`,
             onChange:pagiChange
           }} onRow={(record, index)=>{
             return {
