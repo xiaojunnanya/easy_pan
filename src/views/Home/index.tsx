@@ -19,7 +19,7 @@ import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { getHeaderImg, space, logout } from '@/service/modules/home'
 import setSize from '@/utils/setSize'
 import { useAppDispatch } from '@/store'
-import { changeLoading } from '@/store/modules/home'
+import { changeFilePid, changeLoading } from '@/store/modules/home'
 
 // 定义：
 const { confirm } = Modal;
@@ -240,12 +240,16 @@ const Home = memo(() => {
   const oneMenu = (item: menuType) =>{
     setShowSecondaryMenu(item)
     naviage(item.path)
+    // 恢复最大的列表
+    dispatch(changeFilePid('0'))
   }
 
   const twoMenu = (item: any) =>{ 
     naviage(item.path)
     // 开启表格加载
     dispatch(changeLoading(true))
+    // 恢复最大的列表
+    dispatch(changeFilePid('0'))
    }
 
   /**
@@ -315,7 +319,7 @@ const Home = memo(() => {
           <div className="logo">
             {/* <span className='icon-pan iconfont'> </span> */}
             <CloudUploadOutlined className='icon-pan'/>
-            <div className="name">Easy 云盘</div>
+            <div className="name">Easy云盘</div>
           </div>
           <div className="right-panel">
             

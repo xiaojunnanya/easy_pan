@@ -36,6 +36,12 @@ export const TableStyled = styled.div<propsType>`
         display: flex;
         align-items: center;
 
+        .showImg{
+            width: 30px;
+            margin-right: 15px;
+            text-align: center;
+        }
+
         span, img{
             cursor: pointer;
 
@@ -45,13 +51,12 @@ export const TableStyled = styled.div<propsType>`
         }
 
         img{
-            width: 30px;
             height: 30px;
-            margin-right: 10px;
+            max-width: 42px;
         }
     }
 
-    /* ant-table ant-table-ping-right ant-table-fixed-header ant-table-scroll-horizontal */
+
     .ant-table{
         height: ${ props => props.height + 'px' }
     }

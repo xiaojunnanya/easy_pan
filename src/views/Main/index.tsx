@@ -10,20 +10,25 @@
 import React, { FC, memo, useEffect, useState } from 'react'
 
 import NoData from '@/components/NoData'
-import MainHeader from '@/components/HeaderBtn'
 import { AllStyled } from './style'
 
 import Table from '@/components/Table'
 
 import { getDataList } from '@/service/modules/home'
 
-import type { DataType } from '@/components/Table/index'
-import { useParams } from 'react-router-dom'
-import { useAppDispatch } from '@/store'
+import type { DataType } from '@/components/Table/type'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { useAppDispatch, useAppSelector, useAppShallowEqual } from '@/store'
 import { changeLoading } from '@/store/modules/home'
 
 
 const All: FC= memo(() => {
+
+  const { filePid } = useAppSelector(state =>{
+    return {
+      filePid: state.home.filePid
+    }
+  }, useAppShallowEqual)
 
   const dispatch = useAppDispatch()
 
@@ -31,15 +36,28 @@ const All: FC= memo(() => {
   // 总数
   const [ totalCount, setTotalCount ] = useState(0)
   const { category = 'all' } = useParams()
+  const naviage = useNavigate()
+  
+  // const [ searchParams ] = useSearchParams()
+  //     // 将其转为一个普通的对象
+  // const query = Object.fromEntries(searchParams.entries())
+  // const path = query.path || 0
+  
+  
 
   useEffect(()=>{
+    // naviage('?path='+filePid)
+    
+
+    dispatch(changeLoading(true))
     getDataList({
       category: category,
-      filePid: '0'
+      filePid
     }).then(res =>{
+      console.log(res);
+      
       // 遍历为其添加上key
       const { list } = res.data.data
-      console.log(res.data.data);
       
       for (const item of list) {
         item.key = item.fileId
@@ -48,7 +66,7 @@ const All: FC= memo(() => {
       setData(list)
       dispatch(changeLoading(false))
     })
-  }, [category])
+  }, [category, filePid])
 
   return (
     <AllStyled>

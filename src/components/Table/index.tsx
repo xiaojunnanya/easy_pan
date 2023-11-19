@@ -1,14 +1,17 @@
-import React, { memo, useEffect, useMemo, useState } from 'react'
+import React, { memo, useEffect, useMemo, useRef, useState } from 'react'
 import type { FC } from 'react'
 import { DeleteOutlined, DownloadOutlined, DragOutlined, FormOutlined, ShareAltOutlined } from '@ant-design/icons'
-import { Table, ConfigProvider } from 'antd';
+import { Table, ConfigProvider, Breadcrumb } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { TableStyled } from './style';
 import zh_CN from 'antd/es/locale/zh_CN';
-import { useAppSelector } from '@/store';
+import { useAppDispatch, useAppSelector, useAppShallowEqual } from '@/store';
 import MainHeader from '../HeaderBtn';
 
 import setSize from '@/utils/setSize'
+import { IMGPREVIEW_URL } from '@/service/config'
+
+
 
 import folderIcon from '@/assets/images/icon-image/folder.png'
 
@@ -21,21 +24,16 @@ import txtIcon from '@/assets/images/icon-image/txt.png'
 import otherIcon from '@/assets/images/icon-image/others.png'
 import zipIcon from '@/assets/images/icon-image/zip.png'
 import codeIcon from '@/assets/images/icon-image/code.png'
+import Preview from './Preview';
+import type { DataType } from './type';
+import { getDataList } from '@/service/modules/home';
+import { changeFilePid } from '@/store/modules/home';
 
 
-export interface DataType {
-  key: React.Key
-  fileCategory:number | null, // 文件类型 1 视频 2 音频 3 图片 4 文档 5 其他
-  fileCover: string | null // 文件封面
-  fileId: string // 文件ID
-  fileName: string // 文件名称
-  filePid: string // 父级ID
-  fileSize: string | null // 文件大小
-  fileType: number | null // 1:视频 2:音频  3:图片 4:pdf 5:doc 6:excel 7:txt 8:code 9:zip 10:其他
-  folderType: number // 0:文件 1:目录
-  lastUpdateTime: string // 最后更新时间
-  recoveryTime: string | null // 回收站时间
-  status: number // 0:转码中 1转码失败 2:转码成功
+
+
+export interface ChildMethods {
+  openModel: (record: DataType) => void;
 }
 
 // isShowFolder为ture显示文件夹按钮
@@ -52,21 +50,20 @@ const index: FC<propsType> = memo((props) => {
     return {
       isLoading: state.home.isLoading
     }
-  })
+  },useAppShallowEqual)
+  const childRef = useRef<ChildMethods>(null)
+  const dispatch = useAppDispatch()
 
   // ----- useState -----
   
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   // 获取当前可视区高度
   const [ newHeight, setNewHeight ]  = useState(window.innerHeight - 240)
-  // console.log(newHeight);
   
   // 按钮是否允许点击
   const [ buttonDisabled, setButtonDisabled ]  = useState<boolean>(true)
   // 展示操作部分
   const [ showHandleIndex, setShowHandleIndex ] = useState<number>(-1)
-  // 用state对当前数据进行一层处理，方便过滤修改
-  // const [ propsData, setPropsData ] = useState<DataType[]>(props.data);
 
 
   // ----- stats -----
@@ -148,7 +145,6 @@ const index: FC<propsType> = memo((props) => {
    * @param newSelectedRowKeys 
    */
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    console.log('selectedRowKeys changed: ', newSelectedRowKeys);
     newSelectedRowKeys.length ? setButtonDisabled(false) : setButtonDisabled(true)
     setSelectedRowKeys(newSelectedRowKeys);
   };
@@ -176,9 +172,14 @@ const index: FC<propsType> = memo((props) => {
   /**
    * 点击表格一列文字的操作，比如进入下一层文件夹或预览文件
    */
-  const folderHandle = () =>{
-    console.log('1');
-    
+  const folderHandle = async (record: DataType) =>{
+    // 0 是文件
+    if(record.folderType === 0){
+      childRef.current?.openModel(record)
+    }else{
+      // 文件夹，获取这个文件夹的数据
+      dispatch(changeFilePid(record.fileId))
+    }  
   }
 
   // ----- view -----
@@ -193,7 +194,7 @@ const index: FC<propsType> = memo((props) => {
     // 默认是文件夹
     let showImg = folderIcon
 
-    // 是文件
+    // 是文件,1是文件夹
     if( record.folderType === 0 ){
 
       switch (record.fileType) {
@@ -203,7 +204,10 @@ const index: FC<propsType> = memo((props) => {
         case 2:showImg = musicIcon
           break;
 
-        case 3:showImg = record.fileCover ? record.fileCover : folderIcon
+        case 3:
+          let a = record.fileCover ? IMGPREVIEW_URL + record.fileCover.split('_').join('') : folderIcon
+          
+          showImg = a
           break;
 
         case 4:showImg = pdfIcon
@@ -234,8 +238,12 @@ const index: FC<propsType> = memo((props) => {
 
     return (
       <div className='folderType'>
-        <img src={showImg} onClick={folderHandle}/>
-        <span onClick={folderHandle}>{record.fileName}</span>
+        <div className='showImg'>
+          <img src={showImg}/>
+        </div>
+        <span onClick={()=>{folderHandle(record)}}>
+          {record.fileName}
+        </span>
       </div>
     )
   }
@@ -248,12 +256,15 @@ const index: FC<propsType> = memo((props) => {
           {
             title: '全部文件',
           },
-          // {
-          //   title: 'Application Center',
-          //   href: '',
-          // }
+          {
+            title: 'Application Center',
+            href: '',
+          }
         ]}
       ></Breadcrumb> */}
+      <div style={{display:'none'}}>
+        <Preview ref={childRef}></Preview>
+      </div>
 
       <TableStyled height={newHeight + 57}>
         <ConfigProvider locale={zh_CN}>

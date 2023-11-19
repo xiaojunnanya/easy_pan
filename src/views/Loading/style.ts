@@ -15,5 +15,4 @@ export const LoadingStyled = styled.div`
     align-items: center;
     justify-content: center;
     background: rgba(0, 0, 0, 0.05);
-    
 `

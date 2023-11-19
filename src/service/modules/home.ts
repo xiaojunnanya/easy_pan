@@ -2,7 +2,7 @@ import { jlReq } from "..";
 
 // 获取头像
 export const getHeaderImg = ( userId: string ) =>{
-    return `http://netdisk.kbws.xyz/api//getAvatar/${userId}`
+    return `http://netdisk.kbws.xyz/api/getAvatar/${userId}`
 }
 
 // 获取用户空间
@@ -15,7 +15,7 @@ export const space = () =>{
 
 // 修改头像
 export const changeHeadImg = () =>{
-    return 'http://netdisk.kbws.xyz/api//updateUserAvatar'
+    return 'http://netdisk.kbws.xyz/api/updateUserAvatar'
 }
 
 // 退出登录
@@ -42,7 +42,24 @@ export const getDataList = (data: dataListType) =>{
         data:{
             ...data,
             // pageNo : data.pageNo || 1,
-            // pageSize : data.pageSize || 10
+            pageSize : 100
         }
+    })
+}
+
+// 获取文件信息
+// http://127.0.0.1:7090/api/file/getFile/{fileId}
+export const getFileInfo = (fileId: string) =>{
+    return jlReq.request({
+        method:'get',
+        url:`/file/getFile/${fileId}`
+    })
+}
+
+// 获取pdf
+export const getPdf = (fileId: string) =>{
+    return jlReq.getUrl({
+        method:'get',
+        url:`/file/getFile/${fileId}`
     })
 }

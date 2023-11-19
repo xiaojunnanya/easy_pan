@@ -36,14 +36,13 @@ const Login = memo(() => {
         
         const password = spark.end()
         const result = await loginServer(values.username, password, values.checkCode)
-        console.log(result);
         messageApi.destroy()
-        if( result.data.code === 200 ){
+        if( result?.data.code === 200 ){
             navigate('/main/home/all')
             messageApi.info('登录成功');
             sessionStorage.setItem('userInfo', JSON.stringify(result.data.data))
         }else{
-            messageApi.error(result.data.info);
+            messageApi.error(result?.data.info || '服务器异常，请稍后重试');
         }
         
     };

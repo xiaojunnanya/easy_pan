@@ -11,6 +11,7 @@ import axios from 'axios'
 import type { AxiosInstance } from 'axios'
 
 import { jlRequestConfig } from './type'
+import { BASE_URL } from '../config'
 
 
 class jlRequest{
@@ -70,6 +71,10 @@ class jlRequest{
 
     post<T=any>(config: jlRequestConfig){
         return this.request<T>({...config, method:'POST'})
+    }
+
+    getUrl<T=any>(config: jlRequestConfig){
+        return BASE_URL + config.url
     }
 
 }
