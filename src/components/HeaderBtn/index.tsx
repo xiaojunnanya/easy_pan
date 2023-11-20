@@ -13,7 +13,7 @@ interface propsType{
 
 // 暂时不用了
 const index: FC<propsType> = memo((props) => {
-    const { isShowFolder, btnDisabled } = props
+    const { isShowFolder, btnDisabled = true } = props
     const [ isSpin, setIsSpin ] = useState<boolean>(false)
     
     const onSearch = () =>{

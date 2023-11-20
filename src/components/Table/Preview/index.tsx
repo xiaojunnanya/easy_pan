@@ -1,7 +1,7 @@
 import React, { forwardRef, memo, useImperativeHandle, useState } from 'react';
 import { Modal, Spin, Watermark } from 'antd';
 
-import { getFileInfo, getPdf } from '@/service/modules/home';
+import { getFileInfo } from '@/service/modules/home';
 import type { DataType } from '../type';
 import { IMGPREVIEW_URL } from '@/service/config';
 import { PreviewStyled } from './style';
@@ -55,7 +55,6 @@ const Preview = memo(forwardRef((props, ref) => {
           break;
         // pdf
         case 4:
-          console.log(getPdf(record.fileId));
           const aa = 'http://netdisk.kbws.xyz/api/file/getFile/' + record.fileId
           // console.log(aa);
           const docs = [

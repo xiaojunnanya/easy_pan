@@ -18,6 +18,7 @@ const Share = React.lazy(()=> import("@/views/Share"))
 const Recycle = React.lazy(()=> import("@/views/Recycle"))
 const Setting = React.lazy(()=> import("@/views/Setting"))
 const NotFound = React.lazy(()=> import("@/views/NotFound"))
+const Test = React.lazy(()=> import("@/views/Test"))
 
 const routes : RouteObject[] = [
     {
@@ -27,6 +28,10 @@ const routes : RouteObject[] = [
     {
         path:'/login',
         element: <Login></Login>
+    },
+    {
+        path:'/test',
+        element: <Test></Test>
     },
     {
         path:'/main',

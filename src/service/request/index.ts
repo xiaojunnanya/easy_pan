@@ -13,7 +13,7 @@ import type { AxiosInstance } from 'axios'
 import { jlRequestConfig } from './type'
 import { BASE_URL } from '../config'
 
-
+const cancelTokenSource = axios.CancelToken.source();
 class jlRequest{
     instance: AxiosInstance
 
@@ -28,6 +28,7 @@ class jlRequest{
             //     config.headers['Authorization'] = sessionStorage.getItem('token')
             // }
             config.headers['Content-Type'] = 'application/x-www-form-urlencoded'
+            // config.cancelToken = cancelTokenSource.token
             return config
         },(error) =>{
             // console.log(error);
@@ -72,11 +73,6 @@ class jlRequest{
     post<T=any>(config: jlRequestConfig){
         return this.request<T>({...config, method:'POST'})
     }
-
-    getUrl<T=any>(config: jlRequestConfig){
-        return BASE_URL + config.url
-    }
-
 }
 
 export default jlRequest

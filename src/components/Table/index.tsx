@@ -6,7 +6,6 @@ import type { ColumnsType } from 'antd/es/table';
 import { TableStyled } from './style';
 import zh_CN from 'antd/es/locale/zh_CN';
 import { useAppDispatch, useAppSelector, useAppShallowEqual } from '@/store';
-import MainHeader from '../HeaderBtn';
 
 import setSize from '@/utils/setSize'
 import { IMGPREVIEW_URL } from '@/service/config'
@@ -26,9 +25,7 @@ import zipIcon from '@/assets/images/icon-image/zip.png'
 import codeIcon from '@/assets/images/icon-image/code.png'
 import Preview from './Preview';
 import type { DataType } from './type';
-import { getDataList } from '@/service/modules/home';
-import { changeFilePid } from '@/store/modules/home';
-
+import { changeBtnDisabled, changeFilePid } from '@/store/modules/home';
 
 
 
@@ -39,13 +36,12 @@ export interface ChildMethods {
 // isShowFolder为ture显示文件夹按钮
 interface propsType{
     data: any,
-    isShowFolder?: boolean,
     totalCount: number
 }
 // 封装表格
 // 行点击、行选中
 const index: FC<propsType> = memo((props) => {
-  const { data, isShowFolder, totalCount } = props
+  const { data, totalCount } = props
   const { isLoading } = useAppSelector(state =>{
     return {
       isLoading: state.home.isLoading
@@ -60,8 +56,6 @@ const index: FC<propsType> = memo((props) => {
   // 获取当前可视区高度
   const [ newHeight, setNewHeight ]  = useState(window.innerHeight - 240)
   
-  // 按钮是否允许点击
-  const [ buttonDisabled, setButtonDisabled ]  = useState<boolean>(true)
   // 展示操作部分
   const [ showHandleIndex, setShowHandleIndex ] = useState<number>(-1)
 
@@ -145,7 +139,7 @@ const index: FC<propsType> = memo((props) => {
    * @param newSelectedRowKeys 
    */
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    newSelectedRowKeys.length ? setButtonDisabled(false) : setButtonDisabled(true)
+    newSelectedRowKeys.length ? dispatch(changeBtnDisabled(false)) : dispatch(changeBtnDisabled(true))
     setSelectedRowKeys(newSelectedRowKeys);
   };
 
@@ -167,6 +161,32 @@ const index: FC<propsType> = memo((props) => {
   const handleClick = (e: any, record: DataType, index: number) =>{
     e.stopPropagation()
     console.log(record);
+    switch (index) {
+      // 分享
+      case 1:
+        
+        break;
+      // 下载
+      case 2:
+        
+        break;
+      // 删除
+      case 3:
+        
+        break;
+      // 重命名
+      case 4:console.log('1');
+      
+        
+        break;
+      // 移动
+      case 5:
+        
+        break;
+    
+      default:
+        break;
+    }
   }
 
   /**
@@ -250,7 +270,6 @@ const index: FC<propsType> = memo((props) => {
 
   return (
     <>
-      <MainHeader isShowFolder={isShowFolder} btnDisabled={buttonDisabled}></MainHeader>
 
       {/* <Breadcrumb separator=">" style={{marginBottom:'15px'}} items={[
           {
