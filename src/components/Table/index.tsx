@@ -8,8 +8,6 @@ import zh_CN from 'antd/es/locale/zh_CN';
 import { useAppDispatch, useAppSelector, useAppShallowEqual } from '@/store';
 
 import setSize from '@/utils/setSize'
-import { IMGPREVIEW_URL } from '@/service/config'
-
 
 
 import folderIcon from '@/assets/images/icon-image/folder.png'
@@ -26,11 +24,12 @@ import codeIcon from '@/assets/images/icon-image/code.png'
 import Preview from './Preview';
 import type { DataType } from './type';
 import { changeBtnDisabled, changeFilePid } from '@/store/modules/home';
+import { getImage } from '@/service/modules/home';
 
 
 
 export interface ChildMethods {
-  openModel: (record: DataType) => void;
+  openModel: (record: DataType, img: string) => void;
 }
 
 // isShowFolder为ture显示文件夹按钮
@@ -192,10 +191,10 @@ const index: FC<propsType> = memo((props) => {
   /**
    * 点击表格一列文字的操作，比如进入下一层文件夹或预览文件
    */
-  const folderHandle = async (record: DataType) =>{
+  const folderHandle = async (record: DataType, showImg: string) =>{
     // 0 是文件
     if(record.folderType === 0){
-      childRef.current?.openModel(record)
+      childRef.current?.openModel(record, showImg)
     }else{
       // 文件夹，获取这个文件夹的数据
       dispatch(changeFilePid(record.fileId))
@@ -216,18 +215,17 @@ const index: FC<propsType> = memo((props) => {
 
     // 是文件,1是文件夹
     if( record.folderType === 0 ){
-
+      
       switch (record.fileType) {
-        case 1:showImg = videoIcon
+        case 1:
+          showImg = record.fileCover ? getImage(record.fileCover.split('_').join('')) : videoIcon
           break;
 
         case 2:showImg = musicIcon
           break;
 
         case 3:
-          let a = record.fileCover ? IMGPREVIEW_URL + record.fileCover.split('_').join('') : folderIcon
-          
-          showImg = a
+          showImg = record.fileCover ? getImage(record.fileCover.split('_').join('')) : folderIcon
           break;
 
         case 4:showImg = pdfIcon
@@ -261,7 +259,7 @@ const index: FC<propsType> = memo((props) => {
         <div className='showImg'>
           <img src={showImg}/>
         </div>
-        <span onClick={()=>{folderHandle(record)}}>
+        <span onClick={()=>{folderHandle(record, showImg)}}>
           {record.fileName}
         </span>
       </div>

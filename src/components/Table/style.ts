@@ -37,8 +37,8 @@ export const TableStyled = styled.div<propsType>`
         align-items: center;
 
         .showImg{
-            width: 30px;
-            margin-right: 15px;
+            /* width: 30px; */
+            margin-right: 10px;
             text-align: center;
         }
 
@@ -52,7 +52,8 @@ export const TableStyled = styled.div<propsType>`
 
         img{
             height: 30px;
-            max-width: 42px;
+            width: 30px;
+            object-fit: cover;
         }
     }
 

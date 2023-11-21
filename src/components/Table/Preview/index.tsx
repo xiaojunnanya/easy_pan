@@ -1,12 +1,12 @@
 import React, { forwardRef, memo, useImperativeHandle, useState } from 'react';
-import { Modal, Spin, Watermark } from 'antd';
+import { Button, Modal, Spin, Watermark } from 'antd';
 
-import { getFileInfo } from '@/service/modules/home';
+import { downloadFile, getDownCode, getFileInfo } from '@/service/modules/home';
 import type { DataType } from '../type';
-import { IMGPREVIEW_URL } from '@/service/config';
 import { PreviewStyled } from './style';
 import CodeBlock from '@/utils/CodeBlock';
 import DocViewer, { PDFRenderer } from "@cyntler/react-doc-viewer";
+import setSize from '@/utils/setSize';
 // import { Document, Page } from 'react-pdf';
 
 
@@ -22,33 +22,40 @@ const Preview = memo(forwardRef((props, ref) => {
   const [ recordData, setRecordData ] = useState<DataType>()
   const [ showView, setShowView] = useState<any>()
 
-  const openModel = async (record: DataType) => {
+  const openModel = async (record: DataType, img: string) => {
     setOpen(true);
     setRecordData(record)
     setShowView('')
-    setShowView(await previewShow(record))
+    setShowView(await previewShow(record, img))
+  }
+
+  const download = async (fileId: string) =>{
+    const res = await getDownCode(fileId)
+    // 执行下载
+    const link = document.createElement('a');
+    link.href = downloadFile(res.data.data);
+    document.body.appendChild(link);
+    link.click();
   }
 
   // 文件夹的时候为null
-  const previewShow = async (record: DataType) =>{
+  const previewShow = async (record: DataType, showImg: string) =>{
 
     let show = <div></div>
-    const res = await getFileInfo(record.fileId)
 
     if(record.fileType){
       switch (record.fileType) {
         // 视频
         case 1:
           break;
-
+        // 音频
         case 2:
           break;
         // 图片
         case 3:
-          let a = record.fileCover ? IMGPREVIEW_URL + record.fileCover.split('_').join('') : ''
           show = (
             <div className='img'>
-              <img src={a} alt="" />
+              <img src={showImg} alt={record.fileName} />
             </div>
           )
         
@@ -56,7 +63,6 @@ const Preview = memo(forwardRef((props, ref) => {
         // pdf
         case 4:
           const aa = 'http://netdisk.kbws.xyz/api/file/getFile/' + record.fileId
-          // console.log(aa);
           const docs = [
             { uri: 'https://minio.aimed.cn/xs-szhpt/base/2023-03-23/2014版NOF防治骨质疏松症临床指南解读.90f94a1bbe.pdf' },
             { uri: '/file/getFile/4iWy5DyBPm' },
@@ -78,6 +84,7 @@ const Preview = memo(forwardRef((props, ref) => {
         case 7:
         // code
         case 8:
+          const res = await getFileInfo(record.fileId)
           const language = record.fileName.split('.').pop()
           show = (
             <CodeBlock code={res.data} language={language}></CodeBlock>
@@ -85,9 +92,18 @@ const Preview = memo(forwardRef((props, ref) => {
           break;
         // zip
         case 9:
-          break;
         // 其他
         case 10:
+          show = (
+            <div className='other'>
+              <div>
+                <img src={showImg} alt="" />
+                <div className='name'>{ record.fileName }</div>
+                <div className='info'>该类型的文件暂不支持预览，请下载后查看</div>
+                <Button onClick={()=>{download(record.fileId)}}>点击下载 { record.fileSize && setSize(Number(record.fileSize)) }</Button>
+              </div>
+            </div>
+          )
           break;
       
         default:

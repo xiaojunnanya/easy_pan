@@ -3,7 +3,19 @@ import { jlReq } from "..";
 
 // 获取头像
 export const getHeaderImg = ( userId: string ) =>{
-    return `http://netdisk.kbws.xyz/api/getAvatar/${userId}`
+    return `/api/getAvatar/${userId}`
+}
+
+// 获取图片地址
+export const getImage = ( img: string | null ) =>{
+    // http://netdisk.kbws.xyz/api/file/getImage/
+    return `/api/file/getImage/${img}`
+}
+
+// http://netdisk.kbws.xyz/api/file/ts/getVideoInfo/4xGwxqPPV7
+// 获取视频地址
+export const getVideo = ( video: string | null ) =>{
+    return `/api/file/ts/getVideoInfo/${video}`
 }
 
 // 获取用户空间
@@ -14,10 +26,6 @@ export const space = () =>{
     })
 }
 
-// 修改头像
-export const changeHeadImg = () =>{
-    return 'http://netdisk.kbws.xyz/api/updateUserAvatar'
-}
 
 // 退出登录
 export const logout = () =>{
@@ -88,4 +96,17 @@ export const changeFileName = (data: {fileId: string, fileName: string}) =>{
         url:'/file/rename',
         data
     })
+}
+
+// 获取下载文件的code
+export const getDownCode = (id: string) =>{
+    return jlReq.request({
+        method:'post',
+        url:`/file/createDownloadUrl/${id}`
+    })
+}
+// http://netdisk.kbws.xyz/api/file/download/{code}
+// 下载文件
+export const downloadFile = (code: string) =>{
+    return `/api/file/download/${code}`
 }
