@@ -1,19 +1,20 @@
 import { CloudUploadOutlined, DeleteOutlined, DragOutlined, SnippetsOutlined, SyncOutlined } from '@ant-design/icons'
 import { Button, Input } from 'antd'
-import React, { memo, useState } from 'react'
+import React, { Fragment, memo, useState } from 'react'
 import type { FC } from 'react'
 import { MainHeaderStyled } from './style';
+import { btnType } from './type';
 const { Search } = Input;
 
 // isShowFolder为ture显示文件夹
 interface propsType{
     isShowFolder?: boolean,
-    btnDisabled?: boolean,
+    showBtn: btnType[],
 }
 
 // 暂时不用了
 const index: FC<propsType> = memo((props) => {
-    const { isShowFolder, btnDisabled = true } = props
+    const { isShowFolder, showBtn } = props
     const [ isSpin, setIsSpin ] = useState<boolean>(false)
     
     const onSearch = () =>{
@@ -31,34 +32,25 @@ const index: FC<propsType> = memo((props) => {
         console.log('2');
     }
 
+    const bntshow = showBtn?.map((item, index) =>{
+        return (
+            <Fragment key={index}>
+                {
+                    item.show && (
+                        <div key={index}>
+                            <Button type="primary" icon={item.icon} size="middle" style={item?.style} disabled={item.disabled}>
+                                { item.name }
+                            </Button>
+                        </div>
+                    )
+                }
+            </Fragment>
+        )
+    })
+
   return (
     <MainHeaderStyled>
-        <div>
-            <Button type="primary" icon={<CloudUploadOutlined />} size="middle" onClick={upLoad}>
-                上传
-            </Button>
-        </div>
-
-        {
-            isShowFolder && (
-                <div>
-                    <Button type="primary" icon={<SnippetsOutlined />} size="middle" style={{backgroundColor:'#67C23A'}}>
-                        新建文件夹
-                    </Button>
-                </div>
-            )
-        }
-    
-        <div>
-            <Button type="primary" icon={<DeleteOutlined />} size="middle" style={{backgroundColor:'#F56C6C'}} disabled={btnDisabled}>
-                批量删除
-            </Button>
-        </div>
-        <div>
-            <Button type="primary" icon={<DragOutlined />} size="middle" style={{backgroundColor:'#E6A23C'}} disabled={btnDisabled}>
-                批量移动
-            </Button>
-        </div>
+        {bntshow}
         <div>
             <Search placeholder="输入文件名进行搜索" allowClear onSearch={onSearch} style={{ width: 300 }} />
         </div>

@@ -24,7 +24,7 @@ import codeIcon from '@/assets/images/icon-image/code.png'
 import Preview from './Preview';
 import type { DataType } from './type';
 import { changeBtnDisabled, changeFilePid } from '@/store/modules/home';
-import { getImage } from '@/service/modules/home';
+import { downloadFile, getDownCode, getImage } from '@/service/modules/home';
 
 
 
@@ -79,9 +79,14 @@ const index: FC<propsType> = memo((props) => {
                 <div className='handle' onClick={(e)=>{handleClick(e, record, 1)}}>
                   <ShareAltOutlined /><span>分享</span>
                 </div>
-                <div className='handle' onClick={(e)=>{handleClick(e, record, 2)}}>
-                  <DownloadOutlined /><span>下载</span>
-                </div>
+                {/* 文件夹没有下载 */}
+                {
+                  record.folderType === 0 && (
+                    <div className='handle' onClick={(e)=>{handleClick(e, record, 2)}}>
+                      <DownloadOutlined /><span>下载</span>
+                    </div>
+                  )
+                }
                 <div className='handle' onClick={(e)=>{handleClick(e, record, 3)}}>
                   <DeleteOutlined /><span>删除</span>
                 </div>
@@ -152,6 +157,19 @@ const index: FC<propsType> = memo((props) => {
   }
 
   /**
+   * 下载
+   * @param fileId 
+   */
+  const download = async (fileId: string) =>{
+    const res = await getDownCode(fileId)
+    // 执行下载
+    const link = document.createElement('a');
+    link.href = downloadFile(res.data.data);
+    document.body.appendChild(link);
+    link.click();
+  }
+
+  /**
    * 表格中的五个操作
    * @param e 
    * @param record 
@@ -166,7 +184,7 @@ const index: FC<propsType> = memo((props) => {
         
         break;
       // 下载
-      case 2:
+      case 2:download(record.fileId)
         
         break;
       // 删除
@@ -218,14 +236,14 @@ const index: FC<propsType> = memo((props) => {
       
       switch (record.fileType) {
         case 1:
-          showImg = record.fileCover ? getImage(record.fileCover.split('_').join('')) : videoIcon
+          showImg = record.fileCover ? getImage(record.fileCover) : videoIcon
           break;
 
         case 2:showImg = musicIcon
           break;
 
         case 3:
-          showImg = record.fileCover ? getImage(record.fileCover.split('_').join('')) : folderIcon
+          showImg = record.fileCover ? getImage(record.fileCover) : folderIcon
           break;
 
         case 4:showImg = pdfIcon

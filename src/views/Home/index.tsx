@@ -245,9 +245,13 @@ const Home = memo(() => {
   }
 
   const twoMenu = (item: any) =>{ 
+    // 获取当前路由
+    const urlParams = new URL(window.location.href);
+    const pathname = urlParams?.pathname;
     naviage(item.path)
     // 开启表格加载
-    dispatch(changeLoading(true))
+    item.path === pathname || dispatch(changeLoading(true))
+    
     // 恢复最大的列表
     dispatch(changeFilePid('0'))
    }

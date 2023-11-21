@@ -7,7 +7,7 @@
  * @Description: 
  * @前端实习生: 鲸落
  */
-import React, { FC, memo, useEffect, useState } from 'react'
+import React, { FC, memo, useEffect, useMemo, useState } from 'react'
 
 import NoData from '@/components/NoData'
 import { AllStyled } from './style'
@@ -21,9 +21,14 @@ import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useAppDispatch, useAppSelector, useAppShallowEqual } from '@/store'
 import { changeFilePid, changeLoading } from '@/store/modules/home'
 import HeaderBtn from '@/components/HeaderBtn'
+import { btnType } from '@/components/HeaderBtn/type'
+import { CloudUploadOutlined, DeleteOutlined, DragOutlined, SnippetsOutlined, SyncOutlined } from '@ant-design/icons'
+
 
 
 const All: FC= memo(() => {
+
+  const dispatch = useAppDispatch()
 
   const { filePid, btnDisabled } = useAppSelector(state =>{
     return {
@@ -32,12 +37,52 @@ const All: FC= memo(() => {
     }
   }, useAppShallowEqual)
 
-  const dispatch = useAppDispatch()
+  const { category = 'all' } = useParams()
+
+  const showBtn: btnType[] = useMemo(()=>{
+    return [
+      {
+        name: '上传',
+        icon:<CloudUploadOutlined />,
+        disabled: false,
+        show: true,
+      },
+      {
+        name: '新建文件夹',
+        icon:<SnippetsOutlined />,
+        style:{
+          backgroundColor:'#67C23A'
+        },
+        disabled: false,
+        show: category === 'all'
+      },
+      {
+        name: '批量删除',
+        icon:<DeleteOutlined />,
+        style:{
+          backgroundColor:'#F56C6C'
+        },
+        disabled: btnDisabled,
+        show: true,
+      },
+      {
+        name: '批量移动',
+        icon:<DragOutlined />,
+        style:{
+          backgroundColor:'#E6A23C'
+        },
+        disabled: btnDisabled,
+        show: true,
+      }
+    ]
+  }, [btnDisabled, category])
+
+  
 
   const [ data, setData ] = useState<DataType[]>([])
   // 总数
   const [ totalCount, setTotalCount ] = useState(0)
-  const { category = 'all' } = useParams()
+  
   const naviage = useNavigate()
   const [ searchParams ] = useSearchParams()
   const query = Object.fromEntries(searchParams.entries())
@@ -86,7 +131,8 @@ const All: FC= memo(() => {
 
   return (
     <AllStyled>
-      <HeaderBtn isShowFolder={category === 'all'} btnDisabled={btnDisabled}></HeaderBtn>
+      <HeaderBtn isShowFolder={category === 'all'} showBtn={showBtn}></HeaderBtn>
+      {/* <HeaderBtn isShowFolder={category === 'all'} btnDisabled={btnDisabled}></HeaderBtn> */}
       {
         totalCount ? (
           <div className='table'>
