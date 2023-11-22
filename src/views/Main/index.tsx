@@ -14,7 +14,7 @@ import { AllStyled } from './style'
 
 import Table from '@/components/Table'
 
-import { delFileToRecycle, getDataList } from '@/service/modules/home'
+import { createFolder, delFileToRecycle, getDataList } from '@/service/modules/home'
 
 import type { DataType } from '@/components/Table/type'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
@@ -41,6 +41,17 @@ const All: FC= memo(() => {
 
   const { category = 'all' } = useParams()
 
+  
+
+  const [ data, setData ] = useState<DataType[]>([])
+  // 总数
+  const [ totalCount, setTotalCount ] = useState(0)
+  
+  const naviage = useNavigate()
+  const [ searchParams ] = useSearchParams()
+  const query = Object.fromEntries(searchParams.entries())
+  const path = query.path || '0'
+
   const showBtn: btnType[] = useMemo(()=>{
     return [
       {
@@ -56,7 +67,16 @@ const All: FC= memo(() => {
           backgroundColor:'#67C23A'
         },
         disabled: false,
-        show: category === 'all'
+        show: category === 'all',
+        onClick: async ()=>{
+          const fileName = '新建文件夹' + new Date().getTime()
+          const res = await createFolder(fileName)
+          const d = res.data.data
+          d.key = res.data.data.fileId
+          const a = [...data]
+          a.unshift(res.data.data)
+          setData(a)
+        }
       },
       {
         name: '批量删除',
@@ -90,18 +110,9 @@ const All: FC= memo(() => {
         show: true,
       }
     ]
-  }, [btnDisabled, category, selectKeys])
+  }, [btnDisabled, category, selectKeys, data])
 
-  
 
-  const [ data, setData ] = useState<DataType[]>([])
-  // 总数
-  const [ totalCount, setTotalCount ] = useState(0)
-  
-  const naviage = useNavigate()
-  const [ searchParams ] = useSearchParams()
-  const query = Object.fromEntries(searchParams.entries())
-  const path = query.path || '0'
   // 在第一次进来的时候如果path有的话就使用path
   useEffect(()=>{
       // 将其转为一个普通的对象
@@ -156,7 +167,7 @@ const All: FC= memo(() => {
         totalCount ? (
           <div className='table'>
             {/* <HeaderBtn isShowFolder={isShowFolder} btnDisabled={buttonDisabled}></HeaderBtn> */}
-            <Table data={data} totalCount={totalCount}></Table>
+            <Table data={data}></Table>
           </div>
         ) : (
           <>

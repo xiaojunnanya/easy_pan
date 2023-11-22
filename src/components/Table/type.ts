@@ -17,6 +17,5 @@ export interface DataType {
 
 // isShowFolder为ture显示文件夹按钮
 export interface propsType{
-    data: any,
-    totalCount: number
+    data: any
 }

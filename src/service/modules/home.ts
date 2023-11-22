@@ -89,13 +89,24 @@ export const downloadFile = (code: string) =>{
 }
 
 // 删除到回收站
-// http://127.0.0.1:7090/api/file/delFile
 export const delFileToRecycle = (fileIds: string) =>{
     return jlReq.request({
         method:'post',
         url:'/file/delFile',
         data:{
             fileIds
+        }
+    })
+}
+
+// 新建文件夹
+export const createFolder = (fileName?: string, filePid?: string) =>{
+    return jlReq.request({
+        method:'post',
+        url:'/file/newFoloder',
+        data:{
+            filePid : filePid || '0',
+            fileName: fileName || '新建文件夹'
         }
     })
 }

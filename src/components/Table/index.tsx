@@ -36,7 +36,7 @@ interface ChildMethods {
 // 封装表格
 // 行点击、行选中
 const index: FC<propsType> = memo((props) => {
-  const { data, totalCount } = props
+  const { data } = props
   const { isLoading } = useAppSelector(state =>{
     return {
       isLoading: state.home.isLoading
@@ -325,7 +325,7 @@ const index: FC<propsType> = memo((props) => {
             position:['bottomRight'],
             showSizeChanger: true,
             showQuickJumper: true,
-            showTotal: () => `共 ${totalCount} 条数据`,
+            showTotal: (count) => `共 ${count} 条数据`,
             onChange:pagiChange
           }} onRow={(record, index)=>{
             return {

@@ -34,8 +34,6 @@ const Recycle = memo(() => {
   console.log('selectKeys', selectKeys);
   
   const [ data, setData ] = useState<DataType[]>([])
-  // 总数
-  const [ totalCount, setTotalCount ] = useState(0)
 
   const showBtn: btnType[] = useMemo(()=>{
     return [
@@ -94,7 +92,6 @@ const Recycle = memo(() => {
       for (const item of list) {
         item.key = item.fileId
       }
-      setTotalCount(res.data.data.totalCount)
       setData(list)
       dispatch(changeLoading(false))
     })
@@ -107,7 +104,7 @@ const Recycle = memo(() => {
   return (
     <RecycleStyled>
       <HeaderBtn showBtn={showBtn}></HeaderBtn>
-      <Table data={data} totalCount={totalCount}></Table>
+      <Table data={data}></Table>
     </RecycleStyled>
   )
 })
