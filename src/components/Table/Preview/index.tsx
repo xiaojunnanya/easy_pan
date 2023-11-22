@@ -1,12 +1,12 @@
 import React, { forwardRef, memo, useImperativeHandle, useState } from 'react';
 import { Button, Modal, Spin, Watermark } from 'antd';
 
-import { downloadFile, getDownCode, getFileInfo } from '@/service/modules/home';
+import { getFileInfo, getImage } from '@/service/modules/home';
 import type { DataType } from '../type';
 import { PreviewStyled } from './style';
 import CodeBlock from '@/utils/CodeBlock';
 import DocViewer, { PDFRenderer } from "@cyntler/react-doc-viewer";
-import setSize from '@/utils/setSize';
+import { downLoadFile, setSize } from '@/utils';
 // import { Document, Page } from 'react-pdf';
 
 
@@ -30,12 +30,7 @@ const Preview = memo(forwardRef((props, ref) => {
   }
 
   const download = async (fileId: string) =>{
-    const res = await getDownCode(fileId)
-    // 执行下载
-    const link = document.createElement('a');
-    link.href = downloadFile(res.data.data);
-    document.body.appendChild(link);
-    link.click();
+    downLoadFile(fileId)
   }
 
   // 文件夹的时候为null
@@ -53,9 +48,13 @@ const Preview = memo(forwardRef((props, ref) => {
           break;
         // 图片
         case 3:
+          console.log(record.fileCover);
+          const a = record.fileCover!.split('_')
+          const b = a.pop()
+          const c = a.join('_')+b
           show = (
             <div className='img'>
-              <img src={showImg} alt={record.fileName} />
+              <img src={getImage(c)} alt={record.fileName} />
             </div>
           )
         

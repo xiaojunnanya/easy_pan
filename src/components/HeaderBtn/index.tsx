@@ -38,7 +38,8 @@ const index: FC<propsType> = memo((props) => {
                 {
                     item.show && (
                         <div key={index}>
-                            <Button type="primary" icon={item.icon} size="middle" style={item?.style} disabled={item.disabled}>
+                            <Button type="primary" icon={item.icon} size="middle" style={item?.style} 
+                            disabled={item.disabled} onClick={item.onClick}>
                                 { item.name }
                             </Button>
                         </div>

@@ -1,13 +1,13 @@
 import React, { memo, useEffect, useMemo, useRef, useState } from 'react'
 import type { FC } from 'react'
-import { DeleteOutlined, DownloadOutlined, DragOutlined, FormOutlined, ShareAltOutlined } from '@ant-design/icons'
-import { Table, ConfigProvider, Breadcrumb } from 'antd';
+import { DeleteOutlined,  UndoOutlined } from '@ant-design/icons'
+import { Table, ConfigProvider, Popconfirm } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { TableStyled } from './style';
+import { RecyclePreStyled } from './style';
 import zh_CN from 'antd/es/locale/zh_CN';
 import { useAppDispatch, useAppSelector, useAppShallowEqual } from '@/store';
 
-import { downLoadFile, setSize } from '@/utils'
+import { setSize } from '@/utils'
 
 
 import folderIcon from '@/assets/images/icon-image/folder.png'
@@ -21,17 +21,18 @@ import txtIcon from '@/assets/images/icon-image/txt.png'
 import otherIcon from '@/assets/images/icon-image/others.png'
 import zipIcon from '@/assets/images/icon-image/zip.png'
 import codeIcon from '@/assets/images/icon-image/code.png'
-import Preview from './Preview';
-import type { DataType, propsType } from './type';
-import { changeBtnDisabled, changeFilePid } from '@/store/modules/home';
+import Preview from '../Preview';
+import type { DataType, propsType } from '../type';
+import { changeBtnDisabled } from '@/store/modules/home';
 import { getImage } from '@/service/modules/home';
+import { deleteFile, restore } from '@/service/modules/recycle';
+import { changeSelectKeys } from '@/store/modules/recycle';
 
 
 
 interface ChildMethods {
   openModel: (record: DataType, img: string) => void;
 }
-
 
 // 封装表格
 // 行点击、行选中
@@ -50,6 +51,9 @@ const index: FC<propsType> = memo((props) => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   // 获取当前可视区高度
   const [ newHeight, setNewHeight ]  = useState(window.innerHeight - 240)
+
+  // props data
+  const [ showData, setShowData ] = useState<DataType[]>(data)
   
   // 展示操作部分
   const [ showHandleIndex, setShowHandleIndex ] = useState<number>(-1)
@@ -67,30 +71,25 @@ const index: FC<propsType> = memo((props) => {
       },
       {
         dataIndex: 'handle',
-        width: 310,
+        width: 170,
         render:(text, record, index)=>{
           return (
             showHandleIndex === index && (
               <div className='allHandle'>
-                <div className='handle' onClick={(e)=>{handleClick(e, record, 1)}}>
-                  <ShareAltOutlined /><span>分享</span>
+                <div className='handle'>
+                  <Popconfirm title="提示" description={`你确定要还原【${record.fileName}】吗`}
+                    onConfirm={(e)=>{handleClick(e, record, 1)}}
+                    okText="确定" cancelText="取消">
+                    <UndoOutlined /><span>还原</span>
+                  </Popconfirm>
                 </div>
-                {/* 文件夹没有下载 */}
-                {
-                  record.folderType === 0 && (
-                    <div className='handle' onClick={(e)=>{handleClick(e, record, 2)}}>
-                      <DownloadOutlined /><span>下载</span>
-                    </div>
-                  )
-                }
-                <div className='handle' onClick={(e)=>{handleClick(e, record, 3)}}>
-                  <DeleteOutlined /><span>删除</span>
-                </div>
-                <div className='handle' onClick={(e)=>{handleClick(e, record, 4)}}>
-                  <FormOutlined /><span>重命名</span>
-                </div>
-                <div className='handle' onClick={(e)=>{handleClick(e, record, 5)}}>
-                  <DragOutlined /><span>移动</span>
+
+                <div className='handle'>
+                  <Popconfirm title="提示" description={`你确定要删除【${record.fileName}】吗`}
+                    onConfirm={(e)=>{handleClick(e, record, 2)}}
+                    okText="确定" cancelText="取消">
+                    <DeleteOutlined /><span>删除</span>
+                  </Popconfirm>
                 </div>
               </div>
             )
@@ -98,7 +97,7 @@ const index: FC<propsType> = memo((props) => {
         }
       },
       {
-        title: '修改时间',
+        title: '删除时间',
         dataIndex: 'lastUpdateTime',
         width: 170,
       },
@@ -111,8 +110,10 @@ const index: FC<propsType> = memo((props) => {
         }
       }
     ];
-  }, [data, showHandleIndex])
+  }, [showData, showHandleIndex])
 
+
+  
   
   // ----- useEffect -----
 
@@ -123,6 +124,10 @@ const index: FC<propsType> = memo((props) => {
       return window.removeEventListener('resize', handleResize)
     }
   }, [window.innerHeight])
+
+  useEffect(()=>{
+    setShowData(data)
+  },[data])
 
 
   // ----- function -----
@@ -139,75 +144,51 @@ const index: FC<propsType> = memo((props) => {
    * @param newSelectedRowKeys 
    */
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+    console.log(newSelectedRowKeys);
+    
     newSelectedRowKeys.length ? dispatch(changeBtnDisabled(false)) : dispatch(changeBtnDisabled(true))
     setSelectedRowKeys(newSelectedRowKeys);
+    dispatch(changeSelectKeys(newSelectedRowKeys))
+  };
+
+
+  const handleDelete = (key: React.Key) => {
+    const newData = showData.filter((item: any) => item.key !== key);
+    setShowData(newData);
   };
 
   /**
-   * 获取分页值与数
-   * @param page 当前页
-   * @param pageSize 页数
-   */
-  const pagiChange = (page: any, pageSize: any) =>{
-    console.log(page, pageSize);
-  }
-
-  /**
-   * 下载
-   * @param fileId 
-   */
-  const download = async (fileId: string) =>{
-    downLoadFile(fileId)
-  }
-
-  /**
-   * 表格中的五个操作
+   * 表格中的2个操作
    * @param e 
    * @param record 
    * @param index 
    */
-  const handleClick = (e: any, record: DataType, index: number) =>{
+  const handleClick = async (e: any, record: DataType, index: number) =>{
     e.stopPropagation()
     console.log(record);
+    
     switch (index) {
-      // 分享
+      // 还原
       case 1:
-        
-        break;
-      // 下载
-      case 2:download(record.fileId)
+        const res1 = await restore(record.fileId)
+        if(res1.data.status === 'success'){
+          // 不走接口，删除这一行
+          handleDelete(record.key)
+        }
         
         break;
       // 删除
-      case 3:
-        
-        break;
-      // 重命名
-      case 4:console.log('1');
-      
-        
-        break;
-      // 移动
-      case 5:
-        
+      case 2:
+        const res2 = await deleteFile(record.fileId)
+        if(res2.data.status === 'success'){
+          // 不走接口，删除这一行
+          handleDelete(record.key)
+        }
         break;
     
       default:
         break;
     }
-  }
-
-  /**
-   * 点击表格一列文字的操作，比如进入下一层文件夹或预览文件
-   */
-  const folderHandle = async (record: DataType, showImg: string) =>{
-    // 0 是文件
-    if(record.folderType === 0){
-      childRef.current?.openModel(record, showImg)
-    }else{
-      // 文件夹，获取这个文件夹的数据
-      dispatch(changeFilePid(record.fileId))
-    }  
   }
 
   // ----- view -----
@@ -268,7 +249,7 @@ const index: FC<propsType> = memo((props) => {
         <div className='showImg'>
           <img src={showImg}/>
         </div>
-        <span onClick={()=>{folderHandle(record, showImg)}}>
+        <span>
           {record.fileName}
         </span>
       </div>
@@ -277,24 +258,13 @@ const index: FC<propsType> = memo((props) => {
 
   return (
     <>
-
-      {/* <Breadcrumb separator=">" style={{marginBottom:'15px'}} items={[
-          {
-            title: '全部文件',
-          },
-          {
-            title: 'Application Center',
-            href: '',
-          }
-        ]}
-      ></Breadcrumb> */}
       <div style={{display:'none'}}>
         <Preview ref={childRef}></Preview>
       </div>
 
-      <TableStyled height={newHeight + 57}>
+      <RecyclePreStyled height={newHeight + 57}>
         <ConfigProvider locale={zh_CN}>
-          <Table rowSelection={rowSelection} columns={columns} dataSource={data} summary={()=>{
+          <Table rowSelection={rowSelection} columns={columns} dataSource={showData} summary={()=>{
             return (
                 <>
                   <Table.Summary fixed='top'></Table.Summary>
@@ -304,8 +274,7 @@ const index: FC<propsType> = memo((props) => {
             position:['bottomRight'],
             showSizeChanger: true,
             showQuickJumper: true,
-            showTotal: () => `共 ${totalCount} 条数据`,
-            onChange:pagiChange
+            showTotal: () => `共 ${totalCount} 条数据`
           }} onRow={(record, index)=>{
             return {
               onMouseEnter: () => {
@@ -317,7 +286,7 @@ const index: FC<propsType> = memo((props) => {
           >
           </Table>
         </ConfigProvider>
-      </TableStyled>
+      </RecyclePreStyled>
     </>
   )
 })

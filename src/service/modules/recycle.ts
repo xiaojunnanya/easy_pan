@@ -11,3 +11,25 @@ export const getRecycleList = (pageNo?: number, pageSize?: number) => {
         }
     })
 }
+
+// 恢复文件
+export const restore = (fileIds: string) => {
+    return jlReq.request({
+        method:'post',
+        url:"/recycle/recoverFile",
+        data:{
+            fileIds
+        }
+    })
+}
+
+// 彻底删除文件
+export const deleteFile = (fileIds: string) => {
+    return jlReq.request({
+        method:'post',
+        url:"/recycle/delFile",
+        data:{
+            fileIds
+        }
+    })
+}

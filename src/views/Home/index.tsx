@@ -17,7 +17,7 @@ import { Dropdown, MenuProps, Modal, Popover, Progress } from 'antd'
 
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { getHeaderImg, space, logout } from '@/service/modules/home'
-import setSize from '@/utils/setSize'
+import { setSize } from '@/utils'
 import { useAppDispatch } from '@/store'
 import { changeFilePid, changeLoading } from '@/store/modules/home'
 
