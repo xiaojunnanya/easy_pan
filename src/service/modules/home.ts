@@ -100,13 +100,13 @@ export const delFileToRecycle = (fileIds: string) =>{
 }
 
 // 新建文件夹
-export const createFolder = (fileName?: string, filePid?: string) =>{
+export const createFolder = (fileName: string, filePid: string) =>{
     return jlReq.request({
         method:'post',
         url:'/file/newFoloder',
         data:{
-            filePid : filePid || '0',
-            fileName: fileName || '新建文件夹'
+            filePid : filePid,
+            fileName: fileName
         }
     })
 }

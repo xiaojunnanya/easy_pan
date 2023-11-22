@@ -69,12 +69,14 @@ const All: FC= memo(() => {
         disabled: false,
         show: category === 'all',
         onClick: async ()=>{
+          // 新建文件夹这边还有问题的，在别的目录下，这个父id要传的
           const fileName = '新建文件夹' + new Date().getTime()
-          const res = await createFolder(fileName)
+          const res = await createFolder(fileName, path)
           const d = res.data.data
           d.key = res.data.data.fileId
           const a = [...data]
           a.unshift(res.data.data)
+          setTotalCount(totalCount + 1)
           setData(a)
         }
       },
@@ -157,7 +159,6 @@ const All: FC= memo(() => {
     dispatch(changeLoading(true))
     getData()
   }, [category, filePid])
-
 
   return (
     <AllStyled>
