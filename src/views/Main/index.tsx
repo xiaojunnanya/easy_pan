@@ -14,7 +14,7 @@ import { AllStyled } from './style'
 
 import Table from '@/components/Table'
 
-import { getDataList } from '@/service/modules/home'
+import { delFileToRecycle, getDataList } from '@/service/modules/home'
 
 import type { DataType } from '@/components/Table/type'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
@@ -22,18 +22,20 @@ import { useAppDispatch, useAppSelector, useAppShallowEqual } from '@/store'
 import { changeFilePid, changeLoading } from '@/store/modules/home'
 import HeaderBtn from '@/components/HeaderBtn'
 import { btnType } from '@/components/HeaderBtn/type'
-import { CloudUploadOutlined, DeleteOutlined, DragOutlined, SnippetsOutlined, SyncOutlined } from '@ant-design/icons'
-
+import { CloudUploadOutlined, DeleteOutlined, DragOutlined, ExclamationCircleFilled, SnippetsOutlined, SyncOutlined } from '@ant-design/icons'
+import { Modal } from 'antd'
+const { confirm } = Modal;
 
 
 const All: FC= memo(() => {
 
   const dispatch = useAppDispatch()
 
-  const { filePid, btnDisabled } = useAppSelector(state =>{
+  const { filePid, btnDisabled, selectKeys } = useAppSelector(state =>{
     return {
       filePid: state.home.filePid,
       btnDisabled: state.home.btnDisabled,
+      selectKeys: state.home.selectKeys
     }
   }, useAppShallowEqual)
 
@@ -64,6 +66,19 @@ const All: FC= memo(() => {
         },
         disabled: btnDisabled,
         show: true,
+        onClick: () => {
+          confirm({
+            title: '提示',
+            icon: <ExclamationCircleFilled />,
+            content: '你确定要删除这些文件吗？删除的文件可在10天内通过回收站还原',
+            async onOk() {
+              const res = await delFileToRecycle(selectKeys.join(","))
+              if(res.data.status === 'success'){
+                getData()
+              }
+            }
+          });
+        }
       },
       {
         name: '批量移动',
@@ -75,7 +90,7 @@ const All: FC= memo(() => {
         show: true,
       }
     ]
-  }, [btnDisabled, category])
+  }, [btnDisabled, category, selectKeys])
 
   
 
@@ -107,10 +122,7 @@ const All: FC= memo(() => {
    * 因为 0 和 那个fileid几乎同时请求，看谁先回来
    */
 
-  useEffect(()=>{
-    naviage('?path='+filePid)
-    
-    dispatch(changeLoading(true))
+  const getData = () =>{
     getDataList({
       category: category,
       filePid
@@ -126,6 +138,13 @@ const All: FC= memo(() => {
       dispatch(changeLoading(false))
 
     })
+  }
+
+  useEffect(()=>{
+    naviage('?path='+filePid)
+    
+    dispatch(changeLoading(true))
+    getData()
   }, [category, filePid])
 
 

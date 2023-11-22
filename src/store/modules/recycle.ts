@@ -7,8 +7,6 @@ const recycleSlice = createSlice({
     },
     reducers:{
         changeSelectKeys(state, action){
-            console.log('action.payload', action.payload);
-            
             state.selectKeys = action.payload
         }
     }

@@ -1,7 +1,7 @@
 import React, { memo, useEffect, useMemo, useRef, useState } from 'react'
 import type { FC } from 'react'
 import { DeleteOutlined, DownloadOutlined, DragOutlined, FormOutlined, ShareAltOutlined } from '@ant-design/icons'
-import { Table, ConfigProvider, Breadcrumb } from 'antd';
+import { Table, ConfigProvider, Breadcrumb, Popconfirm } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { TableStyled } from './style';
 import zh_CN from 'antd/es/locale/zh_CN';
@@ -23,8 +23,8 @@ import zipIcon from '@/assets/images/icon-image/zip.png'
 import codeIcon from '@/assets/images/icon-image/code.png'
 import Preview from './Preview';
 import type { DataType, propsType } from './type';
-import { changeBtnDisabled, changeFilePid } from '@/store/modules/home';
-import { getImage } from '@/service/modules/home';
+import { changeBtnDisabled, changeFilePid, changeSelectKeys } from '@/store/modules/home';
+import { delFileToRecycle, getImage } from '@/service/modules/home';
 
 
 
@@ -44,6 +44,8 @@ const index: FC<propsType> = memo((props) => {
   },useAppShallowEqual)
   const childRef = useRef<ChildMethods>(null)
   const dispatch = useAppDispatch()
+  // props data
+  const [ showData, setShowData ] = useState<DataType[]>(data)
 
   // ----- useState -----
   
@@ -83,8 +85,12 @@ const index: FC<propsType> = memo((props) => {
                     </div>
                   )
                 }
-                <div className='handle' onClick={(e)=>{handleClick(e, record, 3)}}>
-                  <DeleteOutlined /><span>删除</span>
+                <div className='handle'>
+                  <Popconfirm title="提示" description={`你确定要删除【${record.fileName}】吗`}
+                    onConfirm={(e)=>{handleClick(e, record, 3)}}
+                    okText="确定" cancelText="取消">
+                    <DeleteOutlined /><span>删除</span>
+                  </Popconfirm>
                 </div>
                 <div className='handle' onClick={(e)=>{handleClick(e, record, 4)}}>
                   <FormOutlined /><span>重命名</span>
@@ -111,7 +117,7 @@ const index: FC<propsType> = memo((props) => {
         }
       }
     ];
-  }, [data, showHandleIndex])
+  }, [showData, showHandleIndex])
 
   
   // ----- useEffect -----
@@ -123,6 +129,10 @@ const index: FC<propsType> = memo((props) => {
       return window.removeEventListener('resize', handleResize)
     }
   }, [window.innerHeight])
+
+  useEffect(()=>{
+    setShowData(data)
+  },[data])
 
 
   // ----- function -----
@@ -141,6 +151,7 @@ const index: FC<propsType> = memo((props) => {
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     newSelectedRowKeys.length ? dispatch(changeBtnDisabled(false)) : dispatch(changeBtnDisabled(true))
     setSelectedRowKeys(newSelectedRowKeys);
+    dispatch(changeSelectKeys(newSelectedRowKeys))
   };
 
   /**
@@ -166,7 +177,7 @@ const index: FC<propsType> = memo((props) => {
    * @param record 
    * @param index 
    */
-  const handleClick = (e: any, record: DataType, index: number) =>{
+  const handleClick = async (e: any, record: DataType, index: number) =>{
     e.stopPropagation()
     console.log(record);
     switch (index) {
@@ -180,6 +191,11 @@ const index: FC<propsType> = memo((props) => {
         break;
       // 删除
       case 3:
+        const res2 = await delFileToRecycle(record.fileId)
+        if(res2.data.status === 'success'){
+          // 不走接口，删除这一行
+          handleDelete(record.key)
+        }
         
         break;
       // 重命名
@@ -196,6 +212,11 @@ const index: FC<propsType> = memo((props) => {
         break;
     }
   }
+
+  const handleDelete = (key: React.Key) => {
+    const newData = showData.filter((item: any) => item.key !== key);
+    setShowData(newData);
+  };
 
   /**
    * 点击表格一列文字的操作，比如进入下一层文件夹或预览文件
@@ -294,7 +315,7 @@ const index: FC<propsType> = memo((props) => {
 
       <TableStyled height={newHeight + 57}>
         <ConfigProvider locale={zh_CN}>
-          <Table rowSelection={rowSelection} columns={columns} dataSource={data} summary={()=>{
+          <Table rowSelection={rowSelection} columns={columns} dataSource={showData} summary={()=>{
             return (
                 <>
                   <Table.Summary fixed='top'></Table.Summary>

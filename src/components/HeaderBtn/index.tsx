@@ -52,12 +52,12 @@ const index: FC<propsType> = memo((props) => {
   return (
     <MainHeaderStyled>
         {bntshow}
-        <div>
+        {/* <div>
             <Search placeholder="输入文件名进行搜索" allowClear onSearch={onSearch} style={{ width: 300 }} />
         </div>
         <div>
             <SyncOutlined className="iconfont icon-refresh" onClick={upDate} spin={isSpin}/>
-        </div>
+        </div> */}
     </MainHeaderStyled>
   )
 })

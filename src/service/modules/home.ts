@@ -56,29 +56,6 @@ export const getDataList = (data: dataListType) =>{
     })
 }
 
-export const a = () =>{
-    const source = axios.CancelToken.source();
-    const requestConfig = {
-        method: 'post',
-        url: '/file/loadDataList',
-        data:{
-            category: 'all',
-            filePid: '0'
-        },
-        cancelToken: source.token, // 将token传递给cancelToken
-      };
-    
-      // 发送axios请求
-      const request = jlReq.request(requestConfig);
-    
-      return {
-        ...request,
-        cancel: () => {
-            source.cancel('Request canceled by user');
-        },
-      };
-}
-
 
 // 获取文件信息
 // http://127.0.0.1:7090/api/file/getFile/{fileId}
@@ -109,4 +86,16 @@ export const getDownCode = (id: string) =>{
 // 下载文件
 export const downloadFile = (code: string) =>{
     return `/api/file/download/${code}`
+}
+
+// 删除到回收站
+// http://127.0.0.1:7090/api/file/delFile
+export const delFileToRecycle = (fileIds: string) =>{
+    return jlReq.request({
+        method:'post',
+        url:'/file/delFile',
+        data:{
+            fileIds
+        }
+    })
 }
