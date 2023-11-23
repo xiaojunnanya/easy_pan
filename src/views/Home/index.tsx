@@ -12,36 +12,16 @@ import { HomeStyled } from './style'
 import { AppstoreAddOutlined, CloudUploadOutlined, CustomerServiceOutlined, 
   DeleteOutlined, EllipsisOutlined, FileImageOutlined, 
   FileWordOutlined, HomeOutlined, PlayCircleOutlined, SettingOutlined, 
-  ShareAltOutlined, SwapOutlined, SyncOutlined, ExclamationCircleFilled } from '@ant-design/icons'
-import { Dropdown, MenuProps, Modal, Popover, Progress } from 'antd'
+  ShareAltOutlined, SwapOutlined, SyncOutlined } from '@ant-design/icons'
+import { Popover, Progress } from 'antd'
 
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
-import { getHeaderImg, space, logout } from '@/service/modules/home'
+import { space } from '@/service/modules/home'
 import { setSize } from '@/utils'
 import { useAppDispatch } from '@/store'
 import { changeFilePid, changeLoading } from '@/store/modules/home'
+import HeadImg from './HeadImg'
 
-// 定义：
-const { confirm } = Modal;
-
-const items: MenuProps['items'] = [
-  {
-    key: '1',
-    label: (<span> 修改头像 </span>),
-  },
-  {
-    key: '2',
-    label: (<span> 修改账户 </span>),
-  },
-  {
-    key: '3',
-    label: (<span> 修改密码 </span>),
-  },
-  {
-    key: '4',
-    label: (<span> 退出登录 </span>),
-  },
-];
 
 interface menuType{
   name: string,
@@ -161,8 +141,6 @@ const menus: menuTypes = [
   },
 ];
 
-const { nickName, userId } = JSON.parse(sessionStorage.getItem('userInfo') || JSON.stringify({nickName:'', userId:''}))
-
 const Home = memo(() => {
 
   const dispatch = useAppDispatch()
@@ -205,37 +183,6 @@ const Home = memo(() => {
     }
   }, [])
 
-
-
-  // 方法：
-  const onClick: MenuProps['onClick'] = ({ key }) => {
-    switch (key) {
-      case '1': break;
-      case '2': break;
-      case '3': break;
-      case '4': 
-        showConfirm()
-        break;
-    
-      default:
-        break;
-    }
-  };
-
-  const showConfirm = () => {
-    confirm({
-      title: '提示',
-      icon: <ExclamationCircleFilled />,
-      content: '你确定要退出登录吗',
-      cancelText:"取消",
-      okText:"确定",
-      onOk() {
-        logout()
-        sessionStorage.removeItem('userInfo')
-        naviage('/login')
-      },
-    });
-  };
 
   const oneMenu = (item: menuType) =>{
     setShowSecondaryMenu(item)
@@ -334,14 +281,8 @@ const Home = memo(() => {
               <SwapOutlined className='icon-transfer'/>
             </Popover>
 
-            <Dropdown menu={{ items, onClick }} placement="bottom" arrow>
-              <div className="user-info">
-                <div className="avatar">
-                  <img src={getHeaderImg(userId)} alt="" />
-                </div>
-                <div className="nick-name">{ nickName }</div>
-              </div>
-            </Dropdown>
+            <HeadImg></HeadImg>
+            
           </div>
         </div>
         <div className="body">

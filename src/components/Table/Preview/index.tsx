@@ -42,6 +42,7 @@ const Preview = memo(forwardRef((props, ref) => {
       switch (record.fileType) {
         // 视频
         case 1:
+          // http://netdisk.kbws.xyz/api/file/ts/getVideoInfo/${record.fileId}
           break;
         // 音频
         case 2:

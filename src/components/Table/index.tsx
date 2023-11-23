@@ -1,7 +1,7 @@
 import React, { memo, useEffect, useMemo, useRef, useState } from 'react'
 import type { FC } from 'react'
 import { DeleteOutlined, DownloadOutlined, DragOutlined, FormOutlined, ShareAltOutlined } from '@ant-design/icons'
-import { Table, ConfigProvider, Breadcrumb, Popconfirm } from 'antd';
+import { Table, ConfigProvider, Popconfirm } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { TableStyled } from './style';
 import zh_CN from 'antd/es/locale/zh_CN';
@@ -298,17 +298,6 @@ const index: FC<propsType> = memo((props) => {
 
   return (
     <>
-
-      {/* <Breadcrumb separator=">" style={{marginBottom:'15px'}} items={[
-          {
-            title: '全部文件',
-          },
-          {
-            title: 'Application Center',
-            href: '',
-          }
-        ]}
-      ></Breadcrumb> */}
       <div style={{display:'none'}}>
         <Preview ref={childRef}></Preview>
       </div>

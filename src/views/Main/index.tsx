@@ -23,7 +23,7 @@ import { changeFilePid, changeLoading } from '@/store/modules/home'
 import HeaderBtn from '@/components/HeaderBtn'
 import { btnType } from '@/components/HeaderBtn/type'
 import { CloudUploadOutlined, DeleteOutlined, DragOutlined, ExclamationCircleFilled, SnippetsOutlined, SyncOutlined } from '@ant-design/icons'
-import { Modal } from 'antd'
+import { Breadcrumb, Modal } from 'antd'
 const { confirm } = Modal;
 
 
@@ -41,16 +41,21 @@ const All: FC= memo(() => {
 
   const { category = 'all' } = useParams()
 
-  
+  const naviage = useNavigate()
+  const [ searchParams ] = useSearchParams()
+  const query = Object.fromEntries(searchParams.entries())
+
+  const [ path, setPath ] = useState(query.path || '0')
+
+  useEffect(()=>{
+    setPath(filePid)
+  }, [filePid])
+
 
   const [ data, setData ] = useState<DataType[]>([])
   // 总数
   const [ totalCount, setTotalCount ] = useState(0)
   
-  const naviage = useNavigate()
-  const [ searchParams ] = useSearchParams()
-  const query = Object.fromEntries(searchParams.entries())
-  const path = query.path || '0'
 
   const showBtn: btnType[] = useMemo(()=>{
     return [
@@ -115,7 +120,7 @@ const All: FC= memo(() => {
   }, [btnDisabled, category, selectKeys, data])
 
 
-  // 在第一次进来的时候如果path有的话就使用path
+  // 为了在path直接进入的时候设置的
   useEffect(()=>{
       // 将其转为一个普通的对象
     dispatch(changeFilePid(path))
@@ -130,15 +135,11 @@ const All: FC= memo(() => {
    *    没有，使用path0
    */
 
-  /**
-   * 路由存在一定的问题：在一个有文件夹的文件夹中刷新，可能会显示所有的
-   * 因为 0 和 那个fileid几乎同时请求，看谁先回来
-   */
-
   const getData = () =>{
     getDataList({
       category: category,
-      filePid
+      filePid : path
+      // filePid : filePid,
     }).then(res =>{
       // 遍历为其添加上key
       const { list } = res.data.data
@@ -154,20 +155,30 @@ const All: FC= memo(() => {
   }
 
   useEffect(()=>{
-    naviage('?path='+filePid)
-    
     dispatch(changeLoading(true))
+    naviage('?path='+path)
     getData()
-  }, [category, filePid])
+  }, [category, path])
 
   return (
     <AllStyled>
       <HeaderBtn isShowFolder={category === 'all'} showBtn={showBtn}></HeaderBtn>
-      {/* <HeaderBtn isShowFolder={category === 'all'} btnDisabled={btnDisabled}></HeaderBtn> */}
+
+      {/* <Breadcrumb separator=">" style={{marginBottom:'15px'}} items={[
+          {
+            title: '全部文件',
+            href:"?path=0"
+          },
+          {
+            title: 'Application Center',
+            href: '?path=90124duRIX'
+          }
+        ]}
+      ></Breadcrumb> */}
+
       {
         totalCount ? (
           <div className='table'>
-            {/* <HeaderBtn isShowFolder={isShowFolder} btnDisabled={buttonDisabled}></HeaderBtn> */}
             <Table data={data}></Table>
           </div>
         ) : (
