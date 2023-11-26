@@ -3,6 +3,7 @@
 import { configureStore } from "@reduxjs/toolkit"
 import homeReducer from './modules/home'
 import recycleReducer from './modules/recycle'
+import commonReducer from './modules/common'
 
 import { useSelector, useDispatch, shallowEqual } from 'react-redux'
 import type { TypedUseSelectorHook } from 'react-redux'
@@ -11,6 +12,7 @@ const store = configureStore({
     reducer: {
         home: homeReducer,
         recycle: recycleReducer,
+        common: commonReducer,
     }
 })
 

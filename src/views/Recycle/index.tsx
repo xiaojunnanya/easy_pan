@@ -10,8 +10,8 @@
 import { DataType } from '@/components/Table/type'
 import { deleteFile, getRecycleList, restore } from '@/service/modules/recycle'
 import { useAppDispatch, useAppSelector, useAppShallowEqual } from '@/store'
-import { changeLoading } from '@/store/modules/home'
-import Table from '@/components/Table/Wait/RecyclePre'
+import { changeLoading } from '@/store/modules/common'
+import Table from '@/components/Table/Wait/RecycleTable'
 import React, { memo, useEffect, useMemo, useState } from 'react'
 
 import type { btnType } from '@/components/HeaderBtn/type'
@@ -85,6 +85,7 @@ const Recycle = memo(() => {
   }, [btnDisabled, selectKeys])
 
   const getData = () =>{
+    dispatch(changeLoading(true))
     getRecycleList().then(res =>{
       // 遍历为其添加上key
       const { list } = res?.data?.data

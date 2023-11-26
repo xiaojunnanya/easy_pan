@@ -9,24 +9,12 @@ import { useAppDispatch, useAppSelector, useAppShallowEqual } from '@/store';
 
 import { setSize } from '@/utils'
 
-
-import folderIcon from '@/assets/images/icon-image/folder.png'
-
-import videoIcon from '@/assets/images/icon-image/video.png'
-import musicIcon from '@/assets/images/icon-image/music.png'
-import pdfIcon from '@/assets/images/icon-image/pdf.png'
-import excelIcon from '@/assets/images/icon-image/excel.png'
-import wordIcon from '@/assets/images/icon-image/word.png'
-import txtIcon from '@/assets/images/icon-image/txt.png'
-import otherIcon from '@/assets/images/icon-image/others.png'
-import zipIcon from '@/assets/images/icon-image/zip.png'
-import codeIcon from '@/assets/images/icon-image/code.png'
 import Preview from '../Preview';
 import type { DataType, propsType } from '../type';
 import { changeBtnDisabled } from '@/store/modules/home';
-import { getImage } from '@/service/modules/home';
 import { deleteFile, restore } from '@/service/modules/recycle';
 import { changeSelectKeys } from '@/store/modules/recycle';
+import RenderName from '../Handle/RenderName';
 
 
 
@@ -40,7 +28,7 @@ const index: FC<propsType> = memo((props) => {
   const { data } = props
   const { isLoading } = useAppSelector(state =>{
     return {
-      isLoading: state.home.isLoading
+      isLoading: state.common.isLoading
     }
   },useAppShallowEqual)
   const childRef = useRef<ChildMethods>(null)
@@ -66,7 +54,7 @@ const index: FC<propsType> = memo((props) => {
         title: '文件名',
         dataIndex: 'name',
         render: (text, record) => {
-          return renderNameAndImg(record)
+          return <RenderName record={record}></RenderName>
         },
       },
       {
@@ -197,64 +185,6 @@ const index: FC<propsType> = memo((props) => {
     selectedRowKeys,
     onChange: onSelectChange,
   };
-
-  // 文字图标渲染
-  const renderNameAndImg = (record: DataType) =>{
-    // 默认是文件夹
-    let showImg = folderIcon
-
-    // 是文件,1是文件夹
-    if( record.folderType === 0 ){
-      
-      switch (record.fileType) {
-        case 1:
-          showImg = record.fileCover ? getImage(record.fileCover) : videoIcon
-          break;
-
-        case 2:showImg = musicIcon
-          break;
-
-        case 3:
-          showImg = record.fileCover ? getImage(record.fileCover) : folderIcon
-          break;
-
-        case 4:showImg = pdfIcon
-          break;
-
-        case 5:showImg = wordIcon
-          break;
-
-        case 6:showImg = excelIcon
-          break;
-
-        case 7:showImg = txtIcon
-          break;
-
-        case 8:showImg = codeIcon
-          break;
-
-        case 9:showImg = zipIcon
-          break;
-
-        case 10:showImg = otherIcon
-          break;
-      
-        default:
-          break;
-      }
-    }
-
-    return (
-      <div className='folderType'>
-        <div className='showImg'>
-          <img src={showImg}/>
-        </div>
-        <span>
-          {record.fileName}
-        </span>
-      </div>
-    )
-  }
 
   return (
     <>

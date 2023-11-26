@@ -8,11 +8,9 @@ export const getHeaderImg = ( userId: string ) =>{
 
 // 获取图片地址
 export const getImage = ( img: string | null ) =>{
-    // http://netdisk.kbws.xyz/api/file/getImage/
     return `/api/file/getImage/${img}`
 }
 
-// http://netdisk.kbws.xyz/api/file/ts/getVideoInfo/4xGwxqPPV7
 // 获取视频地址
 export const getVideo = ( video: string | null ) =>{
     return `/api/file/ts/getVideoInfo/${video}`
@@ -58,7 +56,6 @@ export const getDataList = (data: dataListType) =>{
 
 
 // 获取文件信息
-// http://127.0.0.1:7090/api/file/getFile/{fileId}
 export const getFileInfo = (fileId: string) =>{
     return jlReq.request({
         method:'get',
@@ -82,7 +79,7 @@ export const getDownCode = (id: string) =>{
         url:`/file/createDownloadUrl/${id}`
     })
 }
-// http://netdisk.kbws.xyz/api/file/download/{code}
+
 // 下载文件
 export const downloadFile = (code: string) =>{
     return `/api/file/download/${code}`

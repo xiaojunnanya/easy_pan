@@ -8,13 +8,12 @@ const { Search } = Input;
 
 // isShowFolder为ture显示文件夹
 interface propsType{
-    isShowFolder?: boolean,
     showBtn: btnType[],
 }
 
-// 暂时不用了
+
 const index: FC<propsType> = memo((props) => {
-    const { isShowFolder, showBtn } = props
+    const { showBtn } = props
     const [ isSpin, setIsSpin ] = useState<boolean>(false)
     
     const onSearch = () =>{

@@ -19,10 +19,11 @@ import { createFolder, delFileToRecycle, getDataList } from '@/service/modules/h
 import type { DataType } from '@/components/Table/type'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useAppDispatch, useAppSelector, useAppShallowEqual } from '@/store'
-import { changeFilePid, changeLoading } from '@/store/modules/home'
+import { changeFilePid } from '@/store/modules/home'
+import {  changeLoading } from '@/store/modules/common'
 import HeaderBtn from '@/components/HeaderBtn'
 import { btnType } from '@/components/HeaderBtn/type'
-import { CloudUploadOutlined, DeleteOutlined, DragOutlined, ExclamationCircleFilled, SnippetsOutlined, SyncOutlined } from '@ant-design/icons'
+import { CloudUploadOutlined, DeleteOutlined, DragOutlined, ExclamationCircleFilled, SnippetsOutlined } from '@ant-design/icons'
 import { Breadcrumb, Modal } from 'antd'
 import { BreadcrumbItemType, BreadcrumbSeparatorType } from 'antd/es/breadcrumb/Breadcrumb'
 const { confirm } = Modal;
@@ -182,7 +183,7 @@ const All: FC= memo(() => {
 
   return (
     <AllStyled>
-      <HeaderBtn isShowFolder={category === 'all'} showBtn={showBtn}></HeaderBtn>
+      <HeaderBtn showBtn={showBtn}></HeaderBtn>
 
       {/* <Breadcrumb separator=" " style={{marginBottom:'15px'}} items={breadcrumbItem}
       ></Breadcrumb> */}

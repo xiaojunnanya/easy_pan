@@ -36,6 +36,7 @@ const index = memo(forwardRef<ChildShareMethods>((props, ref) => {
       })
       setIsModalOpen(true)
       setRecordData(record)
+      setCancelText('取消')
     }
 
     const handleOk = async () => {

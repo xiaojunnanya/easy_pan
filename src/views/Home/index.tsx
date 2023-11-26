@@ -19,7 +19,8 @@ import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { space } from '@/service/modules/home'
 import { setSize } from '@/utils'
 import { useAppDispatch } from '@/store'
-import { changeFilePid, changeLoading } from '@/store/modules/home'
+import { changeFilePid } from '@/store/modules/home'
+import { changeLoading } from '@/store/modules/common'
 import HeadImg from './HeadImg'
 
 

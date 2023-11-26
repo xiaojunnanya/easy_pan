@@ -3,15 +3,11 @@ import { createSlice } from '@reduxjs/toolkit'
 const countSlice = createSlice({
     name:"home",
     initialState:{
-        isLoading: false,
         filePid: '0',
         btnDisabled: true,
         selectKeys: []
     },
     reducers:{
-        changeLoading(state, action){
-            state.isLoading = action.payload
-        },
         changeFilePid(state, { payload }){
             state.filePid = payload
         },
@@ -24,6 +20,6 @@ const countSlice = createSlice({
     }
 })
 
-export const { changeLoading, changeFilePid, changeBtnDisabled, changeSelectKeys } = countSlice.actions
+export const { changeFilePid, changeBtnDisabled, changeSelectKeys } = countSlice.actions
 
 export default countSlice.reducer
