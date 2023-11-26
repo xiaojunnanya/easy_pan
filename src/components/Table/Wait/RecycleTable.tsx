@@ -132,8 +132,6 @@ const index: FC<propsType> = memo((props) => {
    * @param newSelectedRowKeys 
    */
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    console.log(newSelectedRowKeys);
-    
     newSelectedRowKeys.length ? dispatch(changeBtnDisabled(false)) : dispatch(changeBtnDisabled(true))
     setSelectedRowKeys(newSelectedRowKeys);
     dispatch(changeSelectKeys(newSelectedRowKeys))

@@ -62,8 +62,9 @@ const Share = memo(() => {
       // 遍历为其添加上key
       const { list } = res?.data?.data
 
+      // 对分享的key 单独处理一下
       for (const item of list) {
-        item.key = item.fileId
+        item.key = item.fileId + item.code
       }
       setData(list)
       dispatch(changeLoading(false))

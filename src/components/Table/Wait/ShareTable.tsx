@@ -135,7 +135,6 @@ const index: FC<propsType> = memo((props) => {
     for (const item of selectedRows) {
       arr.push(item.shareId)
     }
-    
     newSelectedRowKeys.length ? dispatch(changeBtnDisabled(false)) : dispatch(changeBtnDisabled(true))
     setSelectedRowKeys(newSelectedRowKeys);
     dispatch(changeSelectKeys(arr))

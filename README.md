@@ -45,7 +45,7 @@
 常见的并没有做解释
 - `spark-md5`：用户输入密码加密
 - `highlight.js`：代码高亮
-- `clipboard`：复制到剪切板
+- `copy-to-clipboard`：复制到剪切板
 - `react-pdf`：pdf预览
 
 
