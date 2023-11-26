@@ -10,7 +10,8 @@
 export const TIMEOUT = 10000
 
 // 设置开发环境和生产环境
-export let BASE_URL = ''
+export let BASE_URL = '' 
+export let SHOW_BASE_URL = 'http://netdisk.kbws.xyz'
 if(process.env.NODE_ENV === 'development'){
     BASE_URL = '/api'
 }else{

@@ -24,6 +24,7 @@ import HeaderBtn from '@/components/HeaderBtn'
 import { btnType } from '@/components/HeaderBtn/type'
 import { CloudUploadOutlined, DeleteOutlined, DragOutlined, ExclamationCircleFilled, SnippetsOutlined, SyncOutlined } from '@ant-design/icons'
 import { Breadcrumb, Modal } from 'antd'
+import { BreadcrumbItemType, BreadcrumbSeparatorType } from 'antd/es/breadcrumb/Breadcrumb'
 const { confirm } = Modal;
 
 
@@ -44,17 +45,24 @@ const All: FC= memo(() => {
   const naviage = useNavigate()
   const [ searchParams ] = useSearchParams()
   const query = Object.fromEntries(searchParams.entries())
-
-  const [ path, setPath ] = useState(query.path || '0')
-
-  useEffect(()=>{
-    setPath(filePid)
-  }, [filePid])
-
+  const p = query.path || '0'
+ 
 
   const [ data, setData ] = useState<DataType[]>([])
   // 总数
   const [ totalCount, setTotalCount ] = useState(0)
+  const [ path, setPath ] = useState(query.path || '0')
+  const [breadcrumbItem, setBreadcrumbItem] = useState<Partial<BreadcrumbItemType & BreadcrumbSeparatorType>[]>(() => [
+    {
+      title: "返回首页",
+      href: "?path=0"
+    },
+    {
+      title: "返回上一级",
+      href: "?path=0"
+    }
+  ]);  
+  
   
 
   const showBtn: btnType[] = useMemo(()=>{
@@ -126,6 +134,23 @@ const All: FC= memo(() => {
     dispatch(changeFilePid(path))
   }, [path])
   
+  
+
+  useEffect(()=>{
+    dispatch(changeLoading(true))
+    naviage('?path='+path)
+    getData()
+  }, [category, path])
+
+  useEffect(()=>{
+    setPath(filePid)
+  }, [filePid])
+
+  // 路由回撤的时候，会导致页面path直接监听不到
+  useEffect(()=>{
+    dispatch(changeFilePid(p))
+  }, [p])
+
   /**
    * url path的思路
    * 判断query有没有path
@@ -154,26 +179,12 @@ const All: FC= memo(() => {
     })
   }
 
-  useEffect(()=>{
-    dispatch(changeLoading(true))
-    naviage('?path='+path)
-    getData()
-  }, [category, path])
 
   return (
     <AllStyled>
       <HeaderBtn isShowFolder={category === 'all'} showBtn={showBtn}></HeaderBtn>
 
-      {/* <Breadcrumb separator=">" style={{marginBottom:'15px'}} items={[
-          {
-            title: '全部文件',
-            href:"?path=0"
-          },
-          {
-            title: 'Application Center',
-            href: '?path=90124duRIX'
-          }
-        ]}
+      {/* <Breadcrumb separator=" " style={{marginBottom:'15px'}} items={breadcrumbItem}
       ></Breadcrumb> */}
 
       {

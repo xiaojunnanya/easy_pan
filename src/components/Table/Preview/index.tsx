@@ -7,15 +7,16 @@ import { PreviewStyled } from './style';
 import CodeBlock from '@/utils/CodeBlock';
 import DocViewer, { PDFRenderer } from "@cyntler/react-doc-viewer";
 import { downLoadFile, setSize } from '@/utils';
+import { ChildPreviewMethods } from '..';
 // import { Document, Page } from 'react-pdf';
 
 
-const Preview = memo(forwardRef((props, ref) => {
+const Preview = memo(forwardRef<ChildPreviewMethods>((props, ref) => {
 
   // 暴露句柄
   useImperativeHandle(ref, () => ({
     openModel,
-  }));
+  }), []);
   const userInfo = JSON.parse(sessionStorage.getItem("userInfo") || "{}");
 
   const [open, setOpen] = useState(false);

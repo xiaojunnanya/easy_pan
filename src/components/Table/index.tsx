@@ -1,7 +1,7 @@
 import React, { memo, useEffect, useMemo, useRef, useState } from 'react'
 import type { FC } from 'react'
 import { DeleteOutlined, DownloadOutlined, DragOutlined, FormOutlined, ShareAltOutlined } from '@ant-design/icons'
-import { Table, ConfigProvider, Popconfirm } from 'antd';
+import { Table, ConfigProvider, Popconfirm, Modal } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { TableStyled } from './style';
 import zh_CN from 'antd/es/locale/zh_CN';
@@ -25,11 +25,15 @@ import Preview from './Preview';
 import type { DataType, propsType } from './type';
 import { changeBtnDisabled, changeFilePid, changeSelectKeys } from '@/store/modules/home';
 import { delFileToRecycle, getImage } from '@/service/modules/home';
+import Share from './Handle/Share';
 
 
 
-interface ChildMethods {
+export interface ChildPreviewMethods {
   openModel: (record: DataType, img: string) => void;
+}
+export interface ChildShareMethods {
+  openModel: (record: DataType) => void;
 }
 
 
@@ -42,7 +46,8 @@ const index: FC<propsType> = memo((props) => {
       isLoading: state.home.isLoading
     }
   },useAppShallowEqual)
-  const childRef = useRef<ChildMethods>(null)
+  const childPreviewRef = useRef<ChildPreviewMethods>(null)
+  const childShareRef = useRef<ChildShareMethods>(null)
   const dispatch = useAppDispatch()
   // props data
   const [ showData, setShowData ] = useState<DataType[]>(data)
@@ -179,10 +184,11 @@ const index: FC<propsType> = memo((props) => {
    */
   const handleClick = async (e: any, record: DataType, index: number) =>{
     e.stopPropagation()
-    console.log(record);
     switch (index) {
       // 分享
       case 1:
+        childShareRef.current?.openModel(record)
+        // console.log(childShareRef.current);
         
         break;
       // 下载
@@ -224,7 +230,7 @@ const index: FC<propsType> = memo((props) => {
   const folderHandle = async (record: DataType, showImg: string) =>{
     // 0 是文件
     if(record.folderType === 0){
-      childRef.current?.openModel(record, showImg)
+      childPreviewRef.current?.openModel(record, showImg)
     }else{
       // 文件夹，获取这个文件夹的数据
       dispatch(changeFilePid(record.fileId))
@@ -299,7 +305,8 @@ const index: FC<propsType> = memo((props) => {
   return (
     <>
       <div style={{display:'none'}}>
-        <Preview ref={childRef}></Preview>
+        <Preview ref={childPreviewRef}></Preview>
+        <Share ref={childShareRef}></Share>
       </div>
 
       <TableStyled height={newHeight + 57}>

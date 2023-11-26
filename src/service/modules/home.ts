@@ -1,4 +1,4 @@
-import axios from "axios";
+
 import { jlReq } from "..";
 
 // 获取头像
