@@ -37,7 +37,7 @@ const All: FC= memo(() => {
     return {
       filePid: state.home.filePid,
       btnDisabled: state.home.btnDisabled,
-      selectKeys: state.home.selectKeys
+      selectKeys: state.common.selectKeys
     }
   }, useAppShallowEqual)
 

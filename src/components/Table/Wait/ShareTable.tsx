@@ -11,9 +11,11 @@ import Preview from '../Preview';
 import type { DataType, propsType } from '../type';
 import { changeBtnDisabled } from '@/store/modules/home';
 import { deleteFile, restore } from '@/service/modules/recycle';
-import { changeSelectKeys } from '@/store/modules/recycle';
+import { changeSelectKeys } from '@/store/modules/common';
 import RenderName from '../Handle/RenderName';
 import { cancelShare } from '@/service/modules/share';
+import { TableRowSelection } from 'antd/es/table/interface';
+import { coppyUrl } from '@/utils';
 
 
 
@@ -71,12 +73,8 @@ const index: FC<propsType> = memo((props) => {
                   </Popconfirm>
                 </div>
 
-                <div className='handle'>
-                  <Popconfirm title="提示" description={`你确定要删除【${record.fileName}】吗`}
-                    onConfirm={(e)=>{handleClick(e, record, 2)}}
-                    okText="确定" cancelText="取消">
-                    <StopOutlined /><span>复制链接</span>
-                  </Popconfirm>
+                <div className='handle' onClick={(e)=>{handleClick(e, record, 2)}}>
+                  <StopOutlined /><span>复制链接</span>
                 </div>
               </div>
             )
@@ -132,12 +130,15 @@ const index: FC<propsType> = memo((props) => {
    * 点击多选框的时候触发
    * @param newSelectedRowKeys 
    */
-  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    console.log(newSelectedRowKeys);
+  const onSelectChange = (newSelectedRowKeys: React.Key[], selectedRows: DataType[]) => {
+    const arr = []
+    for (const item of selectedRows) {
+      arr.push(item.shareId)
+    }
     
     newSelectedRowKeys.length ? dispatch(changeBtnDisabled(false)) : dispatch(changeBtnDisabled(true))
     setSelectedRowKeys(newSelectedRowKeys);
-    dispatch(changeSelectKeys(newSelectedRowKeys))
+    dispatch(changeSelectKeys(arr))
   };
 
 
@@ -154,7 +155,6 @@ const index: FC<propsType> = memo((props) => {
    */
   const handleClick = async (e: any, record: DataType, index: number) =>{
     e.stopPropagation()
-    console.log(record);
     
     switch (index) {
       // 取消分享
@@ -168,11 +168,7 @@ const index: FC<propsType> = memo((props) => {
         break;
       // 复制链接
       case 2:
-        const res2 = await deleteFile(record.fileId)
-        if(res2.data.status === 'success'){
-          // 不走接口，删除这一行
-          handleDelete(record.key)
-        }
+        coppyUrl(record.shareId, record.code)
         break;
     
       default:
@@ -184,7 +180,7 @@ const index: FC<propsType> = memo((props) => {
 
   const rowSelection = {
     selectedRowKeys,
-    onChange: onSelectChange,
+    onChange: onSelectChange as unknown as TableRowSelection<DataType>['onChange'],
   };
 
 

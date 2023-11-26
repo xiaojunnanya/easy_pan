@@ -11,7 +11,8 @@ import { downLoadFile, setSize } from '@/utils'
 
 import Preview from './Preview';
 import type { DataType, propsType } from './type';
-import { changeBtnDisabled, changeFilePid, changeSelectKeys } from '@/store/modules/home';
+import { changeBtnDisabled, changeFilePid } from '@/store/modules/home';
+import { changeSelectKeys } from '@/store/modules/common';
 import { delFileToRecycle } from '@/service/modules/home';
 import Share from './Handle/Share';
 import RenderName from './Handle/RenderName';

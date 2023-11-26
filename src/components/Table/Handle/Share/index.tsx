@@ -2,8 +2,8 @@ import { Button, Form, Modal, Radio, message } from 'antd'
 import React, { forwardRef, memo, useImperativeHandle, useRef, useState } from 'react'
 import { DataType } from '../../type';
 import { ChildShareMethods } from '../..';
-import { shareFile, shareFileUrl } from '@/service/modules/share';
-import copy from 'copy-to-clipboard';
+import { shareFile } from '@/service/modules/share';
+import { coppyUrl } from '@/utils';
 
 const index = memo(forwardRef<ChildShareMethods>((props, ref) => {
   const [form] = Form.useForm(); // 使用 useForm 创建表单实例
@@ -46,17 +46,11 @@ const index = memo(forwardRef<ChildShareMethods>((props, ref) => {
       console.log(res1.data.data.code); // 提取码: code
       console.log(res1.data.data.shareId); // 分享连接:http://netdisk.kbws.xyz/share/shareId
       setShareUrl({
-        shareId: shareFileUrl(res1.data.data.shareId),
+        shareId: res1.data.data.shareId,
         code: res1.data.data.code
       })
       setCancelText('关闭')
     }
-
-    function coppyUrl(url: any){
-      copy('分享链接：'+url.shareId +'\n提取码：'+url.code);
-      message.destroy()
-      message.success('复制成功');
-    };
 
   return (
     <>
@@ -90,7 +84,7 @@ const index = memo(forwardRef<ChildShareMethods>((props, ref) => {
                     { shareUrl.code }
                   </Form.Item>
                   <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                    <Button type="primary" onClick={()=>coppyUrl(shareUrl)}>
+                    <Button type="primary" onClick={()=>coppyUrl(shareUrl.shareId, shareUrl.code)}>
                       复制链接及提取码
                     </Button>
                   </Form.Item>

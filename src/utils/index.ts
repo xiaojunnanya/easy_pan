@@ -1,4 +1,7 @@
 import { getDownCode, downloadFile } from "@/service/modules/home";
+import { shareFileUrl } from "@/service/modules/share";
+import { message } from "antd";
+import copy from 'copy-to-clipboard';
 
 // 将数据转为MB或GB
 export function setSize(size: number){
@@ -25,3 +28,13 @@ export async function downLoadFile(fileId: string){
     document.body.appendChild(link);
     link.click();
 }
+
+// 复制链接
+export function coppyUrl(
+    shareId: string,
+    code: string
+){
+    copy('分享链接：'+ shareFileUrl(shareId) +'\n提取码：'+code);
+    message.destroy()
+    message.success('复制成功');
+};

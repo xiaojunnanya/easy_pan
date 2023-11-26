@@ -28,10 +28,9 @@ const Recycle = memo(() => {
   const { btnDisabled, selectKeys } = useAppSelector(state =>{
     return {
       btnDisabled: state.home.btnDisabled,
-      selectKeys: state.recycle.selectKeys,
+      selectKeys: state.common.selectKeys,
     }
   }, useAppShallowEqual)
-  console.log('selectKeys', selectKeys);
   
   const [ data, setData ] = useState<DataType[]>([])
 

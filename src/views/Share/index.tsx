@@ -11,19 +11,22 @@ import React, { memo, useEffect, useMemo, useState } from 'react'
 import { ShareStyle } from './style'
 import HeaderBtn from '@/components/HeaderBtn'
 import { btnType } from '@/components/HeaderBtn/type'
-import { StopOutlined } from '@ant-design/icons'
+import { ExclamationCircleFilled, StopOutlined } from '@ant-design/icons'
 import { DataType } from '@/components/Table/type'
 import { changeLoading } from '@/store/modules/common'
 import { useAppDispatch, useAppSelector, useAppShallowEqual } from '@/store'
-import { loadShareList } from '@/service/modules/share'
+import { cancelShare, loadShareList } from '@/service/modules/share'
 import Table from '@/components/Table/Wait/ShareTable'
+import { Modal } from 'antd'
+const { confirm } = Modal;
 
 const Share = memo(() => {
   const dispatch = useAppDispatch()
 
-  const { btnDisabled } = useAppSelector(state =>{
+  const { btnDisabled,selectKeys } = useAppSelector(state =>{
     return {
       btnDisabled: state.home.btnDisabled,
+      selectKeys: state.common.selectKeys
     }
   }, useAppShallowEqual)
 
@@ -34,6 +37,19 @@ const Share = memo(() => {
         icon:<StopOutlined />,
         disabled: btnDisabled,
         show: true,
+        onClick: () => {
+          confirm({
+            title: '提示',
+            icon: <ExclamationCircleFilled />,
+            content: '你确定要取消分享这些文件吗？',
+            async onOk() {
+              const res = await cancelShare(selectKeys.join(","))
+              if(res.data.status === 'success'){
+                getData()
+              }
+            }
+          });
+        }
       },
     ]
   }, [btnDisabled])

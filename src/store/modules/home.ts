@@ -4,8 +4,7 @@ const countSlice = createSlice({
     name:"home",
     initialState:{
         filePid: '0',
-        btnDisabled: true,
-        selectKeys: []
+        btnDisabled: true
     },
     reducers:{
         changeFilePid(state, { payload }){
@@ -13,13 +12,10 @@ const countSlice = createSlice({
         },
         changeBtnDisabled(state, { payload }){
             state.btnDisabled = payload
-        },
-        changeSelectKeys(state, action){
-            state.selectKeys = action.payload
         }
     }
 })
 
-export const { changeFilePid, changeBtnDisabled, changeSelectKeys } = countSlice.actions
+export const { changeFilePid, changeBtnDisabled } = countSlice.actions
 
 export default countSlice.reducer

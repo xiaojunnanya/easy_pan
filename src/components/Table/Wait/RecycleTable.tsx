@@ -13,7 +13,7 @@ import Preview from '../Preview';
 import type { DataType, propsType } from '../type';
 import { changeBtnDisabled } from '@/store/modules/home';
 import { deleteFile, restore } from '@/service/modules/recycle';
-import { changeSelectKeys } from '@/store/modules/recycle';
+import { changeSelectKeys } from '@/store/modules/common';
 import RenderName from '../Handle/RenderName';
 
 
