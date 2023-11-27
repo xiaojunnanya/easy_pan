@@ -1,4 +1,4 @@
-import { CloudUploadOutlined, DeleteOutlined, DragOutlined, SnippetsOutlined, SyncOutlined } from '@ant-design/icons'
+import { SyncOutlined } from '@ant-design/icons'
 import { Button, Input } from 'antd'
 import React, { Fragment, memo, useState } from 'react'
 import type { FC } from 'react'
@@ -9,23 +9,25 @@ const { Search } = Input;
 // isShowFolder为ture显示文件夹
 interface propsType{
     showBtn: btnType[],
+    getData: (filterValue?: string)=> void
 }
 
 
 const index: FC<propsType> = memo((props) => {
-    const { showBtn } = props
+    const { showBtn, getData } = props
     const [ isSpin, setIsSpin ] = useState<boolean>(false)
-    
-    const onSearch = () =>{}
+    const onSearch = (e: string) =>{
+        getData(e)
+    }
 
     const upDate = () =>{
         setIsSpin(true)
+        getData()
         setTimeout(()=>{
             setIsSpin(false)
-        },2000)
+        }, 700)
     }
 
-    const upLoad = () =>{}
 
     const bntshow = showBtn?.map((item, index) =>{
         return (
@@ -47,12 +49,13 @@ const index: FC<propsType> = memo((props) => {
   return (
     <MainHeaderStyled>
         {bntshow}
-        {/* <div>
-            <Search placeholder="输入文件名进行搜索" allowClear onSearch={onSearch} style={{ width: 300 }} />
+        <div>
+            <Search placeholder="输入文件名进行搜索" allowClear onSearch={onSearch} 
+            style={{ width: 300 }}/>
         </div>
         <div>
             <SyncOutlined className="iconfont icon-refresh" onClick={upDate} spin={isSpin}/>
-        </div> */}
+        </div>
     </MainHeaderStyled>
   )
 })

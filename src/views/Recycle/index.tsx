@@ -12,7 +12,7 @@ import { deleteFile, getRecycleList, restore } from '@/service/modules/recycle'
 import { useAppDispatch, useAppSelector, useAppShallowEqual } from '@/store'
 import { changeLoading } from '@/store/modules/common'
 import Table from '@/components/Table/Wait/RecycleTable'
-import React, { memo, useEffect, useMemo, useState } from 'react'
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react'
 
 import type { btnType } from '@/components/HeaderBtn/type'
 import { DeleteOutlined, ExclamationCircleFilled, UndoOutlined } from '@ant-design/icons'
@@ -83,19 +83,24 @@ const Recycle = memo(() => {
     ]
   }, [btnDisabled, selectKeys])
 
-  const getData = () =>{
+  const getData = useCallback((filterValue?: string) =>{
     dispatch(changeLoading(true))
     getRecycleList().then(res =>{
       // 遍历为其添加上key
-      const { list } = res?.data?.data
+      let { list } = res?.data?.data
 
       for (const item of list) {
         item.key = item.fileId
       }
+      if( filterValue ){
+        list = list.filter((item: any)=>{
+          return item.fileName.includes(filterValue)
+        })
+      }
       setData(list)
       dispatch(changeLoading(false))
     })
-  }
+  }, [])
 
   useEffect(() => {
     getData()
@@ -103,7 +108,7 @@ const Recycle = memo(() => {
   
   return (
     <RecycleStyled>
-      <HeaderBtn showBtn={showBtn}></HeaderBtn>
+      <HeaderBtn showBtn={showBtn} getData={getData}></HeaderBtn>
       <Table data={data}></Table>
     </RecycleStyled>
   )

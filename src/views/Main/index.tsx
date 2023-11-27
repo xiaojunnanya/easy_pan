@@ -7,7 +7,7 @@
  * @Description: 
  * @前端实习生: 鲸落
  */
-import React, { FC, memo, useEffect, useMemo, useState } from 'react'
+import React, { FC, memo, useCallback, useEffect, useMemo, useState } from 'react'
 
 import NoData from '@/components/NoData'
 import { AllStyled } from './style'
@@ -24,8 +24,7 @@ import {  changeLoading } from '@/store/modules/common'
 import HeaderBtn from '@/components/HeaderBtn'
 import { btnType } from '@/components/HeaderBtn/type'
 import { CloudUploadOutlined, DeleteOutlined, DragOutlined, ExclamationCircleFilled, SnippetsOutlined } from '@ant-design/icons'
-import { Breadcrumb, Modal } from 'antd'
-import { BreadcrumbItemType, BreadcrumbSeparatorType } from 'antd/es/breadcrumb/Breadcrumb'
+import { Modal } from 'antd'
 const { confirm } = Modal;
 
 
@@ -46,25 +45,13 @@ const All: FC= memo(() => {
   const naviage = useNavigate()
   const [ searchParams ] = useSearchParams()
   const query = Object.fromEntries(searchParams.entries())
-  const p = query.path || '0'
+  const urlPath = query.path || '0'
  
 
   const [ data, setData ] = useState<DataType[]>([])
   // 总数
   const [ totalCount, setTotalCount ] = useState(0)
   const [ path, setPath ] = useState(query.path || '0')
-  const [breadcrumbItem, setBreadcrumbItem] = useState<Partial<BreadcrumbItemType & BreadcrumbSeparatorType>[]>(() => [
-    {
-      title: "返回首页",
-      href: "?path=0"
-    },
-    {
-      title: "返回上一级",
-      href: "?path=0"
-    }
-  ]);  
-  
-  
 
   const showBtn: btnType[] = useMemo(()=>{
     return [
@@ -83,7 +70,6 @@ const All: FC= memo(() => {
         disabled: false,
         show: category === 'all',
         onClick: async ()=>{
-          // 新建文件夹这边还有问题的，在别的目录下，这个父id要传的
           const fileName = '新建文件夹' + new Date().getTime()
           const res = await createFolder(fileName, path)
           const d = res.data.data
@@ -138,7 +124,6 @@ const All: FC= memo(() => {
   
 
   useEffect(()=>{
-    dispatch(changeLoading(true))
     naviage('?path='+path)
     getData()
   }, [category, path])
@@ -149,8 +134,8 @@ const All: FC= memo(() => {
 
   // 路由回撤的时候，会导致页面path直接监听不到
   useEffect(()=>{
-    dispatch(changeFilePid(p))
-  }, [p])
+    dispatch(changeFilePid(urlPath))
+  }, [urlPath])
 
   /**
    * url path的思路
@@ -161,32 +146,36 @@ const All: FC= memo(() => {
    *    没有，使用path0
    */
 
-  const getData = () =>{
-    getDataList({
-      category: category,
-      filePid : path
-      // filePid : filePid,
-    }).then(res =>{
-      // 遍历为其添加上key
-      const { list } = res.data.data
+  const getData = useCallback((filterValue?: string) =>{
+      dispatch(changeLoading(true))
+      getDataList({
+        category: category,
+        filePid : path
+        // filePid : filePid,
+      }).then(res =>{
+        // 遍历为其添加上key
+        let { list } = res.data.data
+  
+        for (const item of list) {
+          item.key = item.fileId
+        }
+        setTotalCount(res.data.data.totalCount)
+        if( filterValue ){
+          list = list.filter((item: any)=>{
+            return item.fileName.includes(filterValue)
+          })
+        }
+        
+        setData(list)
+        dispatch(changeLoading(false))
+      })
+    }, [category, path])
 
-      for (const item of list) {
-        item.key = item.fileId
-      }
-      setTotalCount(res.data.data.totalCount)
-      setData(list)
-      dispatch(changeLoading(false))
-
-    })
-  }
-
-
+    console.log('data', data);
+    
   return (
     <AllStyled>
-      <HeaderBtn showBtn={showBtn}></HeaderBtn>
-
-      {/* <Breadcrumb separator=" " style={{marginBottom:'15px'}} items={breadcrumbItem}
-      ></Breadcrumb> */}
+      <HeaderBtn showBtn={showBtn} getData={getData}></HeaderBtn>
 
       {
         totalCount ? (

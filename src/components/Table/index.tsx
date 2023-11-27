@@ -10,7 +10,7 @@ import { useAppDispatch, useAppSelector, useAppShallowEqual } from '@/store';
 import { downLoadFile, setSize } from '@/utils'
 
 import type { DataType, propsType } from './type';
-import { changeBtnDisabled, changeFilePid } from '@/store/modules/home';
+import { changeBtnDisabled } from '@/store/modules/home';
 import { changeSelectKeys } from '@/store/modules/common';
 import { delFileToRecycle } from '@/service/modules/home';
 import Share from './Handle/Share';

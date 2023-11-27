@@ -7,7 +7,7 @@
  * @Description: 
  * @前端实习生: 鲸落
  */
-import React, { memo, useEffect, useMemo, useState } from 'react'
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { ShareStyle } from './style'
 import HeaderBtn from '@/components/HeaderBtn'
 import { btnType } from '@/components/HeaderBtn/type'
@@ -56,20 +56,25 @@ const Share = memo(() => {
 
   const [ data, setData ] = useState<DataType[]>([])
 
-  const getData = () =>{
+  const getData = useCallback((filterValue?: string) =>{
     dispatch(changeLoading(true))
     loadShareList().then(res =>{
       // 遍历为其添加上key
-      const { list } = res?.data?.data
+      let { list } = res?.data?.data
 
       // 对分享的key 单独处理一下
       for (const item of list) {
         item.key = item.fileId + item.code
       }
+      if( filterValue ){
+        list = list.filter((item: any)=>{
+          return item.fileName.includes(filterValue)
+        })
+      }
       setData(list)
       dispatch(changeLoading(false))
     })
-  }
+  },[])
 
   useEffect(() => {
     getData()
@@ -78,7 +83,7 @@ const Share = memo(() => {
   
   return (
     <ShareStyle>
-      <HeaderBtn showBtn={showBtn}></HeaderBtn>
+      <HeaderBtn showBtn={showBtn} getData={getData}></HeaderBtn>
       <Table data={data}></Table>
     </ShareStyle>
   )

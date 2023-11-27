@@ -4,7 +4,7 @@ const countSlice = createSlice({
     name:"common",
     initialState:{
         isLoading: false,
-        selectKeys: []
+        selectKeys: [],
     },
     reducers:{
         changeLoading(state, action){

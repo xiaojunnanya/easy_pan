@@ -12,8 +12,8 @@ import { HomeStyled } from './style'
 import { AppstoreAddOutlined, CloudUploadOutlined, CustomerServiceOutlined, 
   DeleteOutlined, EllipsisOutlined, FileImageOutlined, 
   FileWordOutlined, HomeOutlined, PlayCircleOutlined, SettingOutlined, 
-  ShareAltOutlined, SwapOutlined, SyncOutlined } from '@ant-design/icons'
-import { Popover, Progress } from 'antd'
+  ShareAltOutlined, SyncOutlined } from '@ant-design/icons'
+import { Progress } from 'antd'
 
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { space } from '@/service/modules/home'
@@ -22,6 +22,7 @@ import { useAppDispatch } from '@/store'
 import { changeFilePid } from '@/store/modules/home'
 import { changeLoading } from '@/store/modules/common'
 import HeadImg from './HeadImg'
+import UploadShow from './UploadShow'
 
 
 interface menuType{
@@ -165,8 +166,6 @@ const Home = memo(() => {
     totalSpace: 0,
   }) 
   const [ isSpin, setIsSpin ] = useState<boolean>(false)
-  // Popover 是否展示
-  const [ isPopoverShow, setIsPopoverShow ] = useState<boolean>(false)
 
   let pathnameSplit = pathname.split('/').slice(0,3).join('/')
 
@@ -250,20 +249,6 @@ const Home = memo(() => {
     )
   })
 
-  // 上传区域展示
-  const showContent = () =>{
-    return (
-      <div className="content">
-        <div>
-          <span>11</span>
-          <Progress percent={30} status="active" />
-        </div>
-        <Progress percent={70} status="exception" />
-        <Progress percent={100} />
-      </div>
-    )
-  }
-
 
   const a = useMemo(()=>{
     return setSize(userSpace.useSpace)
@@ -282,12 +267,7 @@ const Home = memo(() => {
           </div>
           <div className="right-panel">
             
-            <Popover content={showContent} title="上传任务（仅展示本次上传任务）" trigger="click" overlayInnerStyle={{
-              width: '500px',
-              marginRight: '10px'
-            }} open={isPopoverShow} onOpenChange={()=>{setIsPopoverShow(!isPopoverShow)}}>
-              <SwapOutlined className='icon-transfer'/>
-            </Popover>
+            <UploadShow></UploadShow>
 
             <HeadImg></HeadImg>
             
