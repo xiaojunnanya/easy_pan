@@ -75,7 +75,6 @@ const Share = memo(() => {
     getData()
   }, [])
 
-  console.log(data);
   
   return (
     <ShareStyle>

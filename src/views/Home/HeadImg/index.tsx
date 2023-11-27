@@ -25,7 +25,6 @@ const items: MenuProps['items'] = [
     },
   ];
 
-const { nickName, userId } = JSON.parse(sessionStorage.getItem('userInfo') || JSON.stringify({nickName:'', userId:''}))
 
 const getBase64 = (file: RcFile): Promise<string> =>
   new Promise((resolve, reject) => {
@@ -37,7 +36,7 @@ const getBase64 = (file: RcFile): Promise<string> =>
 
 
 const index = memo(() => {
-
+    const { nickName, userId } = JSON.parse(sessionStorage.getItem('userInfo') || JSON.stringify({nickName:'', userId:''}))
     const naviage = useNavigate()
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [fileList, setFileList] = useState<UploadFile[]>([]);

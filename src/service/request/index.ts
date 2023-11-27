@@ -23,25 +23,15 @@ class jlRequest{
 
         // 请求拦截器
         this.instance.interceptors.request.use((config)=>{
-            // console.log("全局请求成功拦截，这里可以开启loading、header携带token等");
-            // if(sessionStorage.getItem('token')){
-            //     config.headers['Authorization'] = sessionStorage.getItem('token')
-            // }
             config.headers['Content-Type'] = 'application/x-www-form-urlencoded'
             // config.cancelToken = cancelTokenSource.token
             return config
-        },(error) =>{
-            // console.log(error);
-        })
+        },(error) =>{})
 
         // 响应拦截器
         this.instance.interceptors.response.use((res)=>{
-            // console.log("全局响应成功拦截，这里可以去掉loading");
-            
             return res
-        },(error) =>{
-            // console.log(error);
-        })
+        },(error) =>{})
 
         // 针对特定的实例添加拦截器
         this.instance.interceptors.request.use(

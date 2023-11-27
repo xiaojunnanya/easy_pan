@@ -7,7 +7,7 @@
  * @Description: 首页
  * @前端实习生: 鲸落
  */
-import React, { memo, useState, useEffect, useMemo } from 'react'
+import React, { memo, useState, useEffect, useMemo, Fragment } from 'react'
 import { HomeStyled } from './style'
 import { AppstoreAddOutlined, CloudUploadOutlined, CustomerServiceOutlined, 
   DeleteOutlined, EllipsisOutlined, FileImageOutlined, 
@@ -29,7 +29,7 @@ interface menuType{
   icon: any;
   menuCode: string,
   path: string,
-  allShow: boolean,
+  isShow: boolean,
   tips?:string,
   children: {
     name: string,
@@ -41,108 +41,110 @@ interface menuType{
 
 type menuTypes = menuType[]
 
-const menus: menuTypes = [
-  {
-      name: "首页",
-      icon: <HomeOutlined className='iconfont'/>,
-      menuCode: "main",
-      path: "/main/home/all",
-      allShow: true,
-      children: [
-          {
-              icon: <AppstoreAddOutlined className='iconfont'/>,
-              name: "全部",
-              category: "all",
-              path: "/main/home/all",
-          },
-          {
-              icon: <PlayCircleOutlined className='iconfont'/>,
-              name: "视频",
-              category: "video",
-              path: "/main/home/video",
-          },
-          {
-              icon: <CustomerServiceOutlined className='iconfont'/>,
-              name: "音频",
-              category: "music",
-              path: "/main/home/music",
-          },
-          {
-              icon: <FileImageOutlined className='iconfont'/>,
-              name: "图片",
-              category: "image",
-              path: "/main/home/image",
-          },
-          {
-              icon: <FileWordOutlined className='iconfont'/>,
-              name: "文档",
-              category: "doc",
-              path: "/main/home/doc",
-          },
-          {
-              icon: <EllipsisOutlined className='iconfont'/>,
-              name: "其他",
-              category: "others",
-              path: "/main/home/others",
-          },
-      ],
-  },
-  {
-      path: "/main/share",
-      icon: <ShareAltOutlined className='iconfont'/>,
-      name: "分享",
-      menuCode: "share",
-      allShow: true,
-      children: [
-          {
-              name: "分享记录",
-              path: "/main/share",
-              category: "share",
-          },
-      ],
-  },
-  {
-      path: "/main/recycle",
-      icon: <DeleteOutlined className='iconfont'/>,
-      name: "回收站",
-      menuCode: "recycle",
-      tips: "回收站为你保存10天内删除的文件",
-      allShow: true,
-      children: [
-          {
-              name: "删除的文件",
-              path: "/main/recycle",
-              category: "recycle",
-          },
-      ],
-  },
-  {
-      path: "/main/settings/fileList",
-      icon: <SettingOutlined className='iconfont'/>,
-      name: "设置",
-      menuCode: "settings",
-      allShow: false,
-      children: [
-          {
-              name: "用户文件",
-              path: "/main/settings/fileList",
-              category: "fileList",
-          },
-          {
-              name: "用户管理",
-              path: "/main/settings/userList",
-              category: "userList",
-          },
-          {
-              name: "系统设置",
-              path: "/main/settings/sysSetting",
-              category: "sysSetting",
-          },
-      ],
-  },
-];
-
 const Home = memo(() => {
+  const { admin } = JSON.parse(sessionStorage.getItem('userInfo') || JSON.stringify({admin:false}))
+  const menus: menuTypes = useMemo(()=>{
+    return [
+      {
+          name: "首页",
+          icon: <HomeOutlined className='iconfont'/>,
+          menuCode: "main",
+          path: "/main/home/all",
+          isShow: true,
+          children: [
+              {
+                  icon: <AppstoreAddOutlined className='iconfont'/>,
+                  name: "全部",
+                  category: "all",
+                  path: "/main/home/all",
+              },
+              {
+                  icon: <PlayCircleOutlined className='iconfont'/>,
+                  name: "视频",
+                  category: "video",
+                  path: "/main/home/video",
+              },
+              {
+                  icon: <CustomerServiceOutlined className='iconfont'/>,
+                  name: "音频",
+                  category: "music",
+                  path: "/main/home/music",
+              },
+              {
+                  icon: <FileImageOutlined className='iconfont'/>,
+                  name: "图片",
+                  category: "image",
+                  path: "/main/home/image",
+              },
+              {
+                  icon: <FileWordOutlined className='iconfont'/>,
+                  name: "文档",
+                  category: "doc",
+                  path: "/main/home/doc",
+              },
+              {
+                  icon: <EllipsisOutlined className='iconfont'/>,
+                  name: "其他",
+                  category: "others",
+                  path: "/main/home/others",
+              },
+          ],
+      },
+      {
+          path: "/main/share",
+          icon: <ShareAltOutlined className='iconfont'/>,
+          name: "分享",
+          menuCode: "share",
+          isShow: true,
+          children: [
+              {
+                  name: "分享记录",
+                  path: "/main/share",
+                  category: "share",
+              },
+          ],
+      },
+      {
+          path: "/main/recycle",
+          icon: <DeleteOutlined className='iconfont'/>,
+          name: "回收站",
+          menuCode: "recycle",
+          tips: "回收站为你保存10天内删除的文件",
+          isShow: true,
+          children: [
+              {
+                  name: "删除的文件",
+                  path: "/main/recycle",
+                  category: "recycle",
+              },
+          ],
+      },
+      {
+          path: "/main/settings/fileList",
+          icon: <SettingOutlined className='iconfont'/>,
+          name: "设置",
+          menuCode: "settings",
+          isShow: admin,
+          children: [
+              {
+                  name: "用户文件",
+                  path: "/main/settings/fileList",
+                  category: "fileList",
+              },
+              {
+                  name: "用户管理",
+                  path: "/main/settings/userList",
+                  category: "userList",
+              },
+              {
+                  name: "系统设置",
+                  path: "/main/settings/sysSetting",
+                  category: "sysSetting",
+              },
+          ],
+      },
+    ]
+  }, [admin])
 
   const dispatch = useAppDispatch()
 
@@ -178,7 +180,6 @@ const Home = memo(() => {
     for (const item of menus) {
       if( item.path.includes(pathnameSplit) ){
         setShowSecondaryMenu( item )
-        // 不是很好的方案使用return，路由需要继续优化
         return
       }
     }
@@ -221,11 +222,18 @@ const Home = memo(() => {
 
   // 一级菜单
   const firstLevelMenu = menus.map((item ,index) =>{
+    
     return (
-      <div className={ `menu-item ${ item.path.includes(pathnameSplit) ? 'active' : '' }  ` } key={item.path} onClick={()=>{oneMenu(item)}}>
-        { item.icon }
-        <div className="text"> { item.name } </div>
-      </div>
+      <Fragment key={item.path}>
+        {
+          item.isShow && (
+            <div className={ `menu-item ${ item.path.includes(pathnameSplit) ? 'active' : '' }  ` } onClick={()=>{oneMenu(item)}}>
+              { item.icon }
+              <div className="text"> { item.name } </div>
+            </div>
+          )
+        }
+      </Fragment>
     )
   })
 
@@ -268,8 +276,7 @@ const Home = memo(() => {
     <HomeStyled>
       <div className="framework">
         <div className="header">
-          <div className="logo">
-            {/* <span className='icon-pan iconfont'> </span> */}
+          <div className="logo" onClick={()=>{naviage('/main')}}>
             <CloudUploadOutlined className='icon-pan'/>
             <div className="name">Easy云盘</div>
           </div>

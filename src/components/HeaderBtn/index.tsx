@@ -16,9 +16,7 @@ const index: FC<propsType> = memo((props) => {
     const { showBtn } = props
     const [ isSpin, setIsSpin ] = useState<boolean>(false)
     
-    const onSearch = () =>{
-        console.log('1');
-    }
+    const onSearch = () =>{}
 
     const upDate = () =>{
         setIsSpin(true)
@@ -27,9 +25,7 @@ const index: FC<propsType> = memo((props) => {
         },2000)
     }
 
-    const upLoad = () =>{
-        console.log('2');
-    }
+    const upLoad = () =>{}
 
     const bntshow = showBtn?.map((item, index) =>{
         return (

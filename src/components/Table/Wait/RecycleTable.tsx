@@ -151,7 +151,6 @@ const index: FC<propsType> = memo((props) => {
    */
   const handleClick = async (e: any, record: DataType, index: number) =>{
     e.stopPropagation()
-    console.log(record);
     
     switch (index) {
       // 还原

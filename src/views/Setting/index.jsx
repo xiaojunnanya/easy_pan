@@ -18,8 +18,7 @@ import SysSetting from './SysSetting'
 const Setting = memo(() => {
 
   const { category } = useParams()
-  console.log(category);
-
+  
   const components = {  
     fileList: <FileList></FileList>,  
     userList: <UserList></UserList>,  

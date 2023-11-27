@@ -1,4 +1,4 @@
-import React, { FC, memo } from 'react'
+import React, { FC, memo, useRef } from 'react'
 import { DataType } from '../../type'
 
 import folderIcon from '@/assets/images/icon-image/folder.png'
@@ -13,16 +13,23 @@ import otherIcon from '@/assets/images/icon-image/others.png'
 import zipIcon from '@/assets/images/icon-image/zip.png'
 import codeIcon from '@/assets/images/icon-image/code.png'
 import { getImage } from '@/service/modules/home'
+import Preview from '../../Preview'
+import { useAppDispatch } from '@/store'
+import { changeFilePid } from '@/store/modules/home'
 
 interface IProps {
-    record: DataType,
-    folderHandle?: (record: DataType, showImg: string) => void
+    record: DataType
+}
+
+export interface ChildPreviewMethods {
+  openModel: (record: DataType, img: string) => void;
 }
 
 const index: FC<IProps> = memo((props) => {
-
-    const { record, folderHandle } = props
-
+  const dispatch = useAppDispatch()
+  const { record } = props
+  const childPreviewRef = useRef<ChildPreviewMethods>(null)
+    
   // 默认是文件夹
   let showImg = folderIcon
 
@@ -66,15 +73,37 @@ const index: FC<IProps> = memo((props) => {
         break;
     }
   }
+
+
+  /**
+   * 点击表格一列文字的操作，比如进入下一层文件夹或预览文件
+   */
+  const folderHandle = (record: DataType, showImg: string) =>{
+    // 0 是文件
+    if(record.folderType === 0){
+      childPreviewRef.current?.openModel(record, showImg)
+    }else{
+      // 文件夹，获取这个文件夹的数据
+      dispatch(changeFilePid(record.fileId))
+    }  
+  }
+
   return (
-    <div className='folderType'>
-      <div className='showImg'>
-        <img src={showImg}/>
+    <>
+
+      <div style={{display:'none'}}>
+        <Preview ref={childPreviewRef}></Preview>
       </div>
-      <span onClick={()=>{ folderHandle && folderHandle(record, showImg) }}>
-        {record.fileName}
-      </span>
-    </div>
+
+      <div className='folderType'>
+        <div className='showImg'>
+          <img src={showImg}/>
+        </div>
+        <span onClick={()=>{ folderHandle && folderHandle(record, showImg) }}>
+          {record.fileName}
+        </span>
+      </div>
+    </>
   )
 })
 

@@ -7,7 +7,8 @@ import { PreviewStyled } from './style';
 import CodeBlock from '@/utils/CodeBlock';
 import DocViewer, { PDFRenderer } from "@cyntler/react-doc-viewer";
 import { downLoadFile, setSize } from '@/utils';
-import { ChildPreviewMethods } from '..';
+import { ChildPreviewMethods } from '../Handle/RenderName';
+
 // import { Document, Page } from 'react-pdf';
 
 
@@ -50,7 +51,6 @@ const Preview = memo(forwardRef<ChildPreviewMethods>((props, ref) => {
           break;
         // 图片
         case 3:
-          console.log(record.fileCover);
           const a = record.fileCover!.split('_')
           const b = a.pop()
           const c = a.join('_')+b

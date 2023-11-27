@@ -30,7 +30,6 @@ const Login = memo(() => {
     }, [])
 
     const onFinish = async (values: any) => {
-        console.log('Received values of form: ', values);
         const spark = new SparkMD5()
         spark.append(values.password)
         

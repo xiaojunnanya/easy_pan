@@ -9,7 +9,6 @@ import { useAppDispatch, useAppSelector, useAppShallowEqual } from '@/store';
 
 import { downLoadFile, setSize } from '@/utils'
 
-import Preview from './Preview';
 import type { DataType, propsType } from './type';
 import { changeBtnDisabled, changeFilePid } from '@/store/modules/home';
 import { changeSelectKeys } from '@/store/modules/common';
@@ -18,10 +17,6 @@ import Share from './Handle/Share';
 import RenderName from './Handle/RenderName';
 
 
-
-export interface ChildPreviewMethods {
-  openModel: (record: DataType, img: string) => void;
-}
 export interface ChildShareMethods {
   openModel: (record: DataType) => void;
 }
@@ -36,7 +31,6 @@ const index: FC<propsType> = memo((props) => {
       isLoading: state.common.isLoading
     }
   },useAppShallowEqual)
-  const childPreviewRef = useRef<ChildPreviewMethods>(null)
   const childShareRef = useRef<ChildShareMethods>(null)
   const dispatch = useAppDispatch()
   // props data
@@ -51,7 +45,6 @@ const index: FC<propsType> = memo((props) => {
   // 展示操作部分
   const [ showHandleIndex, setShowHandleIndex ] = useState<number>(-1)
 
-
   // ----- stats -----
   const columns: ColumnsType<DataType> = useMemo(()=>{
     return [
@@ -59,7 +52,7 @@ const index: FC<propsType> = memo((props) => {
         title: '文件名',
         dataIndex: 'name',
         render: (text, record) => {
-          return <RenderName record={record} folderHandle={folderHandle}></RenderName>
+          return <RenderName record={record}></RenderName>
         },
       },
       {
@@ -154,9 +147,7 @@ const index: FC<propsType> = memo((props) => {
    * @param page 当前页
    * @param pageSize 页数
    */
-  const pagiChange = (page: any, pageSize: any) =>{
-    console.log(page, pageSize);
-  }
+  const pagiChange = (page: any, pageSize: any) =>{}
 
   /**
    * 下载
@@ -178,7 +169,6 @@ const index: FC<propsType> = memo((props) => {
       // 分享
       case 1:
         childShareRef.current?.openModel(record)
-        // console.log(childShareRef.current);
         
         break;
       // 下载
@@ -195,7 +185,7 @@ const index: FC<propsType> = memo((props) => {
         
         break;
       // 重命名
-      case 4:console.log('1');
+      case 4:
       
         
         break;
@@ -209,23 +199,14 @@ const index: FC<propsType> = memo((props) => {
     }
   }
 
+  /**
+   * 删除操作
+   * @param key 
+   */
   const handleDelete = (key: React.Key) => {
     const newData = showData.filter((item: any) => item.key !== key);
     setShowData(newData);
   };
-
-  /**
-   * 点击表格一列文字的操作，比如进入下一层文件夹或预览文件
-   */
-  const folderHandle = async (record: DataType, showImg: string) =>{
-    // 0 是文件
-    if(record.folderType === 0){
-      childPreviewRef.current?.openModel(record, showImg)
-    }else{
-      // 文件夹，获取这个文件夹的数据
-      dispatch(changeFilePid(record.fileId))
-    }  
-  }
 
   // ----- view -----
 
@@ -237,7 +218,6 @@ const index: FC<propsType> = memo((props) => {
   return (
     <>
       <div style={{display:'none'}}>
-        <Preview ref={childPreviewRef}></Preview>
         <Share ref={childShareRef}></Share>
       </div>
 

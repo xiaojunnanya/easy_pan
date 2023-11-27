@@ -40,21 +40,16 @@ const index = memo(forwardRef<ChildShareMethods>((props, ref) => {
     const handleOk = async () => {
       try {
         const res = await form.validateFields()
-        console.log(res);
         const res1 = await shareFile(recordData!.fileId, res.radio1, res.radio2, res.code && res.code)
         setShareUrl({
           shareId: res1.data.data.shareId,
           code: res1.data.data.code
         })
         setCancelText('关闭')
-      } catch (error) {
-        console.log(error);
-        
-      }
+      } catch (error) {}
     }
 
     const radio2Change = (e: any) =>{
-      console.log(e.target.value);
       setRadio2Value(e.target.value)
     }
 
