@@ -136,7 +136,7 @@ export const HomeStyled = styled.div`
                     padding: 0px 5px;
 
                     .percent {
-                        padding-right: 10px;
+                        padding-right: 20px;
                     }
 
                     .space-use {
@@ -147,6 +147,7 @@ export const HomeStyled = styled.div`
                         
                         .use {
                             flex: 1;
+                            font-size: 13px;
                         }
                         .iconfont {
                             cursor: pointer;

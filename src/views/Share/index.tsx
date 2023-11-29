@@ -52,7 +52,7 @@ const Share = memo(() => {
         }
       },
     ]
-  }, [btnDisabled])
+  }, [btnDisabled, selectKeys])
 
   const [ data, setData ] = useState<DataType[]>([])
 

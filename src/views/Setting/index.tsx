@@ -17,21 +17,25 @@ import SysSetting from './SysSetting'
 
 const Setting = memo(() => {
 
-  const { category } = useParams()
-  
-  const components = {  
-    fileList: <FileList></FileList>,  
-    userList: <UserList></UserList>,  
-    sysSetting: <SysSetting></SysSetting>, 
-  };  
+  const { category = 'fileList' } = useParams()
 
-  const ShowComponent =  components[category] || null
+  const ShowComponent = () =>{
+    switch (category) {
+      case 'fileList': 
+        return <FileList></FileList>
+      case 'userList':
+        return <UserList></UserList>
+      case 'sysSetting':
+        return <SysSetting></SysSetting>
+      default:<FileList></FileList>
+    }
+  }
   
   return (
     <div>
       
       {
-        ShowComponent
+        ShowComponent()
       }
       
     </div>

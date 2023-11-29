@@ -3,6 +3,7 @@
 import { configureStore } from "@reduxjs/toolkit"
 import homeReducer from './modules/home'
 import commonReducer from './modules/common'
+import loginReducer from './modules/login'
 
 import { useSelector, useDispatch, shallowEqual } from 'react-redux'
 import type { TypedUseSelectorHook } from 'react-redux'
@@ -11,6 +12,7 @@ const store = configureStore({
     reducer: {
         home: homeReducer,
         common: commonReducer,
+        login: loginReducer
     }
 })
 

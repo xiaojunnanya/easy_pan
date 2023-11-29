@@ -293,7 +293,7 @@ const Home = memo(() => {
               <div className="space-info">
                 <div>空间使用</div>
                 <div className="percent">
-                  <Progress percent={Number(Math.ceil(userSpace.useSpace / userSpace.totalSpace))} size="small" />
+                  <Progress percent={( Number(((userSpace.useSpace / userSpace.totalSpace) * 100).toFixed(2)))} size="small" />
                 </div>
                 <div className="space-use">
                   <div className="use">

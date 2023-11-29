@@ -1,14 +1,15 @@
-import React, { forwardRef, memo, useImperativeHandle, useState } from 'react';
+import React, { forwardRef, memo, useImperativeHandle, useRef, useState } from 'react';
 import { Button, Modal, Spin, Watermark } from 'antd';
 
-import { getFileInfo, getImage } from '@/service/modules/home';
+import { getFileInfo, getImage, getVideo } from '@/service/modules/home';
 import type { DataType } from '../type';
 import { PreviewStyled } from './style';
 import CodeBlock from '@/utils/CodeBlock';
 import DocViewer, { PDFRenderer } from "@cyntler/react-doc-viewer";
 import { downLoadFile, setSize } from '@/utils';
 import { ChildPreviewMethods } from '../Handle/RenderName';
-
+import DPlayer from 'dplayer';
+import Hls from 'hls.js';
 // import { Document, Page } from 'react-pdf';
 
 
@@ -19,6 +20,7 @@ const Preview = memo(forwardRef<ChildPreviewMethods>((props, ref) => {
     openModel,
   }), []);
   const userInfo = JSON.parse(sessionStorage.getItem("userInfo") || "{}");
+  const videoRef = useRef(null)
 
   const [open, setOpen] = useState(false);
   const [ recordData, setRecordData ] = useState<DataType>()
@@ -27,7 +29,6 @@ const Preview = memo(forwardRef<ChildPreviewMethods>((props, ref) => {
   const openModel = async (record: DataType, img: string) => {
     setOpen(true);
     setRecordData(record)
-    setShowView('')
     setShowView(await previewShow(record, img))
   }
 
@@ -37,14 +38,30 @@ const Preview = memo(forwardRef<ChildPreviewMethods>((props, ref) => {
 
   // 文件夹的时候为null
   const previewShow = async (record: DataType, showImg: string) =>{
-
     let show = <div></div>
 
     if(record.fileType){
       switch (record.fileType) {
         // 视频
         case 1:
-          // http://netdisk.kbws.xyz/api/file/ts/getVideoInfo/${record.fileId}
+          show = <div ref={videoRef} className='video'></div>
+          setTimeout(()=>{
+            new DPlayer({
+                container: videoRef.current,
+                autoplay: true,
+                video: {
+                    url: getVideo(record.fileId),
+                    type:'customHls',
+                    customType:{
+                        customHls: function(video: any) {
+                            const hls = new Hls();
+                            hls.loadSource(video.src);
+                            hls.attachMedia(video);
+                        },
+                    }
+                },
+            });
+          },100)
           break;
         // 音频
         case 2:
@@ -117,7 +134,7 @@ const Preview = memo(forwardRef<ChildPreviewMethods>((props, ref) => {
 
   return (
     <>
-      <Modal title={recordData?.fileName} centered open={open} width={900} footer = {[]}
+      <Modal title={recordData?.fileName} centered open={open} width={900} footer = {null}
         onCancel={() => setOpen(false)}
         bodyStyle={{
           height: '80vh',
@@ -126,6 +143,7 @@ const Preview = memo(forwardRef<ChildPreviewMethods>((props, ref) => {
           textAlign:'left'
         }}
         style={{textAlign:'center'}}
+        destroyOnClose
       >
         {
           showView ? (

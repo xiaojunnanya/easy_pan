@@ -34,7 +34,37 @@ export const LoginStyled = styled.div`
                 img{
                     height: 44px;
                     margin-left: 9px;
-                    width: 151px;
+                    /* width: 151px; */
+                    flex: 1;
+                }
+            }
+
+            .emailCode{
+                display: flex;
+
+                .ant-form-item{
+                    width: 250px;
+                }
+
+                button{
+                    flex: 1;
+                    height: 44px;
+                    margin-left: 10px;
+                }
+            }
+
+            .qqimg{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                
+                span{
+                    margin-right: 6px;
+                    color:#636D7E;
+                }
+                img{
+                    width: 20px;
                 }
             }
         }
@@ -49,6 +79,11 @@ export const LoginStyled = styled.div`
 
         .ant-input-affix-wrapper{
             padding: 10px;
+        }
+
+        .login-form-button{
+            width: 100%;
+            height: 40px;
         }
     }
 `

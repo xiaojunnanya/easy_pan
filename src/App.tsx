@@ -14,11 +14,11 @@ import routes from '@/router'
 
 function App() {
   return (
-    <div>
+    <>
       {
         useRoutes(routes)
       }
-    </div>
+    </>
   );
 }
 

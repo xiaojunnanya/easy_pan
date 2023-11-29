@@ -3,6 +3,12 @@ import styled from "styled-components";
 export const PreviewStyled = styled.div`
     height: 100%;
 
+    .video{
+        object-fit: fill;
+        height: 100%;
+        width: 100%;
+    }
+
     .img{
         height: 75vh;
         display: flex;
