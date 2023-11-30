@@ -41,7 +41,6 @@ const index = memo(() => {
 
   const aClick = (e: any, index: number)=>{
     e.stopPropagation()
-    console.log(index);
     if(index === 1){
       dispatch(changeMode('login'))
     }

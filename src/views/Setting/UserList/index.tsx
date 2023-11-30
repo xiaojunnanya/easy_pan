@@ -1,7 +1,7 @@
 import { getHeaderImg } from '@/service/modules/home'
-import { getUserList } from '@/service/modules/setting'
+import { getUserList, updateUserStatus } from '@/service/modules/setting'
 import { setSize } from '@/utils'
-import { Button, Input, Space, Table } from 'antd'
+import { Button, Input, Select, Space, Table } from 'antd'
 import React, { memo, useEffect, useMemo } from 'react'
 import { UserListStyle } from './style'
 import { useAppDispatch, useAppSelector, useAppShallowEqual } from '@/store'
@@ -39,10 +39,8 @@ const index = memo(() => {
         title: '空间使用',
         dataIndex: 'userId',
         render(_: any, item: any){
-          console.log(item);
           const a = setSize(item.useSpace)
           const b = setSize(item.totalSpace)
-
           return `${a}/${b}`
         }
       },
@@ -63,37 +61,80 @@ const index = memo(() => {
       },
       {
         title: '操作',
-        render: () => (
-          <Space size="middle">
-            <a>分配空间</a>
-            <a>启用</a>
-          </Space>
-        ),
+        render: (item: any) => {
+          let a = item.status === 1 ? '0' : '1'
+          return (
+            <Space size="middle">
+              <a>分配空间</a>
+              <a onClick={()=>{handle(item.userId, a)}}>{item.status === 1 ? '禁用' : '启用'}</a>
+            </Space>
+          )
+        },
       },
     ];
   }, [])
 
   const [ userList, setUserList ] = React.useState([])
+  const [ search, setSearch ] = React.useState({
+    nickNameFuzzy:"",
+    status: "",
+  })
 
   // ----- useeffect -----
   useEffect(()=>{
+    getData()
+  },[])
+
+  // ----- method -----
+  const getData = (data?:{nickNameFuzzy?: string, status?: string}) =>{
     dispatch(changeLoading(true))
-    getUserList().then(res =>{
+    getUserList({
+      ...data
+    }).then(res =>{
       let { list } = res.data.data
   
       for (const item of list) {
         item.key = item.userId
       }
-      console.log(list);
       setUserList(list)
       dispatch(changeLoading(false))
     })
-  },[])
+  }
+
+  const handle = async (userId: string, status: string) =>{
+    const res = await updateUserStatus(userId, status)
+    if(res.data.code === 200){
+      getData()
+    }
+  }
+
+  const selectChange = (e: string) =>{
+    setSearch({
+      ...search,
+      status:e,
+    })
+  }
+  
+  const inputChange = (e: any) =>{
+    setSearch({
+      ...search,
+      nickNameFuzzy:e.target.value
+    })
+  }
+
+  const searchData = () =>{
+    getData(search)
+  }
 
   return (
     <UserListStyle>
       <div className='search'>
-        用户昵称：<Input style={{width:'200px'}} placeholder='请输入用户名称'></Input>
+        用户昵称：<Input style={{width:'200px'}} placeholder='请输入用户名称' allowClear onChange={(e)=>{inputChange(e)}}/>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        状态：<Select style={{ width: 120 }} allowClear placeholder="请选择状态"
+        options={[{ value: '1', label: '启用' }, { value: '0', label: '禁用' }]} onChange={selectChange}/>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <Button type='primary' onClick={searchData}>查询</Button>
       </div>
       <Table columns={columns} dataSource={userList} loading={isLoading}></Table>
     </UserListStyle>

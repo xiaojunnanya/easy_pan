@@ -171,7 +171,6 @@ const All: FC= memo(() => {
       })
     }, [category, path])
 
-    console.log('data', data);
     
   return (
     <AllStyled>

@@ -7,14 +7,33 @@ import { jlReq } from ".."
  * @param nickNameFuzzy 昵称模糊搜索
  * @param status 状态
  */
-export const getUserList = (pageNo?: string, pageSize?: string, nickNameFuzzy?: string, status?: string) => {
+export const getUserList = (data?:{
+    pageNo?: string, pageSize?: string, nickNameFuzzy?: string, status?: string
+}) => {
     return jlReq.request({
         url: '/admin/loadUserList',
         method: 'post',
         data: {
-            pageNo: pageNo || 1,
-            pageSize: pageSize || 100,
-            nickNameFuzzy,
+            ...data,
+            pageNo: data?.pageNo || 1,
+            pageSize: data?.pageSize || 100
+        }
+    })
+}
+
+
+/**
+ * 修改用户状态
+ * @param userId 用户ID
+ * @param status 状态
+ * @returns 
+ */
+export const updateUserStatus = (userId: string, status: string) => {
+    return jlReq.request({
+        url: '/admin/updateUserStatus',
+        method: 'post',
+        data: {
+            userId,
             status
         }
     })
