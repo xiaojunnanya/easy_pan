@@ -1,9 +1,17 @@
+/*
+ * @Author: XJN
+ * @Date: 2023-10-06 14:50:52
+ * @LastEditors: xiaojunnanya
+ * @LastEditTime: 2023-11-30 20:11:35
+ * @FilePath: \easy_pan\src\service\modules\login.ts
+ * @Description: 
+ * @前端实习生: 鲸落
+ */
 import { jlReq } from "..";
-import { SHOW_BASE_URL } from "../config";
 
 // 获取验证码图片
 export const checkCodeServer = ( type: number = 0,time: number ) =>{
-    return SHOW_BASE_URL + `/api/checkCode?type=${type}&time=${time}`
+    return `/api/checkCode?type=${type}&time=${time}`
 }
 
 // 登录

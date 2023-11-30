@@ -1,3 +1,12 @@
+/*
+ * @Author: XJN
+ * @Date: 2023-11-27 14:53:06
+ * @LastEditors: xiaojunnanya
+ * @LastEditTime: 2023-11-30 20:15:00
+ * @FilePath: \easy_pan\src\views\Login\Form\Login\index.tsx
+ * @Description: 登录页面
+ * @前端实习生: 鲸落
+ */
 import React, { memo, useEffect, useState } from 'react'
 
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
@@ -33,6 +42,7 @@ const index = memo(() => {
           sessionStorage.setItem('userInfo', JSON.stringify(result.data.data))
       }else{
           messageApi.error(result?.data.info || '服务器异常，请稍后重试');
+          updateCode()
       }
   };
 
@@ -70,8 +80,8 @@ const index = memo(() => {
           </Form.Item>
           <div className='checkCode'>
               <Form.Item name="checkCode" initialValue={'123450'}
-                  rules={[{ required: true, message: '请输入验证码' }]} >
-                  <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="请输入验证码" />
+                  rules={[{ required: true, message: '请输入验证码' }]}>
+                  <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="请输入验证码"/>
               </Form.Item>
               <div onClick={updateCode}>
                   <img src={codeImg} alt="验证码"/>

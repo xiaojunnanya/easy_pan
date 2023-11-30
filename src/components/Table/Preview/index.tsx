@@ -6,11 +6,10 @@ import type { DataType } from '../type';
 import { PreviewStyled } from './style';
 import CodeBlock from '@/utils/CodeBlock';
 import DocViewer, { PDFRenderer } from "@cyntler/react-doc-viewer";
-import { downLoadFile, setSize } from '@/utils';
 import { ChildPreviewMethods } from '../Handle/RenderName';
 import DPlayer from 'dplayer';
 import Hls from 'hls.js';
-// import { Document, Page } from 'react-pdf';
+import { downLoadFile, setSize } from '@/utils';
 
 
 const Preview = memo(forwardRef<ChildPreviewMethods>((props, ref) => {
@@ -35,6 +34,7 @@ const Preview = memo(forwardRef<ChildPreviewMethods>((props, ref) => {
   const download = async (fileId: string) =>{
     downLoadFile(fileId)
   }
+
 
   // 文件夹的时候为null
   const previewShow = async (record: DataType, showImg: string) =>{
@@ -62,9 +62,6 @@ const Preview = memo(forwardRef<ChildPreviewMethods>((props, ref) => {
                 },
             });
           },100)
-          break;
-        // 音频
-        case 2:
           break;
         // 图片
         case 3:
@@ -98,7 +95,8 @@ const Preview = memo(forwardRef<ChildPreviewMethods>((props, ref) => {
         // excel
         case 6:
           break;
-        // txt:没有break执行下一个
+        // 没有break执行下一个
+        // txt
         case 7:
         // code
         case 8:
@@ -108,6 +106,8 @@ const Preview = memo(forwardRef<ChildPreviewMethods>((props, ref) => {
             <CodeBlock code={res.data} language={language}></CodeBlock>
           )
           break;
+        // 音频
+        case 2:
         // zip
         case 9:
         // 其他

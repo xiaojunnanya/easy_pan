@@ -49,7 +49,7 @@
 - `highlight.js`：代码高亮
 - `copy-to-clipboard`：复制到剪切板
 - `react-pdf`：pdf预览
-- `DPlayer`：视频播放
+- `DPlayer`/`hls.js`：视频播放
 
 
 ## 待解决
@@ -61,12 +61,11 @@
 - 移动
 - 批量移动
 - 空数据的时候上传文件+新建文件夹
-- 文件预览：pdf+doc+ppt+excel+音频
+- 文件预览：pdf+doc+excel
 - 面包屑
 - 注册
 - 忘记密码
 - QQ快捷登录
-- 验证码
 - 文件上传+web worket
 - 分页
 - 视频加载速度的优化
