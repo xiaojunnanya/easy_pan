@@ -2,15 +2,15 @@
  * @Author: XJN
  * @Date: 2023-11-27 14:53:06
  * @LastEditors: xiaojunnanya
- * @LastEditTime: 2023-11-30 20:15:00
+ * @LastEditTime: 2023-12-01 13:59:29
  * @FilePath: \easy_pan\src\views\Login\Form\Login\index.tsx
  * @Description: 登录页面
  * @前端实习生: 鲸落
  */
-import React, { memo, useEffect, useState } from 'react'
+import React, { memo, useEffect, useRef, useState } from 'react'
 
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Form, Input, message } from 'antd';
+import { Button, Form, FormInstance, Input, message } from 'antd';
 import SparkMD5 from 'spark-md5'
 import QqImg from '@/assets/images/qq.png'
 
@@ -20,7 +20,7 @@ import { useAppDispatch } from '@/store';
 import { changeMode } from '@/store/modules/login';
 
 const index = memo(() => {
-
+  const formRef = useRef<FormInstance | null>(null);
   const [ codeImg, setCodeImg ] = useState<string>('')
   const [ messageApi, contextHolder ] = message.useMessage();
   const dispatch = useAppDispatch()
@@ -43,6 +43,7 @@ const index = memo(() => {
       }else{
           messageApi.error(result?.data.info || '服务器异常，请稍后重试');
           updateCode()
+          formRef.current?.resetFields(['checkCode']);
       }
   };
 
@@ -68,7 +69,7 @@ const index = memo(() => {
       { contextHolder }
       </>
 
-      <Form name="normal_login" className="login-form" onFinish={onFinish} >
+      <Form name="normal_login" className="login-form" onFinish={onFinish} ref={(form) => (formRef.current = form)}>
           <Form.Item name="username"
               rules={[{ required: true, message: '请输入邮箱' }]} >
               <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="请输入邮箱" />
@@ -79,9 +80,10 @@ const index = memo(() => {
               type="password" placeholder="请输入密码" />
           </Form.Item>
           <div className='checkCode'>
-              <Form.Item name="checkCode" initialValue={'123450'}
+              <Form.Item name="checkCode"
                   rules={[{ required: true, message: '请输入验证码' }]}>
-                  <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="请输入验证码"/>
+                  <Input prefix={<UserOutlined className="site-form-item-icon" />} 
+                  placeholder="请输入验证码"/>
               </Form.Item>
               <div onClick={updateCode}>
                   <img src={codeImg} alt="验证码"/>

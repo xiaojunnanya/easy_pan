@@ -1,7 +1,7 @@
-import React, { memo, useEffect, useState } from 'react'
+import React, { memo, useEffect, useRef, useState } from 'react'
 
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Form, Input, message } from 'antd';
+import { Button, Form, FormInstance, Input, message } from 'antd';
 import SparkMD5 from 'spark-md5'
 
 import { checkCodeServer, loginServer } from '@/service/modules/login';
@@ -10,7 +10,7 @@ import { useAppDispatch } from '@/store';
 import { changeMode } from '@/store/modules/login';
 
 const index = memo(() => {
-
+    const formRef = useRef<FormInstance | null>(null);
   const [ codeImg, setCodeImg ] = useState<string>('')
   const [ messageApi, contextHolder ] = message.useMessage();
   const dispatch = useAppDispatch()
@@ -32,6 +32,8 @@ const index = memo(() => {
           sessionStorage.setItem('userInfo', JSON.stringify(result.data.data))
       }else{
           messageApi.error(result?.data.info || '服务器异常，请稍后重试');
+          updateCode()
+          formRef.current?.resetFields(['checkCode']);
       }
   };
 
@@ -60,7 +62,7 @@ const index = memo(() => {
       { contextHolder }
       </>
 
-      <Form name="normal_login" className="login-form" onFinish={onFinish} >
+      <Form name="normal_login" className="login-form" onFinish={onFinish} ref={(form) => (formRef.current = form)}>
           <Form.Item name="username"
               rules={[{ required: true, message: '请输入邮箱' }]} >
               <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="请输入邮箱" />
