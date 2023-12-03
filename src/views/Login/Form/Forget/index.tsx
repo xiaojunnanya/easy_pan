@@ -4,14 +4,15 @@ import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Form, FormInstance, Input, message } from 'antd';
 import SparkMD5 from 'spark-md5'
 
-import { checkCodeServer, loginServer } from '@/service/modules/login';
+import { checkCodeServer, loginServer, sendEmailCodeServer } from '@/service/modules/login';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '@/store';
 import { changeMode } from '@/store/modules/login';
 
 const index = memo(() => {
-    const formRef = useRef<FormInstance | null>(null);
+  const formRef = useRef<FormInstance | null>(null);
   const [ codeImg, setCodeImg ] = useState<string>('')
+  const [ btnName, setBtnName ] = useState<string>('获取验证码')
   const [ messageApi, contextHolder ] = message.useMessage();
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
@@ -51,8 +52,24 @@ const index = memo(() => {
   /**
    * 邮箱获取验证码
    */
-  const getEmailCode = () =>{
+  const getEmailCode = async () =>{
+    try {
+        formRef.current?.validateFields(['username']).then(async res =>{
+            let time = 10
+            let a = setInterval(()=>{
+				time--;
+                setBtnName(time + '秒后重新获取')
+				if(time == 0) {
+					setBtnName('获取验证码')
+                    clearInterval(a)
+				}
+			
+			}, 1000)
 
+            // 暂时不做提示
+            sendEmailCodeServer(res.username, '1')
+        }).catch(err=>{})
+    } catch (error) {}
   }
 
   return (
@@ -72,7 +89,7 @@ const index = memo(() => {
                   rules={[{ required: true, message: '请输入邮箱验证码' }]} >
                   <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="请邮箱验证码" />
               </Form.Item>
-              <Button type='primary' onClick={getEmailCode}>获取验证码</Button>
+              <Button type='primary' onClick={getEmailCode} disabled={btnName !== '获取验证码'}>{btnName}</Button>
           </div>
           <Form.Item name="password"
               rules={[{ required: true, message: '请输入密码' }]} >
