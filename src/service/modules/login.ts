@@ -2,7 +2,7 @@
  * @Author: XJN
  * @Date: 2023-10-06 14:50:52
  * @LastEditors: xiaojunnanya
- * @LastEditTime: 2023-12-03 10:20:38
+ * @LastEditTime: 2023-12-03 11:22:58
  * @FilePath: \easy_pan\src\service\modules\login.ts
  * @Description: 
  * @前端实习生: 鲸落
@@ -50,6 +50,24 @@ export const sendEmailCodeServer = ( email: string, type: string ) =>{
             email,
             checkCode: 'checkCode',
             type
+        }
+    })
+}
+
+/**
+ * 重置密码
+ * @param email 邮箱
+ * @param password 重置的密码
+ * @param checkCode 验证码
+ * @param emailCode 邮箱的验证码
+ * @returns 
+ */
+export const resetPwdServer = ( email: string, emailCode: string, password: string, checkCode: string ) =>{
+    return jlReq.request({
+        method:'POST',
+        url:'/resetPwd',
+        data:{
+            email, password, checkCode,emailCode
         }
     })
 }

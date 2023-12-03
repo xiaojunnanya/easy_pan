@@ -1,10 +1,9 @@
 import React, { memo, useEffect, useRef, useState } from 'react'
 
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { LockOutlined, MailOutlined, SafetyCertificateOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Form, FormInstance, Input, message } from 'antd';
-import SparkMD5 from 'spark-md5'
 
-import { checkCodeServer, loginServer, sendEmailCodeServer } from '@/service/modules/login';
+import { checkCodeServer, resetPwdServer, sendEmailCodeServer } from '@/service/modules/login';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '@/store';
 import { changeMode } from '@/store/modules/login';
@@ -15,27 +14,24 @@ const index = memo(() => {
   const [ btnName, setBtnName ] = useState<string>('获取验证码')
   const [ messageApi, contextHolder ] = message.useMessage();
   const dispatch = useAppDispatch()
-  const navigate = useNavigate()
 
   useEffect(()=>{
-      setCodeImg(checkCodeServer(0, new Date().getTime()))
+        setCodeImg(checkCodeServer(0, new Date().getTime()))
   }, [])
     
   const onFinish = async (values: any) => {
-      const spark = new SparkMD5()
-      spark.append(values.password)
-      const password = spark.end()
-      const result = await loginServer(values.username, password, values.checkCode)
-      messageApi.destroy()
-      if( result?.data.code === 200 ){
-          navigate('/main/home/all')
-          messageApi.info('登录成功');
-          sessionStorage.setItem('userInfo', JSON.stringify(result.data.data))
-      }else{
-          messageApi.error(result?.data.info || '服务器异常，请稍后重试');
-          updateCode()
-          formRef.current?.resetFields(['checkCode']);
-      }
+        console.log(values);
+        const result = await resetPwdServer(values.username,  values.emailCode, values.password, values.checkCode)
+        console.log(result);
+        messageApi.destroy()
+        if( result?.data.code === 200 && result?.data.info === '请求成功'){
+            dispatch(changeMode('login'))
+            // messageApi.info('重置成功,请重新登录')
+        }else{
+            messageApi.error(result?.data.info || '服务器异常，请稍后重试');
+            updateCode()
+            formRef.current?.resetFields(['checkCode']);
+        }
   };
 
     const updateCode = () =>{
@@ -55,19 +51,24 @@ const index = memo(() => {
   const getEmailCode = async () =>{
     try {
         formRef.current?.validateFields(['username']).then(async res =>{
-            let time = 10
+            let time = 60
             let a = setInterval(()=>{
 				time--;
                 setBtnName(time + '秒后重新获取')
-				if(time == 0) {
+				if(time === 0) {
 					setBtnName('获取验证码')
                     clearInterval(a)
 				}
-			
 			}, 1000)
 
             // 暂时不做提示
-            sendEmailCodeServer(res.username, '1')
+            sendEmailCodeServer(res.username, '1').then(res =>{
+                if(res?.data.code === 200 && res?.data.info === '请求成功'){
+                    messageApi.success('验证码已发送，请注意查收')
+                }else{
+                    messageApi.error(res?.data.info || '服务器异常，请稍后重试')
+                }
+            })
         }).catch(err=>{})
     } catch (error) {}
   }
@@ -82,29 +83,43 @@ const index = memo(() => {
       <Form name="normal_login" className="login-form" onFinish={onFinish} ref={(form) => (formRef.current = form)}>
           <Form.Item name="username"
               rules={[{ required: true, message: '请输入邮箱' }]} >
-              <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="请输入邮箱" />
+              <Input prefix={<MailOutlined className="site-form-item-icon" />} placeholder="请输入邮箱" />
           </Form.Item>
           <div className='emailCode'>
               <Form.Item name="emailCode"
                   rules={[{ required: true, message: '请输入邮箱验证码' }]} >
-                  <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="请邮箱验证码" />
+                  <Input prefix={<SafetyCertificateOutlined className="site-form-item-icon" />} placeholder="请邮箱验证码" />
               </Form.Item>
               <Button type='primary' onClick={getEmailCode} disabled={btnName !== '获取验证码'}>{btnName}</Button>
           </div>
+          {/* 密码只能是数字，字母，特殊字符 8-18位 */}
           <Form.Item name="password"
-              rules={[{ required: true, message: '请输入密码' }]} >
+              rules={[
+                { required: true, message: '请输入密码' },
+                { min: 8, max: 18, message:"密码只能是数字，字母，特殊字符 8-18位" }
+                ]} >
               <Input  prefix={<LockOutlined className="site-form-item-icon" />}
               type="password" placeholder="请输入密码" />
           </Form.Item>
           <Form.Item name="passwordTwo"
-              rules={[{ required: true, message: '请再次输入密码' }]} >
+              rules={[
+                { required: true, message: '请输入密码' },
+                ({getFieldValue})=>({
+                    validator(rule,value){
+                        if(!value || getFieldValue('password') === value){
+                            return Promise.resolve()
+                        }
+                        return Promise.reject("两次密码输入不一致")
+                    }
+                })
+                ]} >
               <Input  prefix={<LockOutlined className="site-form-item-icon" />}
               type="password" placeholder="请再次输入密码" />
           </Form.Item>
           <div className='checkCode'>
-              <Form.Item name="checkCode" initialValue={'123450'}
+              <Form.Item name="checkCode"
                   rules={[{ required: true, message: '请输入验证码' }]} >
-                  <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="请输入验证码" />
+                  <Input prefix={<SafetyCertificateOutlined className="site-form-item-icon" />} placeholder="请输入验证码" />
               </Form.Item>
               <div onClick={updateCode}>
                   <img src={codeImg} alt="验证码"/>

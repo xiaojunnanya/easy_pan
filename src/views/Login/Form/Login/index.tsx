@@ -2,14 +2,14 @@
  * @Author: XJN
  * @Date: 2023-11-27 14:53:06
  * @LastEditors: xiaojunnanya
- * @LastEditTime: 2023-12-01 13:59:29
+ * @LastEditTime: 2023-12-03 17:20:00
  * @FilePath: \easy_pan\src\views\Login\Form\Login\index.tsx
  * @Description: 登录页面
  * @前端实习生: 鲸落
  */
 import React, { memo, useEffect, useRef, useState } from 'react'
 
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { LockOutlined, MailOutlined, SafetyCertificateOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Form, FormInstance, Input, message } from 'antd';
 import SparkMD5 from 'spark-md5'
 import QqImg from '@/assets/images/qq.png'
@@ -38,12 +38,12 @@ const index = memo(() => {
       messageApi.destroy()
       if( result?.data.code === 200 ){
           navigate('/main/home/all')
-          messageApi.info('登录成功');
+          messageApi.info('登录成功')
           sessionStorage.setItem('userInfo', JSON.stringify(result.data.data))
       }else{
-          messageApi.error(result?.data.info || '服务器异常，请稍后重试');
+          messageApi.error(result?.data.info || '服务器异常，请稍后重试')
           updateCode()
-          formRef.current?.resetFields(['checkCode']);
+          formRef.current?.resetFields(['checkCode'])
       }
   };
 
@@ -72,7 +72,7 @@ const index = memo(() => {
       <Form name="normal_login" className="login-form" onFinish={onFinish} ref={(form) => (formRef.current = form)}>
           <Form.Item name="username"
               rules={[{ required: true, message: '请输入邮箱' }]} >
-              <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="请输入邮箱" />
+              <Input prefix={<MailOutlined className="site-form-item-icon" />} placeholder="请输入邮箱" />
           </Form.Item>
           <Form.Item name="password"
               rules={[{ required: true, message: '请输入密码' }]} >
@@ -82,7 +82,7 @@ const index = memo(() => {
           <div className='checkCode'>
               <Form.Item name="checkCode"
                   rules={[{ required: true, message: '请输入验证码' }]}>
-                  <Input prefix={<UserOutlined className="site-form-item-icon" />} 
+                  <Input prefix={<SafetyCertificateOutlined className="site-form-item-icon" />} 
                   placeholder="请输入验证码"/>
               </Form.Item>
               <div onClick={updateCode}>
