@@ -1,3 +1,12 @@
+/*
+ * @Author: XJN
+ * @Date: 2023-11-13 11:24:06
+ * @LastEditors: xiaojunnanya
+ * @LastEditTime: 2023-12-04 15:42:54
+ * @FilePath: \easy_pan\src\components\Table\style.ts
+ * @Description: 
+ * @前端实习生: 鲸落
+ */
 import styled from "styled-components";
 
 
@@ -27,33 +36,6 @@ export const TableStyled = styled.div<propsType>`
                 height: 22px;
                 vertical-align: bottom
             }
-        }
-    }
-
-    .folderType{
-        
-        user-select: none;
-        display: flex;
-        align-items: center;
-
-        .showImg{
-            /* width: 30px; */
-            margin-right: 10px;
-            text-align: center;
-        }
-
-        span, img{
-            cursor: pointer;
-
-            &:hover{
-                color: #06A7FF;
-            }
-        }
-
-        img{
-            height: 30px;
-            width: 30px;
-            object-fit: cover;
         }
     }
 

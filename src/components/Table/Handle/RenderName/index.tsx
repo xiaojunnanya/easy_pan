@@ -16,9 +16,11 @@ import { getImage } from '@/service/modules/home'
 import Preview from '../../Preview'
 import { useAppDispatch } from '@/store'
 import { changeFilePid } from '@/store/modules/home'
+import { RenderNameStyle } from './style'
 
 interface IProps {
-    record: DataType
+    record: DataType,
+    preview?: boolean
 }
 
 export interface ChildPreviewMethods {
@@ -27,7 +29,7 @@ export interface ChildPreviewMethods {
 
 const index: FC<IProps> = memo((props) => {
   const dispatch = useAppDispatch()
-  const { record } = props
+  const { record, preview = false } = props
   const childPreviewRef = useRef<ChildPreviewMethods>(null)
     
   // 默认是文件夹
@@ -85,11 +87,13 @@ const index: FC<IProps> = memo((props) => {
     }else{
       // 文件夹，获取这个文件夹的数据
       dispatch(changeFilePid(record.fileId))
+      console.log('1111');
+      
     }  
   }
 
   return (
-    <>
+    <RenderNameStyle preview={preview}>
 
       <div style={{display:'none'}}>
         <Preview ref={childPreviewRef}></Preview>
@@ -99,11 +103,11 @@ const index: FC<IProps> = memo((props) => {
         <div className='showImg'>
           <img src={showImg}/>
         </div>
-        <span onClick={()=>{ folderHandle && folderHandle(record, showImg) }}>
+        <span onClick={()=>{ preview && folderHandle(record, showImg) }}>
           {record.fileName}
         </span>
       </div>
-    </>
+    </RenderNameStyle>
   )
 })
 

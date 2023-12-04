@@ -3,7 +3,7 @@ import type { FC } from 'react'
 import { LinkOutlined,  StopOutlined } from '@ant-design/icons'
 import { Table, ConfigProvider, Popconfirm } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { RecyclePreStyled } from './style';
+import { WaitStyled } from './style';
 import zh_CN from 'antd/es/locale/zh_CN';
 import { useAppDispatch, useAppSelector, useAppShallowEqual } from '@/store';
 
@@ -189,7 +189,7 @@ const index: FC<propsType> = memo((props) => {
         <Preview ref={childRef}></Preview>
       </div>
 
-      <RecyclePreStyled height={newHeight + 57}>
+      <WaitStyled height={newHeight + 57}>
         <ConfigProvider locale={zh_CN}>
           <Table rowSelection={rowSelection} columns={columns} dataSource={showData} summary={()=>{
             return (
@@ -213,7 +213,7 @@ const index: FC<propsType> = memo((props) => {
           >
           </Table>
         </ConfigProvider>
-      </RecyclePreStyled>
+      </WaitStyled>
     </>
   )
 })

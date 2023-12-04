@@ -1,26 +1,35 @@
+/*
+ * @Author: XJN
+ * @Date: 2023-12-04 11:26:31
+ * @LastEditors: xiaojunnanya
+ * @LastEditTime: 2023-12-04 15:48:57
+ * @FilePath: \easy_pan\src\components\Table\Wait\SettingUserTable.tsx
+ * @Description: 
+ * @前端实习生: 鲸落
+ */
 import React, { memo, useEffect, useMemo, useRef, useState } from 'react'
 import type { FC } from 'react'
-import { DeleteOutlined, DownloadOutlined, DragOutlined, FormOutlined, ShareAltOutlined } from '@ant-design/icons'
+import { DeleteOutlined,  DownloadOutlined } from '@ant-design/icons'
 import { Table, ConfigProvider, Popconfirm } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { TableStyled } from './style';
+import { WaitStyled } from './style';
 import zh_CN from 'antd/es/locale/zh_CN';
 import { useAppDispatch, useAppSelector, useAppShallowEqual } from '@/store';
 
 import { downLoadFile, setSize } from '@/utils'
 
-import type { DataType, propsType } from './type';
+import Preview from '../Preview';
+import type { DataType, propsType } from '../type';
 import { changeBtnDisabled } from '@/store/modules/home';
 import { changeSelectKeys } from '@/store/modules/common';
-import { delFileToRecycle } from '@/service/modules/home';
-import Share from './Handle/Share';
-import RenderName from './Handle/RenderName';
+import RenderName from '../Handle/RenderName';
+import { adminDelFile } from '@/service/modules/setting';
 
 
-export interface ChildShareMethods {
-  openModel: (record: DataType) => void;
+
+interface ChildMethods {
+  openModel: (record: DataType, img: string) => void;
 }
-
 
 // 封装表格
 // 行点击、行选中
@@ -31,19 +40,21 @@ const index: FC<propsType> = memo((props) => {
       isLoading: state.common.isLoading
     }
   },useAppShallowEqual)
-  const childShareRef = useRef<ChildShareMethods>(null)
+  const childRef = useRef<ChildMethods>(null)
   const dispatch = useAppDispatch()
-  // props data
-  const [ showData, setShowData ] = useState<DataType[]>(data)
 
   // ----- useState -----
   
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   // 获取当前可视区高度
   const [ newHeight, setNewHeight ]  = useState(window.innerHeight - 240)
+
+  // props data
+  const [ showData, setShowData ] = useState<DataType[]>(data)
   
   // 展示操作部分
   const [ showHandleIndex, setShowHandleIndex ] = useState<number>(-1)
+
 
   // ----- stats -----
   const columns: ColumnsType<DataType> = useMemo(()=>{
@@ -52,44 +63,41 @@ const index: FC<propsType> = memo((props) => {
         title: '文件名',
         dataIndex: 'name',
         render: (text, record) => {
-          return <RenderName record={record} preview></RenderName>
+          return <RenderName record={record}  preview></RenderName>
         },
       },
       {
         dataIndex: 'handle',
-        width: 310,
+        width: 170,
         render:(text, record, index)=>{
           return (
             showHandleIndex === index && (
               <div className='allHandle'>
-                <div className='handle' onClick={(e)=>{handleClick(e, record, 1)}}>
-                  <ShareAltOutlined /><span>分享</span>
-                </div>
                 {/* 文件夹没有下载 */}
                 {
                   record.folderType === 0 && (
-                    <div className='handle' onClick={(e)=>{handleClick(e, record, 2)}}>
+                    <div className='handle' onClick={(e)=>{handleClick(e, record, 1)}}>
                       <DownloadOutlined /><span>下载</span>
                     </div>
                   )
                 }
+
                 <div className='handle'>
                   <Popconfirm title="提示" description={`你确定要删除【${record.fileName}】吗`}
-                    onConfirm={(e)=>{handleClick(e, record, 3)}}
+                    onConfirm={(e)=>{handleClick(e, record, 2)}}
                     okText="确定" cancelText="取消">
                     <DeleteOutlined /><span>删除</span>
                   </Popconfirm>
-                </div>
-                <div className='handle' onClick={(e)=>{handleClick(e, record, 4)}}>
-                  <FormOutlined /><span>重命名</span>
-                </div>
-                <div className='handle' onClick={(e)=>{handleClick(e, record, 5)}}>
-                  <DragOutlined /><span>移动</span>
                 </div>
               </div>
             )
           )
         }
+      },
+      {
+        title: '发布人',
+        dataIndex: 'nickName',
+        width: 150,
       },
       {
         title: '修改时间',
@@ -107,6 +115,8 @@ const index: FC<propsType> = memo((props) => {
     ];
   }, [showData, showHandleIndex])
 
+
+  
   
   // ----- useEffect -----
 
@@ -142,64 +152,40 @@ const index: FC<propsType> = memo((props) => {
     dispatch(changeSelectKeys(newSelectedRowKeys))
   };
 
-  /**
-   * 获取分页值与数
-   * @param page 当前页
-   * @param pageSize 页数
-   */
-  const pagiChange = (page: any, pageSize: any) =>{}
 
+  const handleDelete = (key: React.Key) => {
+    const newData = showData.filter((item: any) => item.key !== key);
+    setShowData(newData);
+  };
 
   /**
-   * 表格中的五个操作
+   * 表格中的2个操作
    * @param e 
    * @param record 
    * @param index 
    */
   const handleClick = async (e: any, record: DataType, index: number) =>{
     e.stopPropagation()
+    console.log(record.userId);
+    
     switch (index) {
-      // 分享
-      case 1:
-        childShareRef.current?.openModel(record)
-        
-        break;
       // 下载
-      case 2:downLoadFile(record.fileId)
+      case 1:downLoadFile(record.fileId)
         
         break;
       // 删除
-      case 3:
-        const res2 = await delFileToRecycle(record.fileId)
+      case 2:
+        const res2 = await adminDelFile(record.userId + '_' + record.fileId)
         if(res2.data.status === 'success'){
           // 不走接口，删除这一行
           handleDelete(record.key)
         }
-        
-        break;
-      // 重命名
-      case 4:
-      
-        
-        break;
-      // 移动
-      case 5:
-        
         break;
     
       default:
         break;
     }
   }
-
-  /**
-   * 删除操作
-   * @param key 
-   */
-  const handleDelete = (key: React.Key) => {
-    const newData = showData.filter((item: any) => item.key !== key);
-    setShowData(newData);
-  };
 
   // ----- view -----
 
@@ -211,10 +197,10 @@ const index: FC<propsType> = memo((props) => {
   return (
     <>
       <div style={{display:'none'}}>
-        <Share ref={childShareRef}></Share>
+        <Preview ref={childRef}></Preview>
       </div>
 
-      <TableStyled height={newHeight + 57}>
+      <WaitStyled height={newHeight + 57}>
         <ConfigProvider locale={zh_CN}>
           <Table rowSelection={rowSelection} columns={columns} dataSource={showData} summary={()=>{
             return (
@@ -226,8 +212,7 @@ const index: FC<propsType> = memo((props) => {
             position:['bottomRight'],
             showSizeChanger: true,
             showQuickJumper: true,
-            showTotal: (count) => `共 ${count} 条数据`,
-            onChange:pagiChange
+            showTotal: (count) => `共 ${count} 条数据`
           }} onRow={(record, index)=>{
             return {
               onMouseEnter: () => {
@@ -239,7 +224,7 @@ const index: FC<propsType> = memo((props) => {
           >
           </Table>
         </ConfigProvider>
-      </TableStyled>
+      </WaitStyled>
     </>
   )
 })

@@ -14,7 +14,8 @@ export interface DataType {
     recoveryTime: string | null // 回收站时间
     status: number // 0:转码中 1转码失败 2:转码成功
     shareId: string
-    code: string
+    code: string,
+    userId: string
 }
 
 // isShowFolder为ture显示文件夹按钮

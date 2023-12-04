@@ -1,3 +1,12 @@
+/*
+ * @Author: XJN
+ * @Date: 2023-11-28 10:33:35
+ * @LastEditors: xiaojunnanya
+ * @LastEditTime: 2023-12-04 14:04:31
+ * @FilePath: \easy_pan\src\service\modules\setting.ts
+ * @Description: 
+ * @前端实习生: 鲸落
+ */
 import { jlReq } from ".."
 
 /**
@@ -35,6 +44,40 @@ export const updateUserStatus = (userId: string, status: string) => {
         data: {
             userId,
             status
+        }
+    })
+}
+
+/**
+ * fileNameFuzzy
+ * @param pageNo 
+ * @param pageSize 
+ * @param fileNameFuzzy 文件名模糊搜索
+ * @returns 
+ */
+export const getFileList = (pageNo?: string, pageSize?:string, fileNameFuzzy?:string) =>{
+    return jlReq.request({
+        url: '/admin/loadFileList',
+        method: 'post',
+        data:{
+            pageNo: pageNo || 1,
+            pageSize: pageSize || 100,
+            fileNameFuzzy: fileNameFuzzy
+        }
+    })
+}
+
+/**
+ * admin删除
+ * @param fileIdAndUserIds 文件和用户ID用_隔开，多个参数用 逗号隔开
+ * @returns 
+ */
+export const adminDelFile = (fileIdAndUserIds: string) => {
+    return jlReq.request({
+        url: '/admin/delFile',
+        method: 'post',
+        data: {
+            fileIdAndUserIds
         }
     })
 }

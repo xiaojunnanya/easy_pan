@@ -99,10 +99,10 @@ const index = memo(() => {
               <Button type="primary" htmlType="submit" className="login-form-button"> 登录 </Button>
           </Form.Item>
           
-          <div className='qqimg'>
+          {/* <div className='qqimg'>
               <span>QQ快捷登录</span>
               <img src={QqImg}/>
-          </div>
+          </div> */}
       </Form>
     </>
   )
