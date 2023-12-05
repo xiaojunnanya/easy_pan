@@ -2,13 +2,13 @@
  * @Author: XJN
  * @Date: 2023-10-08 21:24:59
  * @LastEditors: xiaojunnanya
- * @LastEditTime: 2023-12-05 15:29:15
+ * @LastEditTime: 2023-12-05 15:31:04
  * @FilePath: \easy_pan\src\views\Setting\SysSetting\index.tsx
  * @Description: 系统设置
  * @前端实习生: 鲸落
  */
 import React, { useEffect } from 'react';
-import { Button, Checkbox, Form, Input, message } from 'antd';
+import { Button, Form, Input, message } from 'antd';
 import { getSysSettings, saveSysSettings } from '@/service/modules/setting';
 
 

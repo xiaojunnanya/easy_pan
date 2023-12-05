@@ -2,17 +2,16 @@
  * @Author: XJN
  * @Date: 2023-11-27 14:53:06
  * @LastEditors: xiaojunnanya
- * @LastEditTime: 2023-12-03 17:20:00
+ * @LastEditTime: 2023-12-05 15:31:16
  * @FilePath: \easy_pan\src\views\Login\Form\Login\index.tsx
  * @Description: 登录页面
  * @前端实习生: 鲸落
  */
 import React, { memo, useEffect, useRef, useState } from 'react'
 
-import { LockOutlined, MailOutlined, SafetyCertificateOutlined, UserOutlined } from '@ant-design/icons';
+import { LockOutlined, MailOutlined, SafetyCertificateOutlined } from '@ant-design/icons';
 import { Button, Form, FormInstance, Input, message } from 'antd';
 import SparkMD5 from 'spark-md5'
-import QqImg from '@/assets/images/qq.png'
 
 import { checkCodeServer, loginServer } from '@/service/modules/login';
 import { useNavigate } from 'react-router-dom';

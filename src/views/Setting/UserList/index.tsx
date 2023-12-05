@@ -1,11 +1,12 @@
 import { getHeaderImg } from '@/service/modules/home'
 import { getUserList, updateUserStatus } from '@/service/modules/setting'
 import { setSize } from '@/utils'
-import { Button, Input, Select, Space, Table } from 'antd'
-import React, { memo, useEffect, useMemo } from 'react'
+import { Button, ConfigProvider, Input, Select, Space, Table } from 'antd'
+import React, { memo, useEffect, useMemo, useState } from 'react'
 import { UserListStyle } from './style'
 import { useAppDispatch, useAppSelector, useAppShallowEqual } from '@/store'
 import { changeLoading } from '@/store/modules/common'
+import zh_CN from 'antd/es/locale/zh_CN'
 
 const index = memo(() => {
 
@@ -79,13 +80,28 @@ const index = memo(() => {
     nickNameFuzzy:"",
     status: "",
   })
+  // 获取当前可视区高度
+  const [ newHeight, setNewHeight ]  = useState(window.innerHeight - 240)
 
   // ----- useeffect -----
   useEffect(()=>{
     getData()
   },[])
 
+  useEffect(()=>{
+    window.addEventListener('resize', handleResize)
+
+    return () =>{
+      return window.removeEventListener('resize', handleResize)
+    }
+  }, [window.innerHeight])
+
   // ----- method -----
+
+  const handleResize = () =>{
+    setNewHeight(window.innerHeight - 240)
+  }
+
   const getData = (data?:{nickNameFuzzy?: string, status?: string}) =>{
     dispatch(changeLoading(true))
     getUserList({
@@ -127,7 +143,7 @@ const index = memo(() => {
   }
 
   return (
-    <UserListStyle>
+    <UserListStyle height={newHeight + 57}>
       <div className='search'>
         用户昵称：<Input style={{width:'200px'}} placeholder='请输入用户名称' allowClear onChange={(e)=>{inputChange(e)}}/>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -136,7 +152,16 @@ const index = memo(() => {
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <Button type='primary' onClick={searchData}>查询</Button>
       </div>
-      <Table columns={columns} dataSource={userList} loading={isLoading}></Table>
+      <ConfigProvider locale={zh_CN}>
+        <Table columns={columns} dataSource={userList} loading={isLoading}
+        sticky={{ offsetHeader: 0 }} scroll={{y: newHeight, x:1000}} pagination={{
+          position:['bottomRight'],
+          showSizeChanger: true,
+          showQuickJumper: true,
+          showTotal: (count) => `共 ${count} 条数据`
+        }}
+        ></Table>
+      </ConfigProvider>
     </UserListStyle>
   )
 })
