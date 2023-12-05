@@ -2,7 +2,7 @@
  * @Author: XJN
  * @Date: 2023-10-06 21:40:03
  * @LastEditors: xiaojunnanya
- * @LastEditTime: 2023-12-04 16:22:29
+ * @LastEditTime: 2023-12-04 15:30:21
  * @FilePath: \easy_pan\src\views\Setting\FileList\index.tsx
  * @Description: 
  * @前端实习生: 鲸落
@@ -16,7 +16,7 @@ import React, { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import type { btnType } from '@/components/HeaderBtn/type'
 import { DeleteOutlined, ExclamationCircleFilled } from '@ant-design/icons'
 import HeaderBtn from '@/components/HeaderBtn'
-import { RecycleStyled } from './style'
+import { RecycleStyled } from '../style'
 import { Modal } from 'antd'
 import { adminDelFile, getFileList } from '@/service/modules/setting'
 const { confirm } = Modal;

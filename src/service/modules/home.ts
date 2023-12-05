@@ -68,7 +68,7 @@ export const logout = () =>{
 interface dataListType{
     category: string, // 分类
     filePid: string,  // 父文件ID
-    fileNameFuzzy?: string, // 文件名
+    fileNameFuzzy?: string, // 模糊搜索文件名
     pageNo?: string, // 页码
     pageSize?: string // 分页大小
 }
