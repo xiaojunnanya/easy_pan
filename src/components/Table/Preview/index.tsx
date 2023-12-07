@@ -10,6 +10,7 @@
 import React, { forwardRef, memo, useImperativeHandle, useRef, useState } from 'react';
 import { Button, Modal, Spin, Watermark } from 'antd';
 import PerPdf from './Handle/PrePdf'
+import PerDoc from './Handle/PreDoc'
 import { getFileInfo, getImage, getVideo } from '@/service/modules/home';
 import type { DataType } from '../type';
 import { PreviewStyled } from './style';
@@ -91,6 +92,7 @@ const Preview = memo(forwardRef<ChildPreviewMethods>((props, ref) => {
           break;
         // doc
         case 5:
+          show = <PerDoc fileId={record.fileId}></PerDoc>
           break;
         // excel
         case 6:

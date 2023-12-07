@@ -47,6 +47,19 @@ export const previewFile = (fileId: string) =>{
 }
 
 /**
+ * 获取文件信息
+ * @param fileId 
+ * @returns 
+ */
+export const getFileDetailInfo = (fileId: string) =>{
+    return jlReq.request({
+        method:'post',
+        url:`/file/getFile/${fileId}`,
+        responseType:'blob'
+    })
+}
+
+/**
  * 下载文件
  * @param code 
  * @returns 

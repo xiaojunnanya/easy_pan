@@ -2,7 +2,7 @@
  * @Author: XJN
  * @Date: 2023-10-06 02:30:44
  * @LastEditors: xiaojunnanya
- * @LastEditTime: 2023-10-06 16:48:45
+ * @LastEditTime: 2023-12-07 09:38:21
  * @FilePath: \easy_pan\src\service\request\index.ts
  * @Description: 
  * @前端实习生: 鲸落
@@ -11,7 +11,6 @@ import axios from 'axios'
 import type { AxiosInstance } from 'axios'
 
 import { jlRequestConfig } from './type'
-import { BASE_URL } from '../config'
 
 const cancelTokenSource = axios.CancelToken.source();
 class jlRequest{

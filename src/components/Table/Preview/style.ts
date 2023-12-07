@@ -2,7 +2,7 @@
  * @Author: XJN
  * @Date: 2023-11-17 15:04:57
  * @LastEditors: xiaojunnanya
- * @LastEditTime: 2023-12-05 17:54:31
+ * @LastEditTime: 2023-12-07 09:09:13
  * @FilePath: \easy_pan\src\components\Table\Preview\style.ts
  * @Description: 
  * @前端实习生: 鲸落
@@ -64,5 +64,4 @@ export const PreviewStyled = styled.div`
     .react-pdf__Page__textContent, .react-pdf__Page__annotations{
         display: none !important;
     }
-    /* react-pdf__Page__textContent textLayer */
 `
