@@ -1,11 +1,19 @@
+/*
+ * @Author: XJN
+ * @Date: 2023-11-16 16:56:04
+ * @LastEditors: xiaojunnanya
+ * @LastEditTime: 2023-12-07 09:05:07
+ * @FilePath: \easy_pan\src\components\Table\Preview\index.tsx
+ * @Description: 
+ * @前端实习生: 鲸落
+ */
 import React, { forwardRef, memo, useImperativeHandle, useRef, useState } from 'react';
 import { Button, Modal, Spin, Watermark } from 'antd';
-
+import PerPdf from './Handle/PrePdf'
 import { getFileInfo, getImage, getVideo } from '@/service/modules/home';
 import type { DataType } from '../type';
 import { PreviewStyled } from './style';
 import CodeBlock from '@/utils/CodeBlock';
-import DocViewer, { PDFRenderer } from "@cyntler/react-doc-viewer";
 import { ChildPreviewMethods } from '../Handle/RenderName';
 import DPlayer from 'dplayer';
 import Hls from 'hls.js';
@@ -36,9 +44,10 @@ const Preview = memo(forwardRef<ChildPreviewMethods>((props, ref) => {
   }
 
 
+
   // 文件夹的时候为null
   const previewShow = async (record: DataType, showImg: string) =>{
-    let show = <div></div>
+    let show = <div>loading...</div>
 
     if(record.fileType){
       switch (record.fileType) {
@@ -77,16 +86,7 @@ const Preview = memo(forwardRef<ChildPreviewMethods>((props, ref) => {
           break;
         // pdf
         case 4:
-          const aa = 'http://netdisk.kbws.xyz/api/file/getFile/' + record.fileId
-          const docs = [
-            { uri: 'https://minio.aimed.cn/xs-szhpt/base/2023-03-23/2014版NOF防治骨质疏松症临床指南解读.90f94a1bbe.pdf' },
-            { uri: '/file/getFile/4iWy5DyBPm' },
-            // { uri: 'http://netdisk.kbws.xyz/api/file/getFile/4iWy5DyBPm' },
-          ];
-          // HEAD请求跨域   记得设置请求失败处理方式
-          show = (
-            <DocViewer documents={docs} pluginRenderers={[PDFRenderer]} prefetchMethod="GET"/>
-          )
+          show = <PerPdf fileId={record.fileId}></PerPdf>
           
           break;
         // doc

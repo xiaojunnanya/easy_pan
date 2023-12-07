@@ -37,7 +37,20 @@ export const getVideo = ( video: string | null ) =>{
     return `/api/file/ts/getVideoInfo/${video}`
 }
 
-// 下载文件
+/**
+ * 预览
+ * @param fileId 
+ * @returns 
+ */
+export const previewFile = (fileId: string) =>{
+    return `/api/file/getFile/${fileId}`
+}
+
+/**
+ * 下载文件
+ * @param code 
+ * @returns 
+ */
 export const downloadFile = (code: string) =>{
     return `/api/file/download/${code}`
 }
@@ -90,7 +103,11 @@ export const getDataList = (data: dataListType) =>{
 }
 
 
-// 获取文件信息
+/**
+ * 获取文件信息
+ * @param fileId 
+ * @returns 
+ */
 export const getFileInfo = (fileId: string) =>{
     return jlReq.request({
         method:'get',
@@ -98,7 +115,11 @@ export const getFileInfo = (fileId: string) =>{
     })
 }
 
-// 文件重命名
+/**
+ * 文件重命名
+ * @param data 
+ * @returns 
+ */
 export const changeFileName = (data: {fileId: string, fileName: string}) =>{
     return jlReq.request({
         method:'post',
@@ -107,7 +128,11 @@ export const changeFileName = (data: {fileId: string, fileName: string}) =>{
     })
 }
 
-// 获取下载文件的code
+/**
+ * 获取下载文件的code
+ * @param id 
+ * @returns 
+ */
 export const getDownCode = (id: string) =>{
     return jlReq.request({
         method:'post',
@@ -115,7 +140,11 @@ export const getDownCode = (id: string) =>{
     })
 }
 
-// 删除到回收站
+/**
+ * 删除到回收站
+ * @param fileIds 
+ * @returns 
+ */
 export const delFileToRecycle = (fileIds: string) =>{
     return jlReq.request({
         method:'post',
@@ -126,7 +155,12 @@ export const delFileToRecycle = (fileIds: string) =>{
     })
 }
 
-// 新建文件夹
+/**
+ * 新建文件夹
+ * @param fileName 
+ * @param filePid 
+ * @returns 
+ */
 export const createFolder = (fileName: string, filePid: string) =>{
     return jlReq.request({
         method:'post',

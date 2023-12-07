@@ -2,7 +2,7 @@
  * @Author: XJN
  * @Date: 2023-10-06 02:24:25
  * @LastEditors: xiaojunnanya
- * @LastEditTime: 2023-12-05 14:51:59
+ * @LastEditTime: 2023-12-05 15:47:09
  * @FilePath: \easy_pan\README.md
  * @Description: 
  * @前端实习生: 鲸落
@@ -71,8 +71,8 @@
 - 移动
 - 批量移动
 - 空数据的时候上传文件+新建文件夹
-- 文件预览：pdf+doc+excel+md文件的的预览
-- 面包屑
+- 文件预览：pdf+doc+excel+ppt+音频的预览
+- 面包屑导航
 - 优化注册和忘记密码的全局提示
 - 大件上传+web worket
 - 表格分页
