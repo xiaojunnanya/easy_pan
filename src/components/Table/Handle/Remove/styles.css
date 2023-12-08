@@ -1,0 +1,21 @@
+
+.moda-body{
+    .ant-modal-body{
+        margin-top: 15px !important;
+    }
+
+    .folderType{
+        margin: 10px 0;
+
+        &:hover{
+            background-color: #F8F8F8;
+            cursor: pointer;
+        }
+    }
+    
+    .ant-breadcrumb{
+        background-color: #F1F1F1;
+        padding: 10px;
+        user-select: none;
+    }
+}

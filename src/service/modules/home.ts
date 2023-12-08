@@ -47,7 +47,7 @@ export const previewFile = (fileId: string) =>{
 }
 
 /**
- * 获取文件留
+ * 获取文件流
  * @param fileId 
  * @returns 
  */
@@ -181,6 +181,40 @@ export const createFolder = (fileName: string, filePid: string) =>{
         data:{
             filePid : filePid,
             fileName: fileName
+        }
+    })
+}
+
+/**
+ * 获取所有目录
+ * @param filePid 文件id
+ * @param currentFileIds 
+ * @returns 
+ */
+export const getLoadAllFolder = (filePid: string, currentFileIds?: string) =>{
+    return jlReq.request({
+        method:'post',
+        url:'/file/loadAllFolder',
+        data:{
+            filePid, 
+            currentFileIds: currentFileIds || 0
+        }
+    })
+}
+
+/**
+ * 移动文件
+ * @param fileIds 所选文件ID
+ * @param filePid 文件父ID
+ * @returns 
+ */
+export const removeFileFolder = (fileIds: string, filePid: string) =>{
+    return jlReq.request({
+        method:'post',
+        url:'/file/changeFileFolder',
+        data:{
+            fileIds,
+            filePid
         }
     })
 }

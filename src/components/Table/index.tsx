@@ -15,10 +15,15 @@ import { changeSelectKeys } from '@/store/modules/common';
 import { delFileToRecycle } from '@/service/modules/home';
 import Share from './Handle/Share';
 import RenderName from './Handle/RenderName';
+import Remove from './Handle/Remove';
 
 
 export interface ChildShareMethods {
   openModel: (record: DataType) => void;
+}
+
+export interface ChildRemoveMethods {
+  showModal: () => void;
 }
 
 
@@ -32,6 +37,7 @@ const index: FC<propsType> = memo((props) => {
     }
   },useAppShallowEqual)
   const childShareRef = useRef<ChildShareMethods>(null)
+  const childRemoveRef = useRef<ChildRemoveMethods>(null)
   const dispatch = useAppDispatch()
   // props data
   const [ showData, setShowData ] = useState<DataType[]>(data)
@@ -184,7 +190,8 @@ const index: FC<propsType> = memo((props) => {
         break;
       // 移动
       case 5:
-        
+        // 移动文件这部分接口有点问题，先暂时停止
+        // childRemoveRef.current?.showModal()
         break;
     
       default:
@@ -212,6 +219,7 @@ const index: FC<propsType> = memo((props) => {
     <>
       <div style={{display:'none'}}>
         <Share ref={childShareRef}></Share>
+        <Remove ref={childRemoveRef}></Remove>
       </div>
 
       <TableStyled height={newHeight + 57}>

@@ -91,9 +91,9 @@ const index: FC<IProps> = memo((props) => {
       
     }  
   }
-
+  
   return (
-    <RenderNameStyle preview={preview}>
+    <RenderNameStyle preview={String(preview)}>
 
       <div style={{display:'none'}}>
         <Preview ref={childPreviewRef}></Preview>

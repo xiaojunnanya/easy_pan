@@ -1,11 +1,11 @@
 import styled from "styled-components";
 
 interface IProps {
-    preview: boolean;
+    preview: string;
 }
 
 export const RenderNameStyle = styled.div<IProps>`
-
+    
     .folderType{
         
         user-select: none;
@@ -18,10 +18,10 @@ export const RenderNameStyle = styled.div<IProps>`
         }
 
         span, img{
-            cursor: ${ props => props.preview && 'pointer' };
+            cursor: ${ props => props.preview === 'true' ? 'pointer' : '' };
 
             &:hover{
-                color: ${ props => props.preview && '#06A7FF' };
+                color: ${ props => props.preview === 'true' ? '#06A7FF' : '' };
             }
         }
 
