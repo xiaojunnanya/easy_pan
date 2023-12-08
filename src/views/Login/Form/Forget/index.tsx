@@ -65,7 +65,6 @@ const index = memo(() => {
 				}
 			}, 1000)
 
-            // 暂时不做提示
             sendEmailCodeServer(res.username, '1').then(res =>{
                 if(res?.data.code === 200 && res?.data.info === '请求成功'){
                     dispatch(changeMessageApi({

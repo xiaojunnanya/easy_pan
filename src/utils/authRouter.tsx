@@ -12,7 +12,7 @@ import { useLocation, Navigate } from 'react-router-dom'
 
 const AuthRouter = (props: { children: JSX.Element }) =>{
     const { pathname } = useLocation()
-    if( pathname === '/login' ){
+    if( ( pathname === '/login' ) || ( pathname.includes('/share') ) || ( pathname.includes('/shareCheck') ) ){
         return props.children
     }
     if(!sessionStorage.getItem('userInfo')){

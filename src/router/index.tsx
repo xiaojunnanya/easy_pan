@@ -18,6 +18,8 @@ const Share = React.lazy(()=> import("@/views/Share"))
 const Recycle = React.lazy(()=> import("@/views/Recycle"))
 const Setting = React.lazy(()=> import("@/views/Setting"))
 const NotFound = React.lazy(()=> import("@/views/NotFound"))
+const Shares = React.lazy(()=> import("@/views/ShareModule/Share"))
+const ShareModule = React.lazy(()=> import("@/views/ShareModule/ShareCheck"))
 const Test = React.lazy(()=> import("@/views/Test"))
 
 const routes : RouteObject[] = [
@@ -66,6 +68,14 @@ const routes : RouteObject[] = [
                 element: <Setting></Setting>
             },
         ]
+    },
+    {
+        path:'/share/:id',
+        element: <Shares></Shares>
+    },
+    {
+        path:'/shareCheck/:id',
+        element: <ShareModule></ShareModule>
     },
     {
         path:'*',

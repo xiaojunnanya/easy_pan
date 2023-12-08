@@ -1,3 +1,5 @@
+
+
 import { SyncOutlined } from '@ant-design/icons'
 import { Button, Input } from 'antd'
 import React, { Fragment, memo, useState } from 'react'
@@ -6,10 +8,9 @@ import { MainHeaderStyled } from './style';
 import { btnType } from './type';
 const { Search } = Input;
 
-// isShowFolder为ture显示文件夹
 interface propsType{
-    showBtn: btnType[],
-    getData: (filterValue?: string)=> void
+    showBtn: btnType[], // 展示的阿牛
+    getData: (filterValue?: string)=> void // 更新数据
 }
 
 

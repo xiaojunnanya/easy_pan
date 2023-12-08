@@ -12,7 +12,7 @@ import React, { useEffect } from 'react';
 import { useRoutes } from 'react-router-dom'
 import routes from '@/router'
 import { message } from 'antd';
-import { useAppSelector } from './store';
+import { useAppSelector, useAppShallowEqual } from './store';
 
 
 function App() {
@@ -22,7 +22,7 @@ function App() {
     return {
       mess: state.common.messageApi
     }
-  })
+  }, useAppShallowEqual)
 
   useEffect(()=>{
     messageApi.destroy()

@@ -59,6 +59,8 @@
 - `copy-to-clipboard`：复制到剪切板
 - `react-pdf`：pdf预览
 - `DPlayer`/`hls.js`：视频播放
+- `xlsx`：excel预览
+- `docx-preview`：doc预览
 
 
 ## 待解决
