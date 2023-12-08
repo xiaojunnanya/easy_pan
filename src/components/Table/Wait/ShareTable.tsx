@@ -10,7 +10,6 @@ import { useAppDispatch, useAppSelector, useAppShallowEqual } from '@/store';
 import Preview from '../Preview';
 import type { DataType, propsType } from '../type';
 import { changeBtnDisabled } from '@/store/modules/home';
-import { deleteFile, restore } from '@/service/modules/recycle';
 import { changeSelectKeys } from '@/store/modules/common';
 import RenderName from '../Handle/RenderName';
 import { cancelShare } from '@/service/modules/share';

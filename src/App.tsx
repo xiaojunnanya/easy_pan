@@ -7,14 +7,41 @@
  * @Description: 
  * @前端实习生: 鲸落
  */
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { useRoutes } from 'react-router-dom'
 import routes from '@/router'
+import { message } from 'antd';
+import { useAppSelector } from './store';
+
 
 function App() {
+  const [ messageApi, contextHolder ] = message.useMessage()
+
+  const { mess } = useAppSelector((state)=>{
+    return {
+      mess: state.common.messageApi
+    }
+  })
+
+  useEffect(()=>{
+    messageApi.destroy()
+    if(mess.info){
+      switch (mess.type) {
+        case 'success': messageApi.success(mess.info);break;
+        case 'error': messageApi.error(mess.info);break;
+        case 'info': messageApi.info(mess.info);break;
+      
+        default:
+          break;
+      }
+    }
+  }, [mess])
+
+
   return (
     <>
+      { contextHolder }
       {
         useRoutes(routes)
       }

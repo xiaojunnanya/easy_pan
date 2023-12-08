@@ -1,18 +1,17 @@
 import React, { memo, useEffect, useRef, useState } from 'react'
 
-import { LockOutlined, MailOutlined, SafetyCertificateOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Form, FormInstance, Input, message } from 'antd';
+import { LockOutlined, MailOutlined, SafetyCertificateOutlined } from '@ant-design/icons';
+import { Button, Form, FormInstance, Input } from 'antd';
 
 import { checkCodeServer, resetPwdServer, sendEmailCodeServer } from '@/service/modules/login';
-import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '@/store';
 import { changeMode } from '@/store/modules/login';
+import { changeMessageApi } from '@/store/modules/common';
 
 const index = memo(() => {
   const formRef = useRef<FormInstance | null>(null);
   const [ codeImg, setCodeImg ] = useState<string>('')
   const [ btnName, setBtnName ] = useState<string>('获取验证码')
-  const [ messageApi, contextHolder ] = message.useMessage();
   const dispatch = useAppDispatch()
 
   useEffect(()=>{
@@ -23,12 +22,17 @@ const index = memo(() => {
         console.log(values);
         const result = await resetPwdServer(values.username,  values.emailCode, values.password, values.checkCode)
         console.log(result);
-        messageApi.destroy()
         if( result?.data.code === 200 && result?.data.info === '请求成功'){
             dispatch(changeMode('login'))
-            // messageApi.info('重置成功,请重新登录')
+            dispatch(changeMessageApi({
+                type: 'success',
+                info: '重置成功,请重新登录'
+            }))
         }else{
-            messageApi.error(result?.data.info || '服务器异常，请稍后重试');
+            dispatch(changeMessageApi({
+                type: 'error',
+                info: result?.data.info || '服务器异常，请稍后重试'
+            }))
             updateCode()
             formRef.current?.resetFields(['checkCode']);
         }
@@ -64,9 +68,15 @@ const index = memo(() => {
             // 暂时不做提示
             sendEmailCodeServer(res.username, '1').then(res =>{
                 if(res?.data.code === 200 && res?.data.info === '请求成功'){
-                    messageApi.success('验证码已发送，请注意查收')
+                    dispatch(changeMessageApi({
+                        type: 'success',
+                        info: '验证码已发送，请注意查收'
+                    }))
                 }else{
-                    messageApi.error(res?.data.info || '服务器异常，请稍后重试')
+                    dispatch(changeMessageApi({
+                        type: 'error',
+                        info: res?.data.info || '服务器异常，请稍后重试'
+                    }))
                 }
             })
         }).catch(err=>{})
@@ -75,11 +85,6 @@ const index = memo(() => {
 
   return (
     <>
-
-      <>
-      { contextHolder }
-      </>
-
       <Form name="normal_login" className="login-form" onFinish={onFinish} ref={(form) => (formRef.current = form)}>
           <Form.Item name="username"
               rules={[{ required: true, message: '请输入邮箱' }]} >

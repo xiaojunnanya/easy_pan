@@ -10,18 +10,18 @@
 import React, { memo, useEffect, useRef, useState } from 'react'
 
 import { LockOutlined, MailOutlined, SafetyCertificateOutlined } from '@ant-design/icons';
-import { Button, Form, FormInstance, Input, message } from 'antd';
+import { Button, Form, FormInstance, Input } from 'antd';
 import SparkMD5 from 'spark-md5'
 
 import { checkCodeServer, loginServer } from '@/service/modules/login';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '@/store';
 import { changeMode } from '@/store/modules/login';
+import { changeMessageApi } from '@/store/modules/common';
 
 const index = memo(() => {
   const formRef = useRef<FormInstance | null>(null);
   const [ codeImg, setCodeImg ] = useState<string>('')
-  const [ messageApi, contextHolder ] = message.useMessage();
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
 
@@ -34,13 +34,12 @@ const index = memo(() => {
       spark.append(values.password)
       const password = spark.end()
       const result = await loginServer(values.username, password, values.checkCode)
-      messageApi.destroy()
       if( result?.data.code === 200 ){
           navigate('/main/home/all')
-          messageApi.info('登录成功')
+          dispatch(changeMessageApi({ type:'success', info:'登录成功' }))
           sessionStorage.setItem('userInfo', JSON.stringify(result.data.data))
       }else{
-          messageApi.error(result?.data.info || '服务器异常，请稍后重试')
+          dispatch(changeMessageApi({ type:'error', info:result?.data.info || '服务器异常，请稍后重试' }))
           updateCode()
           formRef.current?.resetFields(['checkCode'])
       }
@@ -63,11 +62,6 @@ const index = memo(() => {
 
   return (
     <>
-
-      <>
-      { contextHolder }
-      </>
-
       <Form name="normal_login" className="login-form" onFinish={onFinish} ref={(form) => (formRef.current = form)}>
           <Form.Item name="username"
               rules={[{ required: true, message: '请输入邮箱' }]} >

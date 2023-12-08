@@ -12,7 +12,6 @@ import type { AxiosInstance } from 'axios'
 
 import { jlRequestConfig } from './type'
 
-const cancelTokenSource = axios.CancelToken.source();
 class jlRequest{
     instance: AxiosInstance
 

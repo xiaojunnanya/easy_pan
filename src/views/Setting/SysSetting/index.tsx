@@ -8,8 +8,10 @@
  * @前端实习生: 鲸落
  */
 import React, { useEffect } from 'react';
-import { Button, Form, Input, message } from 'antd';
+import { Button, Form, Input } from 'antd';
 import { getSysSettings, saveSysSettings } from '@/service/modules/setting';
+import { changeMessageApi } from '@/store/modules/common';
+import { useAppDispatch } from '@/store';
 
 
 type FieldType = {
@@ -20,16 +22,22 @@ type FieldType = {
 
 const App: React.FC = () => {
   const [form] = Form.useForm()
-  const [ messageApi, contextHolder ] = message.useMessage();
+  const dispatch = useAppDispatch()
 
   const onFinish = (values: any) => {
     console.log('Success:', values);
     saveSysSettings(values).then(res =>{
       console.log(res.data);
       if( res?.data.code === 200 && res?.data.status === 'success'){
-          messageApi.success('修改成功')
+          dispatch(changeMessageApi({
+            type: 'success',
+            info: '修改成功'
+        }))
       }else{
-          messageApi.error(res?.data.info || '服务器异常，请稍后重试')
+          dispatch(changeMessageApi({
+            type: 'error',
+            info: res?.data.info || '服务器异常，请稍后重试'
+        }))
       }
     })
   };
@@ -44,11 +52,6 @@ const App: React.FC = () => {
 
   return (
     <>
-
-      {
-        contextHolder
-      }
-
       <Form  name="basic" labelCol={{ span: 8 }} wrapperCol={{ span: 16 }}
         style={{ maxWidth: 600,marginTop:50 }} 
         onFinish={onFinish}

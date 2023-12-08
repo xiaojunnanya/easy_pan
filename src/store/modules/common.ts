@@ -5,6 +5,10 @@ const countSlice = createSlice({
     initialState:{
         isLoading: false,
         selectKeys: [],
+        messageApi:{
+            type:'',
+            info:'',
+        },
     },
     reducers:{
         changeLoading(state, action){
@@ -12,10 +16,13 @@ const countSlice = createSlice({
         },
         changeSelectKeys(state, action){
             state.selectKeys = action.payload
+        },
+        changeMessageApi(state, action){
+            state.messageApi = action.payload
         }
     }
 })
 
-export const { changeLoading, changeSelectKeys } = countSlice.actions
+export const { changeLoading, changeSelectKeys, changeMessageApi } = countSlice.actions
 
 export default countSlice.reducer
