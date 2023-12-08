@@ -11,6 +11,7 @@ import React, { forwardRef, memo, useImperativeHandle, useRef, useState } from '
 import { Button, Modal, Spin, Watermark } from 'antd';
 import PerPdf from './Handle/PrePdf'
 import PerDoc from './Handle/PreDoc'
+import PreXls from './Handle/PreXls'
 import { getFileInfo, getImage, getVideo } from '@/service/modules/home';
 import type { DataType } from '../type';
 import { PreviewStyled } from './style';
@@ -96,6 +97,7 @@ const Preview = memo(forwardRef<ChildPreviewMethods>((props, ref) => {
           break;
         // excel
         case 6:
+          show = <PreXls fileId={record.fileId}></PreXls>
           break;
         // 没有break执行下一个
         // txt
@@ -150,11 +152,14 @@ const Preview = memo(forwardRef<ChildPreviewMethods>((props, ref) => {
         {
           showView ? (
             <PreviewStyled>
-              <Watermark content={[userInfo.nickName, 'Easy云盘']} style={{height:'100%'}}>
+              {/* <Watermark content={[userInfo.nickName, 'Easy云盘']} style={{height:'100%'}}>
                 {
                   showView
                 }
-              </Watermark>
+              </Watermark> */}
+              {
+                  showView
+              }
             </PreviewStyled>
           ) : (
             <div className="example" style={{textAlign:'center',marginTop:'100px'}}>

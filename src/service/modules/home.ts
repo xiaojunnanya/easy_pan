@@ -47,15 +47,15 @@ export const previewFile = (fileId: string) =>{
 }
 
 /**
- * 获取文件信息
+ * 获取文件留
  * @param fileId 
  * @returns 
  */
-export const getFileDetailInfo = (fileId: string) =>{
+export const getFileDetailInfo = (fileId: string, isDoc: boolean) =>{
     return jlReq.request({
         method:'post',
         url:`/file/getFile/${fileId}`,
-        responseType:'blob'
+        responseType:isDoc ? 'blob' : 'arraybuffer'
     })
 }
 
