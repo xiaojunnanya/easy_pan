@@ -1,3 +1,12 @@
+/*
+ * @Author: XJN
+ * @Date: 2023-10-16 21:20:16
+ * @LastEditors: xiaojunnanya
+ * @LastEditTime: 2023-12-11 15:15:21
+ * @FilePath: \easy_pan\src\components\HeaderBtn\index.tsx
+ * @Description: 头部按钮部分
+ * @前端实习生: 鲸落
+ */
 
 
 import { SyncOutlined } from '@ant-design/icons'
@@ -9,21 +18,23 @@ import { btnType } from './type';
 const { Search } = Input;
 
 interface propsType{
-    showBtn: btnType[], // 展示的阿牛
-    getData: (filterValue?: string)=> void // 更新数据
+    showBtn: btnType[], // 展示的按钮
+    getData?: (filterValue?: string)=> void // 更新数据
+    isSearch?: boolean
 }
 
 
 const index: FC<propsType> = memo((props) => {
-    const { showBtn, getData } = props
+    const { showBtn, getData, isSearch = true } = props
     const [ isSpin, setIsSpin ] = useState<boolean>(false)
+    
     const onSearch = (e: string) =>{
-        getData(e)
+        getData && getData(e)
     }
 
     const upDate = () =>{
         setIsSpin(true)
-        getData()
+        getData && getData()
         setTimeout(()=>{
             setIsSpin(false)
         }, 700)
@@ -50,13 +61,19 @@ const index: FC<propsType> = memo((props) => {
   return (
     <MainHeaderStyled>
         {bntshow}
-        <div>
-            <Search placeholder="输入文件名进行搜索" allowClear onSearch={onSearch} 
-            style={{ width: 300 }}/>
-        </div>
-        <div>
-            <SyncOutlined className="iconfont icon-refresh" onClick={upDate} spin={isSpin}/>
-        </div>
+        {
+            isSearch && (
+                <>
+                    <div>
+                        <Search placeholder="输入文件名进行搜索" allowClear onSearch={onSearch} 
+                        style={{ width: 300 }}/>
+                    </div>
+                    <div>
+                        <SyncOutlined className="iconfont icon-refresh" onClick={upDate} spin={isSpin}/>
+                    </div>
+                </>
+            )
+        }
     </MainHeaderStyled>
   )
 })

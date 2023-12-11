@@ -29,7 +29,6 @@ export const InvalidSharingStyle = styled.div`
         .logo{
             display: flex;
             align-items: center;
-            cursor: pointer;
             margin: 30px 0 0 30px;
 
             .icon-pan{

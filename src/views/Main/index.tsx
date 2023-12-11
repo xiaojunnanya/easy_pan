@@ -2,8 +2,8 @@
  * @Author: XJN
  * @Date: 2023-10-08 20:42:01
  * @LastEditors: xiaojunnanya
- * @LastEditTime: 2023-10-16 22:12:49
- * @FilePath: \easy_pan\src\views\Main\All\index.tsx
+ * @LastEditTime: 2023-12-11 15:47:37
+ * @FilePath: \easy_pan\src\views\Main\index.tsx
  * @Description: 
  * @前端实习生: 鲸落
  */

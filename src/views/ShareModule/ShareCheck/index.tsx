@@ -2,7 +2,7 @@
  * @Author: XJN
  * @Date: 2023-12-08 14:30:16
  * @LastEditors: xiaojunnanya
- * @LastEditTime: 2023-12-11 11:23:09
+ * @LastEditTime: 2023-12-11 14:28:47
  * @FilePath: \easy_pan\src\views\ShareModule\ShareCheck\index.tsx
  * @Description: 外部分享验证模块
  * @前端实习生: 鲸落
@@ -35,12 +35,12 @@ const index = memo(() => {
       if(res.data.code === 200 && res.data.status === 'success'){
         setData(res.data.data)
       }else{
+        navigate(`/invalidSharing/${id}`)
         // 分享过期
         dispatch(changeMessageApi({
             type: 'error',
             info: res?.data.info || '服务器异常，请稍后重试'
         }))
-        navigate(`/invalidSharing/${id}`)
       }
     })
   }, [id])
