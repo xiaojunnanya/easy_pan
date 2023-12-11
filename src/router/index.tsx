@@ -2,9 +2,9 @@
  * @Author: XJN
  * @Date: 2023-10-03 19:29:14
  * @LastEditors: xiaojunnanya
- * @LastEditTime: 2023-10-17 20:16:08
+ * @LastEditTime: 2023-12-11 10:58:59
  * @FilePath: \easy_pan\src\router\index.tsx
- * @Description: 
+ * @Description: 路由模块
  * @前端实习生: 鲸落
  */
 import React from "react"
@@ -20,6 +20,7 @@ const Setting = React.lazy(()=> import("@/views/Setting"))
 const NotFound = React.lazy(()=> import("@/views/NotFound"))
 const Shares = React.lazy(()=> import("@/views/ShareModule/Share"))
 const ShareModule = React.lazy(()=> import("@/views/ShareModule/ShareCheck"))
+const InvalidSharing = React.lazy(()=> import("@/views/ShareModule/InvalidSharing"))
 const Test = React.lazy(()=> import("@/views/Test"))
 
 const routes : RouteObject[] = [
@@ -76,6 +77,10 @@ const routes : RouteObject[] = [
     {
         path:'/shareCheck/:id',
         element: <ShareModule></ShareModule>
+    },
+    {
+        path:'/invalidSharing/:id',
+        element: <InvalidSharing></InvalidSharing>
     },
     {
         path:'*',

@@ -38,3 +38,7 @@ export function coppyUrl(
     message.destroy()
     message.success('复制成功');
 };
+
+
+// 1分钟倒计时
+export const minuteDown = (time: number) => {}

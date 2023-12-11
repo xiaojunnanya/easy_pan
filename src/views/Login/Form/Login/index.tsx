@@ -2,7 +2,7 @@
  * @Author: XJN
  * @Date: 2023-11-27 14:53:06
  * @LastEditors: xiaojunnanya
- * @LastEditTime: 2023-12-05 15:31:16
+ * @LastEditTime: 2023-12-11 10:13:55
  * @FilePath: \easy_pan\src\views\Login\Form\Login\index.tsx
  * @Description: 登录页面
  * @前端实习生: 鲸落
@@ -39,7 +39,7 @@ const index = memo(() => {
           dispatch(changeMessageApi({ type:'success', info:'登录成功' }))
           sessionStorage.setItem('userInfo', JSON.stringify(result.data.data))
       }else{
-          dispatch(changeMessageApi({ type:'error', info:result?.data.info || '服务器异常，请稍后重试' }))
+          dispatch(changeMessageApi({ type:'error', info: result?.data.info || '服务器异常，请稍后重试' }))
           updateCode()
           formRef.current?.resetFields(['checkCode'])
       }

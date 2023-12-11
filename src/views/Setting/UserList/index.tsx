@@ -26,11 +26,13 @@ const index = memo(() => {
         render:(userId: string)=>{
           const img = getHeaderImg(userId)
           return <img src={img} width='40px' style={{borderRadius:"50%"}}/>
-        }
+        },
+        width: 70,
       },
       {
         title: '昵称',
-        dataIndex: 'nickName'
+        dataIndex: 'nickName',
+        width: 130,
       },
       {
         title: '邮箱',
@@ -43,22 +45,26 @@ const index = memo(() => {
           const a = setSize(item.useSpace)
           const b = setSize(item.totalSpace)
           return `${a}/${b}`
-        }
+        },
+        width: 160,
       },
       {
         title: '加入时间',
-        dataIndex: 'joinTime'
+        dataIndex: 'joinTime',
+        width: 170,
       },
       {
         title: '最后登录时间',
-        dataIndex: 'lastLoginTime'
+        dataIndex: 'lastLoginTime',
+        width: 170,
       },
       {
         title: '状态',
         dataIndex: 'status',
         render(status: number){
           return <div style={{color:  status === 1 ? '#529B2E' : 'red'}}>{status === 1 ? '正常' : '禁用'}</div>
-        }
+        },
+        width: 60,
       },
       {
         title: '操作',
@@ -68,9 +74,11 @@ const index = memo(() => {
             <Space size="middle">
               <a>分配空间</a>
               <a onClick={()=>{handle(item.userId, a)}}>{item.status === 1 ? '禁用' : '启用'}</a>
+              <a>设置管理员</a>
             </Space>
           )
         },
+        width: 170
       },
     ];
   }, [])

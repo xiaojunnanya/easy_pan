@@ -55,18 +55,19 @@ const index = memo(() => {
   const getEmailCode = async () =>{
     try {
         formRef.current?.validateFields(['username']).then(async res =>{
-            let time = 60
-            let a = setInterval(()=>{
-				time--;
-                setBtnName(time + '秒后重新获取')
-				if(time === 0) {
-					setBtnName('获取验证码')
-                    clearInterval(a)
-				}
-			}, 1000)
-
             sendEmailCodeServer(res.username, '1').then(res =>{
                 if(res?.data.code === 200 && res?.data.info === '请求成功'){
+
+                    let time = 60
+                    let a = setInterval(()=>{
+                        time--;
+                        setBtnName(time + '秒后重新获取')
+                        if(time === 0) {
+                            setBtnName('获取验证码')
+                            clearInterval(a)
+                        }
+                    }, 1000)
+
                     dispatch(changeMessageApi({
                         type: 'success',
                         info: '验证码已发送，请注意查收'
