@@ -117,7 +117,7 @@ export const getDataList = (data: dataListType) =>{
 
 
 /**
- * 获取文件信息
+ * 获取文件内容信息
  * @param fileId 
  * @returns 
  */

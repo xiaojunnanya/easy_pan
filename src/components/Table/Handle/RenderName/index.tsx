@@ -15,8 +15,9 @@ import codeIcon from '@/assets/images/icon-image/code.png'
 import { getImage } from '@/service/modules/home'
 import Preview from '../../Preview'
 import { useAppDispatch } from '@/store'
-import { changeFilePid } from '@/store/modules/home'
+import { changeFileName, changeFilePid } from '@/store/modules/home'
 import { RenderNameStyle } from './style'
+import { useSearchParams } from 'react-router-dom'
 
 interface IProps {
     record: DataType,
@@ -31,6 +32,9 @@ const index: FC<IProps> = memo((props) => {
   const dispatch = useAppDispatch()
   const { record, preview = false } = props
   const childPreviewRef = useRef<ChildPreviewMethods>(null)
+  const [ searchParams ] = useSearchParams()
+  const query = Object.fromEntries(searchParams.entries())
+  const path = query.path || '0'
     
   // 默认是文件夹
   let showImg = folderIcon
@@ -86,9 +90,11 @@ const index: FC<IProps> = memo((props) => {
       childPreviewRef.current?.openModel(record, showImg)
     }else{
       // 文件夹，获取这个文件夹的数据
-      dispatch(changeFilePid(record.fileId))
-      console.log('1111');
-      
+      // 修改path路由方式，采用'/'来分割纪录路由而不是直接展示
+      // path
+      dispatch(changeFilePid(path + '/' + record.fileId))
+      // 同时传递文件夹名字，在面包屑的地方使用
+      dispatch(changeFileName(record.fileName))
     }  
   }
   

@@ -16,6 +16,7 @@ import { delFileToRecycle } from '@/service/modules/home';
 import Share from './Handle/Share';
 import RenderName from './Handle/RenderName';
 import Remove from './Handle/Remove';
+import Breadcrumb from '../Breadcrumb';
 
 
 export interface ChildShareMethods {
@@ -31,9 +32,10 @@ export interface ChildRemoveMethods {
 // 行点击、行选中
 const index: FC<propsType> = memo((props) => {
   const { data } = props
-  const { isLoading } = useAppSelector(state =>{
+  const { isLoading, filePid } = useAppSelector(state =>{
     return {
-      isLoading: state.common.isLoading
+      isLoading: state.common.isLoading,
+      filePid: state.home.filePid
     }
   },useAppShallowEqual)
   const childShareRef = useRef<ChildShareMethods>(null)
@@ -47,6 +49,7 @@ const index: FC<propsType> = memo((props) => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   // 获取当前可视区高度
   const [ newHeight, setNewHeight ]  = useState(window.innerHeight - 240)
+
   
   // 展示操作部分
   const [ showHandleIndex, setShowHandleIndex ] = useState<number>(-1)
@@ -123,6 +126,7 @@ const index: FC<propsType> = memo((props) => {
       return window.removeEventListener('resize', handleResize)
     }
   }, [window.innerHeight])
+
 
   useEffect(()=>{
     setShowData(data)
@@ -221,6 +225,8 @@ const index: FC<propsType> = memo((props) => {
         <Share ref={childShareRef}></Share>
         <Remove ref={childRemoveRef}></Remove>
       </div>
+
+      <Breadcrumb />
 
       <TableStyled height={newHeight + 57}>
         <ConfigProvider locale={zh_CN}>

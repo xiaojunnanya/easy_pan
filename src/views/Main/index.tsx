@@ -2,7 +2,7 @@
  * @Author: XJN
  * @Date: 2023-10-08 20:42:01
  * @LastEditors: xiaojunnanya
- * @LastEditTime: 2023-12-11 15:47:37
+ * @LastEditTime: 2023-12-12 14:17:07
  * @FilePath: \easy_pan\src\views\Main\index.tsx
  * @Description: 
  * @前端实习生: 鲸落
@@ -71,7 +71,7 @@ const All: FC= memo(() => {
         show: category === 'all',
         onClick: async ()=>{
           const fileName = '新建文件夹' + new Date().getTime()
-          const res = await createFolder(fileName, path)
+          const res = await createFolder(fileName, path.split('/').pop() || '0')
           const d = res.data.data
           d.key = res.data.data.fileId
           const a = [...data]
@@ -119,6 +119,8 @@ const All: FC= memo(() => {
   useEffect(()=>{
       // 将其转为一个普通的对象
     dispatch(changeFilePid(path))
+    // 刚进来的时候同时修改仓库fileName
+    
   }, [path])
   
   
@@ -150,8 +152,7 @@ const All: FC= memo(() => {
       dispatch(changeLoading(true))
       getDataList({
         category: category,
-        filePid : path
-        // filePid : filePid,
+        filePid : path.split('/').pop() || '0'
       }).then(res =>{
         // 遍历为其添加上key
         let { list } = res.data.data
