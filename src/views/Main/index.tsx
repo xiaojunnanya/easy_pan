@@ -2,7 +2,7 @@
  * @Author: XJN
  * @Date: 2023-10-08 20:42:01
  * @LastEditors: xiaojunnanya
- * @LastEditTime: 2023-12-19 11:09:29
+ * @LastEditTime: 2023-12-28 10:17:51
  * @FilePath: \easy_pan\src\views\Main\index.tsx
  * @Description: 
  * @前端实习生: 鲸落
@@ -27,6 +27,7 @@ import { CloudUploadOutlined, DeleteOutlined, DragOutlined, ExclamationCircleFil
 import { Modal } from 'antd'
 
 import { changeFile, changeIsPopoverShow } from '@/store/modules/upload'
+import Breadcrumb from '@/components/Breadcrumb'
 const { confirm } = Modal;
 
 const All: FC= memo(() => {
@@ -139,6 +140,8 @@ const All: FC= memo(() => {
 
   // 为了在path直接进入的时候设置的
   useEffect(()=>{
+    console.log('changeFilePid1');
+    
       // 将其转为一个普通的对象
     dispatch(changeFilePid(path))
     // 刚进来的时候同时修改仓库fileName
@@ -158,6 +161,8 @@ const All: FC= memo(() => {
 
   // 路由回撤的时候，会导致页面path直接监听不到
   useEffect(()=>{
+    console.log('changeFilePid2');
+    
     dispatch(changeFilePid(urlPath))
   }, [urlPath])
 
@@ -198,6 +203,8 @@ const All: FC= memo(() => {
   return (
     <AllStyled>
       <HeaderBtn showBtn={showBtn} getData={getData}></HeaderBtn>
+
+      {/* <Breadcrumb /> */}
 
       {
         totalCount ? (

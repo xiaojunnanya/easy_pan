@@ -16,7 +16,6 @@ import { delFileToRecycle } from '@/service/modules/home';
 import Share from './Handle/Share';
 import RenderName from './Handle/RenderName';
 import Remove from './Handle/Remove';
-import Breadcrumb from '../Breadcrumb';
 
 
 export interface ChildShareMethods {
@@ -225,8 +224,6 @@ const index: FC<propsType> = memo((props) => {
         <Share ref={childShareRef}></Share>
         <Remove ref={childRemoveRef}></Remove>
       </div>
-
-      <Breadcrumb />
 
       <TableStyled height={newHeight + 57}>
         <ConfigProvider locale={zh_CN}>

@@ -1,3 +1,12 @@
+/*
+ * @Author: XJN
+ * @Date: 2023-11-30 17:10:38
+ * @LastEditors: xiaojunnanya
+ * @LastEditTime: 2023-12-28 09:57:18
+ * @FilePath: \easy_pan\src\utils\index.ts
+ * @Description: 
+ * @前端实习生: 鲸落
+ */
 import { getDownCode, downloadFile } from "@/service/modules/home";
 import { shareFileUrl } from "@/service/modules/share";
 import { message } from "antd";
@@ -40,5 +49,11 @@ export function coppyUrl(
 };
 
 
-// 1分钟倒计时
-export const minuteDown = (time: number) => {}
+// 将字符串携带'/'转为数组
+export function setArr(str: string){
+    if(str.includes('/')){
+        return str.split('/')
+    }else{
+        return str
+    }
+}

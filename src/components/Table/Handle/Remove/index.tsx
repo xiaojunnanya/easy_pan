@@ -1,4 +1,4 @@
-import { Breadcrumb, Modal } from 'antd';
+import { Modal } from 'antd';
 import React, { forwardRef, memo, useImperativeHandle, useState } from 'react'
 import { ChildRemoveMethods } from '../..';
 import { getLoadAllFolder } from '@/service/modules/home';
@@ -21,11 +21,6 @@ const index = memo(forwardRef<ChildRemoveMethods>((props, ref) => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [ showFolder, setShowFolder ] = useState<DataType[]>([])
-    const [ breadItem, setBreadItem ] = useState<any[]>([
-        {
-          title: '全部文件',
-        },
-      ])
 
 
     // ----- method -----
@@ -65,7 +60,6 @@ const index = memo(forwardRef<ChildRemoveMethods>((props, ref) => {
                 <OkBtn />
             </>
             )}>
-                <Breadcrumb separator=">" items={breadItem} />
                 {
                     showFolder.map(item => {
                         return (
