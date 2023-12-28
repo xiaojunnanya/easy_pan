@@ -2,7 +2,7 @@
  * @Author: XJN
  * @Date: 2023-10-06 02:30:44
  * @LastEditors: xiaojunnanya
- * @LastEditTime: 2023-12-07 09:38:21
+ * @LastEditTime: 2023-12-28 16:06:02
  * @FilePath: \easy_pan\src\service\request\index.ts
  * @Description: 
  * @前端实习生: 鲸落
@@ -21,7 +21,7 @@ class jlRequest{
 
         // 请求拦截器
         this.instance.interceptors.request.use((config)=>{
-            config.headers['Content-Type'] = 'application/x-www-form-urlencoded'
+            config.headers['Content-Type'] = config.headers['Content-Type'] || 'application/x-www-form-urlencoded'
             // config.cancelToken = cancelTokenSource.token
             return config
         },(error) =>{})
@@ -45,7 +45,6 @@ class jlRequest{
 
     // 创建网络请求的方法
     request<T=any>(config: jlRequestConfig){
-
         // 可以设置单次请求的成功拦截
         // if(config.interceptors?.requestSuccessFn){
         //     config = config.interceptors.requestSuccessFn(config)

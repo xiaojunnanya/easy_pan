@@ -64,6 +64,7 @@
 - `DPlayer`/`hls.js`：视频播放
 - `xlsx`：excel预览
 - `docx-preview`：doc预览
+- `nanoid`：生成唯一id
 
 
 

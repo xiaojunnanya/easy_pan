@@ -2,7 +2,7 @@
  * @Author: XJN
  * @Date: 2023-10-08 20:42:01
  * @LastEditors: xiaojunnanya
- * @LastEditTime: 2023-12-28 10:17:51
+ * @LastEditTime: 2023-12-28 10:24:53
  * @FilePath: \easy_pan\src\views\Main\index.tsx
  * @Description: 
  * @前端实习生: 鲸落
@@ -64,6 +64,7 @@ const All: FC= memo(() => {
         show: true,
         onClick: ()=>{
           console.log('大文件上传');
+          dispatch(changeIsPopoverShow(false))
           // 切片，web work，记得要中断或关闭webworker 线程
           // 先在主线程中进行切片上传相关操作，其他的在说
           
@@ -140,8 +141,6 @@ const All: FC= memo(() => {
 
   // 为了在path直接进入的时候设置的
   useEffect(()=>{
-    console.log('changeFilePid1');
-    
       // 将其转为一个普通的对象
     dispatch(changeFilePid(path))
     // 刚进来的时候同时修改仓库fileName
@@ -161,8 +160,6 @@ const All: FC= memo(() => {
 
   // 路由回撤的时候，会导致页面path直接监听不到
   useEffect(()=>{
-    console.log('changeFilePid2');
-    
     dispatch(changeFilePid(urlPath))
   }, [urlPath])
 

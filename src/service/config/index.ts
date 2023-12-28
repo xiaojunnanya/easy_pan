@@ -2,8 +2,8 @@
  * @Author: XJN
  * @Date: 2023-10-05 21:13:02
  * @LastEditors: xiaojunnanya
- * @LastEditTime: 2023-10-05 22:35:13
- * @FilePath: \demo\src\service\config\index.ts
+ * @LastEditTime: 2023-12-28 15:44:18
+ * @FilePath: \easy_pan\src\service\config\index.ts
  * @Description: 
  * @前端实习生: 鲸落
  */
