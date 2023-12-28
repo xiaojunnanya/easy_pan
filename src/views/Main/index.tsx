@@ -2,12 +2,12 @@
  * @Author: XJN
  * @Date: 2023-10-08 20:42:01
  * @LastEditors: xiaojunnanya
- * @LastEditTime: 2023-12-12 14:17:07
+ * @LastEditTime: 2023-12-19 11:09:29
  * @FilePath: \easy_pan\src\views\Main\index.tsx
  * @Description: 
  * @前端实习生: 鲸落
  */
-import React, { FC, memo, useCallback, useEffect, useMemo, useState } from 'react'
+import React, { FC, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import NoData from '@/components/NoData'
 import { AllStyled } from './style'
@@ -25,8 +25,9 @@ import HeaderBtn from '@/components/HeaderBtn'
 import { btnType } from '@/components/HeaderBtn/type'
 import { CloudUploadOutlined, DeleteOutlined, DragOutlined, ExclamationCircleFilled, SnippetsOutlined } from '@ant-design/icons'
 import { Modal } from 'antd'
-const { confirm } = Modal;
 
+import { changeFile, changeIsPopoverShow } from '@/store/modules/upload'
+const { confirm } = Modal;
 
 const All: FC= memo(() => {
 
@@ -60,6 +61,27 @@ const All: FC= memo(() => {
         icon:<CloudUploadOutlined />,
         disabled: false,
         show: true,
+        onClick: ()=>{
+          console.log('大文件上传');
+          // 切片，web work，记得要中断或关闭webworker 线程
+          // 先在主线程中进行切片上传相关操作，其他的在说
+          
+          // 这边我们将完整的信息传递到upload中，相关的操作在upload中操作
+          const inp = document.createElement('input');
+          inp.type = 'file';
+          inp.addEventListener("change", (event) => {
+            const inputElement = event.target as HTMLInputElement;
+            const { files } = inputElement
+            if( files && files[0] ){
+              const file = files[0]
+              // 对于调用其展开的方式，无法展开这样应该是display:none的原因
+              // 决定采用store来操作
+              dispatch(changeIsPopoverShow(true))
+              dispatch(changeFile(file))
+            }
+          });
+          inp.click();
+        }
       },
       {
         name: '新建文件夹',
