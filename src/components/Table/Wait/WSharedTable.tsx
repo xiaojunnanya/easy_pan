@@ -1,15 +1,16 @@
 /*
  * @Author: XJN
- * @Date: 2023-12-04 11:26:31
+ * @Date: 2024-01-02 15:32:25
  * @LastEditors: xiaojunnanya
- * @LastEditTime: 2023-12-04 15:48:57
- * @FilePath: \easy_pan\src\components\Table\Wait\SettingUserTable.tsx
- * @Description: 
+ * @LastEditTime: 2024-01-02 16:01:09
+ * @FilePath: \easy_pan\src\components\Table\Wait\WSharedTable.tsx
+ * @Description: 外部分享模块表格展示
  * @前端实习生: 鲸落
  */
+
 import React, { memo, useEffect, useMemo, useRef, useState } from 'react'
 import type { FC } from 'react'
-import { DeleteOutlined,  DownloadOutlined } from '@ant-design/icons'
+import { DeliveredProcedureOutlined,  DownloadOutlined } from '@ant-design/icons'
 import { Table, ConfigProvider, Popconfirm } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { WaitStyled } from './style';
@@ -21,9 +22,9 @@ import { downLoadFile, setSize } from '@/utils'
 import Preview from '../Preview';
 import type { DataType, propsType } from '../type';
 import { changeBtnDisabled } from '@/store/modules/home';
+import { deleteFile, restore } from '@/service/modules/recycle';
 import { changeSelectKeys } from '@/store/modules/common';
 import RenderName from '../Handle/RenderName';
-import { adminDelFile } from '@/service/modules/setting';
 
 
 
@@ -34,7 +35,7 @@ interface ChildMethods {
 // 封装表格
 // 行点击、行选中
 const index: FC<propsType> = memo((props) => {
-  const { data } = props
+  const { data, currentUser = true } = props
   const { isLoading } = useAppSelector(state =>{
     return {
       isLoading: state.common.isLoading
@@ -63,12 +64,12 @@ const index: FC<propsType> = memo((props) => {
         title: '文件名',
         dataIndex: 'name',
         render: (text, record) => {
-          return <RenderName record={record}  preview></RenderName>
+          return <RenderName record={record}></RenderName>
         },
       },
       {
         dataIndex: 'handle',
-        width: 170,
+        width: 230,
         render:(text, record, index)=>{
           return (
             showHandleIndex === index && (
@@ -82,11 +83,11 @@ const index: FC<propsType> = memo((props) => {
                   )
                 }
 
-                <div className='handle'>
+                <div className='handle' style={ { display: currentUser ? 'none' : 'block' } }>
                   <Popconfirm title="提示" description={`你确定要删除【${record.fileName}】吗`}
                     onConfirm={(e)=>{handleClick(e, record, 2)}}
                     okText="确定" cancelText="取消">
-                    <DeleteOutlined /><span>删除</span>
+                    <DeliveredProcedureOutlined /> <span>保存到我的网盘</span>
                   </Popconfirm>
                 </div>
               </div>
@@ -95,12 +96,7 @@ const index: FC<propsType> = memo((props) => {
         }
       },
       {
-        title: '发布人',
-        dataIndex: 'nickName',
-        width: 150,
-      },
-      {
-        title: '修改时间',
+        title: '删除时间',
         dataIndex: 'lastUpdateTime',
         width: 170,
       },
@@ -166,20 +162,15 @@ const index: FC<propsType> = memo((props) => {
    */
   const handleClick = async (e: any, record: DataType, index: number) =>{
     e.stopPropagation()
-    console.log(record.userId);
     
     switch (index) {
       // 下载
-      case 1:downLoadFile(record.fileId)
+      case 1:
+        downLoadFile(record.fileId)
         
         break;
-      // 删除
+      // 保存到我的网盘
       case 2:
-        const res2 = await adminDelFile(record.userId + '_' + record.fileId)
-        if(res2.data.status === 'success'){
-          // 不走接口，删除这一行
-          handleDelete(record.key)
-        }
         break;
     
       default:

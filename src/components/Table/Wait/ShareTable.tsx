@@ -196,7 +196,7 @@ const index: FC<propsType> = memo((props) => {
                   <Table.Summary fixed='top'></Table.Summary>
                 </>
             )
-          }} sticky={{ offsetHeader: 0 }} scroll={{y: newHeight, x:1000}} pagination={{
+          }} sticky={{ offsetHeader: 0 }} scroll={{y: newHeight, x:900}} pagination={{
             position:['bottomRight'],
             showSizeChanger: true,
             showQuickJumper: true,

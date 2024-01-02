@@ -2,7 +2,7 @@
  * @Author: XJN
  * @Date: 2023-12-08 14:30:28
  * @LastEditors: xiaojunnanya
- * @LastEditTime: 2023-12-11 15:41:23
+ * @LastEditTime: 2024-01-02 16:00:10
  * @FilePath: \easy_pan\src\views\ShareModule\Share\index.tsx
  * @Description: 外部分享模块
  * @前端实习生: 鲸落
@@ -16,6 +16,7 @@ import { getHeaderImg } from '@/service/modules/home'
 import HeaderBtn from '@/components/HeaderBtn'
 import { btnType } from '@/components/HeaderBtn/type'
 import { useAppSelector, useAppShallowEqual } from '@/store'
+import Table from '@/components/Table/Wait/WSharedTable'
 
 const index = memo(() => {
   const { id } = useParams()
@@ -30,7 +31,7 @@ const index = memo(() => {
     }
   }, useAppShallowEqual)
 
-  const [ data, setData ] = useState({
+  const [ userInfo, setUserInfo ] = useState({
     nickName:'',
     shareTime:"",
     userId:"",
@@ -38,16 +39,21 @@ const index = memo(() => {
     currentUser:false,// 判断是不是分享者查看这个链接，是分享者按钮就是取消分享，不是就是保存到我的网盘
   })
 
+  const [ data, setData ] = useState([])
+
   const showBtn: btnType[] = useMemo(()=>{
     return [
       {
-        name: data.currentUser ? '取消分享' : '保存到我的网盘',
-        icon:data.currentUser ? <StopOutlined /> : <DeliveredProcedureOutlined />,
+        name: userInfo.currentUser ? '取消分享' : '保存到我的网盘',
+        icon:userInfo.currentUser ? <StopOutlined /> : <DeliveredProcedureOutlined />,
         disabled: btnDisabled,
         show: true,
+        onClick: ()=>{
+          console.log('111')
+        }
       }
     ]
-  }, [btnDisabled, data.currentUser])
+  }, [btnDisabled, userInfo.currentUser])
 
   useEffect(()=>{
     // 检查是否登录
@@ -58,10 +64,10 @@ const index = memo(() => {
       }
 
       if( data.code === 200 && data.data ){
-        setData(data.data)
+        setUserInfo(data.data)
         loadFileList(id, '0').then(res =>{
-          console.log(res.data);
-          
+          console.log(res.data.data.list);
+          setData(res.data.data.list)
         })
       }
     })
@@ -71,7 +77,7 @@ const index = memo(() => {
   return (
     <ShareStyle>
       {
-        data.nickName && (
+        userInfo.nickName && (
           <>
             <div className="lo">
               <div className="logo">
@@ -83,24 +89,22 @@ const index = memo(() => {
               <div className='info'>
                 <div className="file-info">
                   <div className="avatar">
-                    <img src={getHeaderImg(data.userId)} alt="" />
+                    <img src={getHeaderImg(userInfo.userId)} alt="" />
                   </div>
                   <div className="share-info">
                     <div className="user-info">
-                      <div className="nick-name">{ data.nickName }</div>
-                      <div className="share-time">分享时间：{ data.shareTime }</div>
+                      <div className="nick-name">{ userInfo.nickName }</div>
+                      <div className="share-time">分享时间：{ userInfo.shareTime }</div>
                     </div>
-                    <div className="file-name">分享文件：{ data.fileName }</div>
+                    <div className="file-name">分享文件：{ userInfo.fileName }</div>
                   </div>
                 </div>
                 <div className='btn'>
                   <HeaderBtn showBtn={showBtn} isSearch={false}></HeaderBtn>
                 </div>
               </div>
-              <hr style={{color:'#DDDDDD', opacity:'.5'}}/>
-              {/* <div className="table">
-                <HeaderBtn showBtn={showBtn} isSearch={false}></HeaderBtn>
-              </div> */}
+
+              <Table data={data} currentUser={userInfo.currentUser}></Table>
             </div>
           </>
         )

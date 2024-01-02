@@ -21,4 +21,6 @@ export interface DataType {
 // isShowFolder为ture显示文件夹按钮
 export interface propsType{
     data: any
+    // 是否展示操作
+    currentUser?: boolean
 }
