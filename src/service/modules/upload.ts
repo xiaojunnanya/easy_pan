@@ -23,7 +23,6 @@ interface fileType{
 
 // 文件分片上传
 export const uploadChunkFile = ( file: fileType ) =>{
-    console.log('file', file);
     // debugger
     return jlReq.request({
         url: '/file/uploadFile',

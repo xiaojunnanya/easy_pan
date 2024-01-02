@@ -2,12 +2,12 @@
  * @Author: XJN
  * @Date: 2023-11-27 10:18:39
  * @LastEditors: xiaojunnanya
- * @LastEditTime: 2023-12-28 16:31:23
+ * @LastEditTime: 2024-01-02 15:19:09
  * @FilePath: \easy_pan\src\views\Home\UploadShow\index.tsx
  * @Description: 
  * @前端实习生: 鲸落
  */
-import { useAppSelector } from '@/store';
+import { useAppDispatch, useAppSelector } from '@/store';
 import { SwapOutlined } from '@ant-design/icons'
 import { Popover, Progress } from 'antd'
 import React, { memo, useEffect, useId, useRef, useState } from 'react'
@@ -15,6 +15,7 @@ import SparkMD5 from "spark-md5";
 import {nanoid} from 'nanoid'
 import { UploadShowStyle } from './style';
 import { uploadChunkFile } from '@/service/modules/upload';
+import { changeMessageApi } from '@/store/modules/common';
 
 enum STATUS{
   success = 'success',
@@ -99,6 +100,8 @@ interface fileItemType{
 const chunkSize = 1024 * 1024 * 5;
 
 const index = memo(() => {
+  const dispatch = useAppDispatch()
+  
   const { popoverShow, file }  = useAppSelector((state)=>{
     return {
       popoverShow: state.upload.isPopoverShow,
@@ -117,7 +120,8 @@ const index = memo(() => {
     }, [popoverShow])
 
     useEffect(()=>{
-      if(file.name) addFile(file, new Date().getTime().toString())
+      // 取10位时间戳
+      if(file.name) addFile(file, String(Math.round(new Date().getTime() / 1000)))
     }, [file])
 
     // ---- method -----
@@ -276,91 +280,37 @@ const index = memo(() => {
         const fileSize = currentFile.totalSize;
         const chunks = Math.ceil(fileSize / chunkSize);
         for (let i = chunkIndex; i < chunks; i++) {
-            // 他这边做的还有一个删除的功能，删除就不在上传了
-            // let delIndex = delList.value.indexOf(uid);
-            // if (delIndex != -1) {
-            //     delList.value.splice(delIndex, 1);
-            //     break;
-            // }
-
-            // 每次都需要获取一下，因为状态可以会发生变化？
-            currentFile = getFileByUid(uid);
-            // 做的暂停
-            if (currentFile.pause) {
-                break;
-            };
+          
             let start = i * chunkSize;
             let isEnd = start + chunkSize
             let end = isEnd >= fileSize ? fileSize : isEnd;
             let chunkFile = file.slice(start, end);
 
-            // debugger
-            // 对每一个分片进行上传
-            uploadChunkFile({
-
-              file: chunkFile,
-              // @ts-ignore
-              fileName: file.name,
-              fileMd5: currentFile.md5 || '',
-              chunkIndex: String(i),
-              chunks: String(chunks),
-              fileId: currentFile.fileId,
-              filePid: currentFile.filePid,
-
-            }).then(res =>{
-              console.log('res', res);
-              currentFile.fileId = res.data.fileId
-            })
-
-            console.log('结束了');
-            
-
-            // let updateResult = await proxy.Request({
-            //     url: api.upload,
-            //     showLoading: false,
-            //     dataType: "file",
-            //     params: {
-            //         file: chunkFile,
-            //         fileName: file.name,
-            //         fileMd5: currentFile.md5,
-            //         chunkIndex: i,
-            //         chunks: chunks,
-            //         fileId: currentFile.fileId,
-            //         filePid: currentFile.filePid,
-            //     },
-            //     showError: false,
-            //     errorCallback: (errorMsg) => {
-            //         currentFile.status = STATUS.fail.value;
-            //         currentFile.errorMsg = errorMsg;
-            //     },
-            //     uploadProgressCallback: (event) => {
-            //         let loaded = event.loaded;
-            //         if (loaded > fileSize) {
-            //             loaded = fileSize;
-            //         }
-            //         currentFile.uploadSize = i * chunkSize + loaded;
-            //         currentFile.uploadProgress = Math.floor(
-            //             (currentFile.uploadSize / fileSize) * 100
-            //         );
-            //     },
-            // });
-
-
-
-            // if (updateResult == null) {
-            //     break;
-            // }
-            // currentFile.fileId = updateResult.data.fileId;
-            // currentFile.status = STATUS[updateResult.data.status].value;
-            // currentFile.chunkIndex = i;
-            // if (
-            //     updateResult.data.status == STATUS.upload_seconds.value ||
-            //     updateResult.data.status == STATUS.upload_finish.value
-            // ) {
-            //     currentFile.uploadProgress = 100;
-            //     emit("uploadCallback");
-            //     break;
-            // }
+            try {
+              // 对每一个分片进行上传
+              let res = await uploadChunkFile({
+                file: chunkFile,
+                // @ts-ignore
+                fileName: file.name,
+                fileMd5: currentFile.md5 || '',
+                chunkIndex: String(i),
+                chunks: String(chunks),
+                fileId: currentFile.fileId,
+                filePid: currentFile.filePid,
+              })
+              
+              if(res.data.data){
+                currentFile.fileId = res.data.data.fileId
+                // 中断做的事
+                currentFile.chunkIndex = i
+              }
+            } catch (error) {
+              dispatch(changeMessageApi({
+                  type: 'error',
+                  info: '上传失败，请稍后重试'
+              }))
+              break
+            }
         }
     };
 
