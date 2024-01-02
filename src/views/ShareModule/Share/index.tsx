@@ -2,7 +2,7 @@
  * @Author: XJN
  * @Date: 2023-12-08 14:30:28
  * @LastEditors: xiaojunnanya
- * @LastEditTime: 2024-01-02 16:00:10
+ * @LastEditTime: 2024-01-02 16:38:10
  * @FilePath: \easy_pan\src\views\ShareModule\Share\index.tsx
  * @Description: 外部分享模块
  * @前端实习生: 鲸落
@@ -11,20 +11,21 @@ import { getShareLoginInfo, loadFileList } from '@/service/modules/shareModule'
 import React, { memo, useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { ShareStyle } from './style'
-import { CloudUploadOutlined, DeliveredProcedureOutlined, StopOutlined } from '@ant-design/icons'
+import { CloudUploadOutlined, DeliveredProcedureOutlined, ExclamationCircleOutlined, StopOutlined } from '@ant-design/icons'
 import { getHeaderImg } from '@/service/modules/home'
 import HeaderBtn from '@/components/HeaderBtn'
 import { btnType } from '@/components/HeaderBtn/type'
-import { useAppSelector, useAppShallowEqual } from '@/store'
+import { useAppDispatch, useAppSelector, useAppShallowEqual } from '@/store'
 import Table from '@/components/Table/Wait/WSharedTable'
+import { cancelShare } from '@/service/modules/share'
+import { Modal } from 'antd'
+import { changeMessageApi } from '@/store/modules/common'
 
 const index = memo(() => {
   const { id } = useParams()
   const navigate = useNavigate()
-  const [ searchParams ] = useSearchParams()
-  const query = Object.fromEntries(searchParams.entries())
-  const urlPath = query.path || '0'
-
+  const dispatch = useAppDispatch()
+  
   const {  btnDisabled } = useAppSelector(state =>{
     return {
       btnDisabled: state.home.btnDisabled
@@ -39,6 +40,8 @@ const index = memo(() => {
     currentUser:false,// 判断是不是分享者查看这个链接，是分享者按钮就是取消分享，不是就是保存到我的网盘
   })
 
+  const [modal, contextHolder] = Modal.useModal();
+
   const [ data, setData ] = useState([])
 
   const showBtn: btnType[] = useMemo(()=>{
@@ -49,7 +52,29 @@ const index = memo(() => {
         disabled: btnDisabled,
         show: true,
         onClick: ()=>{
-          console.log('111')
+          if(userInfo.currentUser){
+            // 取消分享
+            modal.confirm({
+              title: '提示',
+              icon: <ExclamationCircleOutlined />,
+              content: '是否确定取消分享',
+              okText: '确认',
+              cancelText: '取消',
+              onOk: async ()=>{
+                const res = await cancelShare(id || '')
+                if( res.data.code === 200){
+                  navigate('/main')
+                }else{
+                  dispatch(changeMessageApi({
+                    message: '取消分享失败，请稍后重试',
+                    type: 'error'
+                  }))
+                }
+              }
+            });
+          }else{
+            // 保存到我的网盘
+          }
         }
       }
     ]
@@ -72,10 +97,14 @@ const index = memo(() => {
       }
     })
   }, [id])
+
   
 
   return (
     <ShareStyle>
+
+      {contextHolder}
+
       {
         userInfo.nickName && (
           <>

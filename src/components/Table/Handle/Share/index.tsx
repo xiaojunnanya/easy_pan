@@ -78,7 +78,7 @@ const index = memo(forwardRef<ChildShareMethods>((props, ref) => {
             {
               ( shareUrl.shareId && shareUrl.code ) ? (
                 <>
-                  <Form.Item label="分享连接">
+                  <Form.Item label="分享链接">
                     { shareFileUrl(shareUrl.shareId) }
                   </Form.Item>
                   <Form.Item label="提取码">

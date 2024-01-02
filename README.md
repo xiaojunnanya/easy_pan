@@ -3,7 +3,7 @@
  * @Author: XJN
  * @Date: 2023-10-06 02:24:25
  * @LastEditors: xiaojunnanya
- * @LastEditTime: 2024-01-02 16:02:57
+ * @LastEditTime: 2024-01-02 16:41:00
  * @FilePath: \easy_pan\README.md
  * @Description: 
  * @前端实习生: 鲸落
@@ -123,7 +123,7 @@
     - [x] 分享链接前的校验code
     - [x] 分享内容展示等功能
     - [x] 判断是否是本人请求的链接
-    - [ ] 取消分享（本人访问）
+    - [x] 取消分享（本人访问）
     - [ ] 保存到我的网盘（非本人访问）
     - [ ] 文件夹预览
 - 用户体验优化模块

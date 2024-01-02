@@ -30,7 +30,7 @@ const index = memo(() => {
             </div>
             <div className="info">
               <img src={err} alt="" />
-              <div className='txt'>啊哦，分享连接不存在，或已失效</div>
+              <div className='txt'>啊哦，分享链接不存在，或已失效</div>
               <Button onClick={click}>返回首页</Button>
             </div>
         </div>
