@@ -166,8 +166,6 @@ const index: FC<propsType> = memo((props) => {
    */
   const handleClick = async (e: any, record: DataType, index: number) =>{
     e.stopPropagation()
-    console.log(record.userId);
-    
     switch (index) {
       // 下载
       case 1:downLoadFile(record.fileId)

@@ -91,7 +91,6 @@ const index = memo(() => {
       if( data.code === 200 && data.data ){
         setUserInfo(data.data)
         loadFileList(id, '0').then(res =>{
-          console.log(res.data.data.list);
           setData(res.data.data.list)
         })
       }

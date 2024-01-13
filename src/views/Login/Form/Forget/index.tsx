@@ -19,9 +19,7 @@ const index = memo(() => {
   }, [])
     
   const onFinish = async (values: any) => {
-        console.log(values);
         const result = await resetPwdServer(values.username,  values.emailCode, values.password, values.checkCode)
-        console.log(result);
         if( result?.data.code === 200 && result?.data.info === '请求成功'){
             dispatch(changeMode('login'))
             dispatch(changeMessageApi({

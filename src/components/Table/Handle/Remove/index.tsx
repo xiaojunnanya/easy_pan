@@ -47,7 +47,6 @@ const index = memo(forwardRef<ChildRemoveMethods>((props, ref) => {
     };
 
     const detail = (data: DataType) =>{
-        console.log(data);
         getData(data.fileId)
     }
 

@@ -25,9 +25,7 @@ const App: React.FC = () => {
   const dispatch = useAppDispatch()
 
   const onFinish = (values: any) => {
-    console.log('Success:', values);
     saveSysSettings(values).then(res =>{
-      console.log(res.data);
       if( res?.data.code === 200 && res?.data.status === 'success'){
           dispatch(changeMessageApi({
             type: 'success',

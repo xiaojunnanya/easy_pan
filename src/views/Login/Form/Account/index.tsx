@@ -3,7 +3,7 @@ import React, { memo, useEffect, useRef, useState } from 'react'
 import { LockOutlined, MailOutlined, SafetyCertificateOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Form, FormInstance, Input } from 'antd';
 
-import { checkCodeServer, resetPwdServer, sendEmailCodeServer } from '@/service/modules/login';
+import { checkCodeServer, registerServer, sendEmailCodeServer } from '@/service/modules/login';
 
 import { useAppDispatch } from '@/store';
 import { changeMode } from '@/store/modules/login';
@@ -21,13 +21,13 @@ const index = memo(() => {
     
   const onFinish = async (values: any) => {
         console.log(values);
-        const result = await resetPwdServer(values.username,  values.emailCode, values.password, values.checkCode)
+        const result = await registerServer(values.username,  values.name, values.password, values.checkCode, values.emailCode)
         console.log(result);
         if( result?.data.code === 200 && result?.data.info === '请求成功'){
             dispatch(changeMode('login'))
             dispatch(changeMessageApi({
                 type: 'success',
-                info: '重置成功,请重新登录'
+                info: '注册成功,请返回登录'
             }))
         }else{
             dispatch(changeMessageApi({

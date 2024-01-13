@@ -2,7 +2,7 @@
  * @Author: XJN
  * @Date: 2023-10-06 14:50:52
  * @LastEditors: xiaojunnanya
- * @LastEditTime: 2023-12-03 11:22:58
+ * @LastEditTime: 2024-01-13 15:28:48
  * @FilePath: \easy_pan\src\service\modules\login.ts
  * @Description: 
  * @前端实习生: 鲸落
@@ -68,6 +68,18 @@ export const resetPwdServer = ( email: string, emailCode: string, password: stri
         url:'/resetPwd',
         data:{
             email, password, checkCode,emailCode
+        }
+    })
+}
+
+// http://127.0.0.1:7090/api/register
+// 注册
+export const registerServer = ( email: string, nickName: string, password: string, checkCode: string, emailCode: string ) =>{
+    return jlReq.request({
+        method:'POST',
+        url:'/register',
+        data:{
+            email, password, checkCode, nickName, emailCode
         }
     })
 }

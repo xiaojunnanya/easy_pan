@@ -36,8 +36,6 @@ const countSlice = createSlice({
     reducers:{
         changeFilePid(state, { payload }){
             // 因为历史问题，这里改为用字符串的方式来处理，同时再设置一个参数来改为数组形式
-            console.log('执行');
-            
             state.filePid = payload
             let a: string[] = [...state.fileInfo.filePid]
             a.push(payload)

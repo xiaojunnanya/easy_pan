@@ -37,13 +37,13 @@ const index = memo(() => {
     }
   ]);
 
-  useEffect(()=>{
-    console.log('11', filePid);
-    console.log('222', fileName);
-    console.log('fileInfo', fileInfo);
+  // useEffect(()=>{
+  //   console.log('11', filePid);
+  //   console.log('222', fileName);
+  //   console.log('fileInfo', fileInfo);
     
     
-  }, [filePid, fileName, fileInfo])
+  // }, [filePid, fileName, fileInfo])
 
   return (
     <Breadcrumb separator=">" items={breadcrumb} />
