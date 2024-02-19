@@ -44,7 +44,14 @@ const index = memo(() => {
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');
 
-    const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) => setFileList(newFileList);
+    const handleChange: UploadProps['onChange'] = ({ file, fileList: newFileList }) => {
+      setFileList(newFileList)
+      if( file.status === 'done' ){
+        setIsModalOpen(false)
+        window.location.reload();
+      }
+      
+    };
     const handleCancel = () => setPreviewOpen(false);
     // 方法：
   const onClick: MenuProps['onClick'] = ({ key }) => {
@@ -97,16 +104,21 @@ const index = memo(() => {
 
   return (
     <HeadImgStyle>
-        <Modal title="修改头像" open={isModalOpen} onOk={()=>{setIsModalOpen(false)}} onCancel={()=>{setIsModalOpen(false)}}>
+        <Modal title="修改头像" 
+        open={isModalOpen} 
+        onCancel={()=>{setIsModalOpen(false)}} footer={[]} width='200px'>
+          {/* 上传 */}
           <Upload
             action="/api/updateUserAvatar"
             listType="picture-card"
             fileList={fileList}
             onPreview={handlePreview}
             onChange={handleChange}
+            name='avatar'
           >
             {fileList.length >= 1 ? null : uploadButton}
           </Upload>
+          {/* 预览头像 */}
           <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
             <img alt="example" style={{ width: '100%' }} src={previewImage} />
           </Modal>
