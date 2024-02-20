@@ -68,7 +68,8 @@ const index: FC<propsType> = memo((props) => {
         width: 310,
         render:(text, record, index)=>{
           return (
-            showHandleIndex === index && (
+            // record.status === 2 代表转码成功
+            showHandleIndex === index &&  record.status === 2 && (
               <div className='allHandle'>
                 <div className='handle' onClick={(e)=>{handleClick(e, record, 1)}}>
                   <ShareAltOutlined /><span>分享</span>

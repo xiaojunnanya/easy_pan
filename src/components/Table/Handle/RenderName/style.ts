@@ -17,6 +17,17 @@ export const RenderNameStyle = styled.div<IProps>`
             text-align: center;
         }
 
+        .fileName{
+            white-space: nowrap;
+        }
+
+        .status{
+            margin-left: 10px;
+            white-space: nowrap;
+            color: #F0A239;
+            font-size: 12px;
+        }
+
         span, img{
             cursor: ${ props => props.preview === 'true' ? 'pointer' : '' };
 

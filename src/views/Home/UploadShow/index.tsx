@@ -4,7 +4,13 @@
  * @LastEditors: xiaojunnanya
  * @LastEditTime: 2024-01-02 15:19:09
  * @FilePath: \easy_pan\src\views\Home\UploadShow\index.tsx
- * @Description: 
+ * @Description: 上传
+ * 分为了好几个部分
+ *  1. 先上传进行切片，在切片的过程中，显示的是在解析中，有一个饼形图来显示切片的速度
+ *  2. 在切玩片之后，在进行上传，显示上传的进度
+ *  3. 还有暂停的功能，上传到一半，我暂停，之后在继续上传
+ * （这里也涉及到断点上传，在上传到一半的时候，我下次再从这个地方进行上传）
+ *  4. 在服务器接收到所上传的参数的时候也需要进行一个拼接的过程，这个时候我们的前端展示的应该是解码中这样的字段...
  * @前端实习生: 鲸落
  */
 import { useAppDispatch, useAppSelector } from '@/store';
