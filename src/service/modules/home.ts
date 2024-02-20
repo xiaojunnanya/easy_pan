@@ -218,3 +218,12 @@ export const removeFileFolder = (fileIds: string, filePid: string) =>{
         }
     })
 }
+
+// 修改密码
+export const updatePassword = (password: string) =>{
+    return jlReq.request({
+        method:'post',
+        url:'/updatePassword',
+        data:{password}
+    })
+}

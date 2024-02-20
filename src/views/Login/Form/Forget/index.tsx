@@ -99,7 +99,15 @@ const index = memo(() => {
           <Form.Item name="password"
               rules={[
                 { required: true, message: '请输入密码' },
-                { min: 8, max: 18, message:"密码只能是数字，字母，特殊字符 8-18位" }
+                { min: 8, max: 18, message: '密码长度不能小于8位且不能超过18位'},
+                {
+                    validator(rule, value, callback) {
+                    // 正则：必须既有数字也有字母
+                    if (!/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,18}$/.test(value)) {
+                        callback('密码必须要由数字和字母组成');
+                    }
+                    },
+                }
                 ]} >
               <Input  prefix={<LockOutlined className="site-form-item-icon" />}
               type="password" placeholder="请输入密码" />
