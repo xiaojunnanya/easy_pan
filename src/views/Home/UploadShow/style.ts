@@ -1,15 +1,45 @@
 import styled from "styled-components";
 
 export const UploadShowStyle = styled.div`
-    .fileshow{
-        div{
-            display: flex;
 
-            .desc{
-                width: 100px;
-                vertical-align: top;
-                transform: translate(0px, -4px)
+    .uploadShow{
+
+        .bottom{
+
+            display: flex;
+            align-items: center;
+
+            .progress{
+                width: 88%;
+            }
+
+            .btn{
+                height: 100%;
+                flex: 1;
+                margin-left: 10px;
+                
+                &>span{
+                    margin:  0 3px;
+                    font-size: 16px;
+                }
             }
         }
     }
+
+    .cutShow{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 10px 0;
+    }
+
+
+    .top{
+        &>span:nth-child(1){
+            margin-right: 10px;
+        }
+    }
+
+    
+    
 `
