@@ -98,7 +98,7 @@ interface fileItemType{
 }
 
 // 切片大小
-const CHUNK_SIZE = 1024 * 1024 * 5;
+const CHUNK_SIZE = 1024 * 1024 * 1;
 
 const index = memo(() => {
   const dispatch = useAppDispatch()
@@ -113,8 +113,8 @@ const index = memo(() => {
   // Popover 是否展示
   const [ isPopoverShow, setIsPopoverShow ] = useState<boolean>(popoverShow)
   // 视图列表的展示
-  const fileList = useRef<fileItemType[]>([])
-  // const [ fileList, setFileList ] = useState<fileItemType[]>([]);
+  // const fileList = useRef<fileItemType[]>([])
+  const [ fileList, setFileList ] = useState<fileItemType[]>([]);
     
     useEffect(()=>{
       setIsPopoverShow(popoverShow)
@@ -162,7 +162,9 @@ const index = memo(() => {
             errorMsg: null
         };
 
-        fileList.current.unshift(fileItem);
+        // 初始结构将其放入
+        setFileList([...fileList, fileItem]);
+        // fileList.current.unshift(fileItem);
         // 为空直接结束
         if(fileItem.totalSize === 0){
           fileItem.status = STATUS.emptyfile.value;
@@ -191,8 +193,7 @@ const index = memo(() => {
         const chunk = await computeMd5(fileItem, i, chunks)
         arr.push(chunk)
       }
-      console.log(arr);
-      
+
       return arr
     }
 
@@ -220,6 +221,26 @@ const index = memo(() => {
           fileReader.onload = (e) => {
             spark.append(e.target?.result as ArrayBuffer);
 
+            if( index + 1 < chunks ){
+              console.log(
+                `第${fileItem.fileName}, ${index}个分片的解析完成, 开始第${
+                  index + 1
+                }个分片的解析`
+              );
+
+              // let percent = Math.floor((index / chunks) * 100);
+              // fileItem.md5Progress = percent
+            }else{
+              
+              // let md5 = spark.end();
+              fileItem.md5Progress = 100;
+              // file.status = STATUS.uploading.value;
+              // file.md5 = md5;
+              // spark.destroy();
+              console.log(`第${fileItem.fileName}, ${index}个分片的解析完成，完成全部解析`);
+              
+            }
+
             // 切割一下第一个，防止过长
             resolve({
               fileId: fileItem.uid.slice(0, 5),
@@ -230,33 +251,9 @@ const index = memo(() => {
               chunkIndex: index,
               chunks: chunks
             });
-
-            // if( index + 1 < chunks ){
-            //   // console.log(
-            //   //   `第${fileItem.fileName}, ${index}个分片的解析完成, 开始第${
-            //   //     index + 1
-            //   //   }个分片的解析`
-            //   // );
-
-            //   // let percent = Math.floor((index / chunks) * 100);
-            //   // file.md5Progress = percent
-
-            //   resolve(blob)
-            // }else{
-              
-            //   // let md5 = spark.end();
-            //   // file.md5Progress = 100;
-            //   // file.status = STATUS.uploading.value;
-            //   // file.md5 = md5;
-            //   // spark.destroy();
-            //   // console.log(`第${fileItem.fileName}, ${index}个分片的解析完成，完成全部解析`);
-            //   resolve(blob)
-              
-            // }
+ 
           }
 
-          
-          
       })
     }
 
@@ -264,22 +261,24 @@ const index = memo(() => {
      * 上传
      */
     const uploadFile = async (blobStream: any) =>{
-      console.log(blobStream);
       for (let i = 0; i < blobStream.length; i++) {
         let res = await uploadChunkFile(blobStream[i])
         if(i < blobStream.length - 1 ){
           blobStream[i+1].fileId = res.data.data.fileId
         }
+
+        if(res.data.data.status === 'upload_finish'){
+          dispatch(changeMessageApi({ type:'success', info:'上传成功' }))
+        }
       }
     }
-
-
+    
       // 上传区域展示
     const showContent = () =>{
       return (
         <UploadShowStyle>
           {
-            fileList.current.map(file => {
+            fileList.map(file => {
               return file.md5Progress !== 100 ? (
                 <div className='cutShow' key={file.uid}>
                   <span className='top'>
@@ -317,7 +316,7 @@ const index = memo(() => {
 
     return (
       <>
-          <Popover content={fileList.current.length ? showContent : '暂无任务'} title="上传任务（仅展示本次上传任务）" trigger="click" overlayInnerStyle={{
+          <Popover content={fileList.length ? showContent : '暂无任务'} title="上传任务（仅展示本次上传任务）" trigger="click" overlayInnerStyle={{
               width: '500px',
               marginRight: '10px'
           }} open={isPopoverShow} onOpenChange={()=>{setIsPopoverShow(!isPopoverShow)}}>
