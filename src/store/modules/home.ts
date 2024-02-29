@@ -17,7 +17,8 @@ interface IState{
     fileInfo:{
         filePid: string[],
         fileName: string[]
-    }
+    },
+    getDataMethod: () => void,
 }
 
 const initialState: IState = {
@@ -27,7 +28,8 @@ const initialState: IState = {
     fileInfo:{
         filePid: ['0'],
         fileName: ['全部文件']
-    }
+    },
+    getDataMethod: () => {},
 }
 
 const countSlice = createSlice({
@@ -51,10 +53,13 @@ const countSlice = createSlice({
         },
         changeBtnDisabled(state, { payload }){
             state.btnDisabled = payload
+        },
+        changeGetDataMethod(state, { payload }){
+            state.getDataMethod = payload
         }
     }
 })
 
-export const { changeFilePid, changeBtnDisabled, changeFileName } = countSlice.actions
+export const { changeFilePid, changeBtnDisabled, changeFileName, changeGetDataMethod } = countSlice.actions
 
 export default countSlice.reducer

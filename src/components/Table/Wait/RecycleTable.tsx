@@ -15,6 +15,7 @@ import { changeBtnDisabled } from '@/store/modules/home';
 import { deleteFile, restore } from '@/service/modules/recycle';
 import { changeSelectKeys } from '@/store/modules/common';
 import RenderName from '../Handle/RenderName';
+import { useOutletContext } from 'react-router-dom';
 
 
 
@@ -25,6 +26,7 @@ interface ChildMethods {
 // 封装表格
 // 行点击、行选中
 const index: FC<propsType> = memo((props) => {
+  const getSpace = useOutletContext() as ()=>{};
   const { data } = props
   const { isLoading } = useAppSelector(state =>{
     return {
@@ -168,6 +170,7 @@ const index: FC<propsType> = memo((props) => {
         if(res2.data.status === 'success'){
           // 不走接口，删除这一行
           handleDelete(record.key)
+          getSpace()
         }
         break;
     

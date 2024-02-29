@@ -307,7 +307,7 @@ const Home = memo(() => {
 
           </div>
           <div className="body-content">
-             <Outlet></Outlet>
+             <Outlet context={getSpace}></Outlet>
           </div>
         </div>
       </div>

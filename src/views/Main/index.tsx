@@ -7,7 +7,7 @@
  * @Description: 
  * @前端实习生: 鲸落
  */
-import React, { FC, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { FC, memo, useCallback, useEffect, useMemo, useState } from 'react'
 
 import NoData from '@/components/NoData'
 import { AllStyled } from './style'
@@ -19,7 +19,7 @@ import { createFolder, delFileToRecycle, getDataList } from '@/service/modules/h
 import type { DataType } from '@/components/Table/type'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useAppDispatch, useAppSelector, useAppShallowEqual } from '@/store'
-import { changeFilePid } from '@/store/modules/home'
+import { changeFilePid, changeGetDataMethod } from '@/store/modules/home'
 import {  changeLoading } from '@/store/modules/common'
 import HeaderBtn from '@/components/HeaderBtn'
 import { btnType } from '@/components/HeaderBtn/type'
@@ -63,7 +63,6 @@ const All: FC= memo(() => {
         disabled: false,
         show: true,
         onClick: ()=>{
-          console.log('大文件上传');
           dispatch(changeIsPopoverShow(false))
           // 切片，web work，记得要中断或关闭webworker 线程
           // 先在主线程中进行切片上传相关操作，其他的在说
@@ -195,6 +194,10 @@ const All: FC= memo(() => {
         dispatch(changeLoading(false))
       })
     }, [category, path])
+
+
+    // 这边我目前没有思考到有什么好方法可以在我上传完文件后调用getData方法，先将这个方法放到仓库调用，后续有好方法再优化
+    dispatch(changeGetDataMethod(getData))
 
     
   return (

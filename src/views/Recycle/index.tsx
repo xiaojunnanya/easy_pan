@@ -19,10 +19,13 @@ import { DeleteOutlined, ExclamationCircleFilled, UndoOutlined } from '@ant-desi
 import HeaderBtn from '@/components/HeaderBtn'
 import { RecycleStyled } from './style'
 import { Modal } from 'antd'
+import { useOutletContext } from 'react-router-dom'
 const { confirm } = Modal;
 
 
 const Recycle = memo(() => {
+  const getSpace = useOutletContext() as ()=>{};
+
   const dispatch = useAppDispatch()
 
   const { btnDisabled, selectKeys } = useAppSelector(state =>{
@@ -75,6 +78,7 @@ const Recycle = memo(() => {
               const res = await deleteFile(selectKeys.join(","))
               if(res.data.status === 'success'){
                 getData()
+                getSpace()
               }
             }
           });

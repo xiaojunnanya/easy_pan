@@ -3,6 +3,7 @@ import styled from "styled-components";
 export const UploadShowStyle = styled.div`
 
     .uploadShow{
+        margin: 18px 0;
 
         .bottom{
 

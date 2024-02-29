@@ -35,7 +35,7 @@ const index: FC<IProps> = memo((props) => {
   const [ searchParams ] = useSearchParams()
   const query = Object.fromEntries(searchParams.entries())
   const path = query.path || '0'
-    
+
   // 默认是文件夹
   let showImg = folderIcon
 
@@ -109,9 +109,20 @@ const index: FC<IProps> = memo((props) => {
         <div className='showImg'>
           <img src={showImg}/>
         </div>
-        <span onClick={()=>{ preview && folderHandle(record, showImg) }}>
-          {record.fileName}
-        </span>
+        {
+          record.status === 0 ? (
+            <span>
+              {record.fileName} <span style={{
+                fontSize: '12px',
+                color:'#e6a23c'
+              }}>转码中...</span>
+            </span>
+          ) : (
+            <span onClick={()=>{ preview && folderHandle(record, showImg) }}>
+              {record.fileName}
+            </span>
+          )
+        }
       </div>
     </RenderNameStyle>
   )

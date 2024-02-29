@@ -22,12 +22,8 @@ import {nanoid} from 'nanoid'
 import { UploadShowStyle } from './style';
 import { uploadChunkFile } from '@/service/modules/upload';
 import { changeMessageApi } from '@/store/modules/common';
+import { useOutletContext } from 'react-router-dom';
 
-// enum STATUS{
-//   success = 'success',
-//   exception = 'exception', // 错误
-//   normal = 'normal'
-// }
 
 const STATUS = {
   emptyfile: {
@@ -98,22 +94,24 @@ interface fileItemType{
 }
 
 // 切片大小
-const CHUNK_SIZE = 1024 * 1024 * 1;
+const CHUNK_SIZE = 1024 * 1024 * 3;
 
 const index = memo(() => {
+  const getSpace = useOutletContext() as ()=>{};
   const dispatch = useAppDispatch()
   
-  const { popoverShow, file }  = useAppSelector((state)=>{
+  const { popoverShow, file, getDataMethod }  = useAppSelector((state)=>{
     return {
       popoverShow: state.upload.isPopoverShow,
       file: state.upload.file,
+      getDataMethod: state.home.getDataMethod,
     }
   })
 
   // Popover 是否展示
   const [ isPopoverShow, setIsPopoverShow ] = useState<boolean>(popoverShow)
   // 视图列表的展示
-  // const fileList = useRef<fileItemType[]>([])
+  const arrList = useRef<fileItemType[]>([])
   const [ fileList, setFileList ] = useState<fileItemType[]>([]);
     
     useEffect(()=>{
@@ -133,11 +131,12 @@ const index = memo(() => {
      * @param filePid 文件ID
      */
     const addFile = async (file: any, filePid: string) => {
+        const uuid = nanoid()
         const fileItem: fileItemType = {
             // 文件, 文件大小, 文件流, 文件名...
             file: file,
             // 文件UID
-            uid: nanoid(),
+            uid: uuid,
             // md5进度:进度解析
             md5Progress: 0,
             // md5值
@@ -145,7 +144,7 @@ const index = memo(() => {
             // 文件名
             fileName: file.name,
             // 上传状态
-            status: STATUS.init.value,
+            status: 'init',
             // 已上传大小
             uploadSize: 0,
             // 文件总大小
@@ -162,9 +161,12 @@ const index = memo(() => {
             errorMsg: null
         };
 
+        let arr = [...fileList, fileItem]
         // 初始结构将其放入
-        setFileList([...fileList, fileItem]);
-        // fileList.current.unshift(fileItem);
+        setFileList(arr);
+        // 这边多一个ref来存储数据，为了获取最新数组中的数据，我也不知道为什么在数据流的传递中，无法获取到最新的fileList
+        arrList.current = arr
+
         // 为空直接结束
         if(fileItem.totalSize === 0){
           fileItem.status = STATUS.emptyfile.value;
@@ -198,6 +200,34 @@ const index = memo(() => {
     }
 
     /**
+     * 在fileList取到当前的数据的索引或数据
+     * @param uid 
+     * @returns 
+     */
+    const getFileItem = (uid: string, isUid: boolean = true) => {
+      if(isUid){
+        return arrList.current.findIndex(item => item.uid === uid) 
+      }else{
+        return arrList.current.find(item => item.uid === uid)
+      }
+    }
+
+    // 更新数据
+    const updateFileItem = (fileItem: fileItemType, i: number) => {
+      if( i >=0 ){
+        let arr = [...arrList.current]
+        arr.splice(i, 1, fileItem)
+        setFileList(arr)
+        arrList.current = arr
+
+        return true
+      }else{
+        return false
+      }
+    }
+
+
+    /**
      * 计算md5
      * @param fileItem 文件
      * @param start 开始位置
@@ -222,36 +252,32 @@ const index = memo(() => {
             spark.append(e.target?.result as ArrayBuffer);
 
             if( index + 1 < chunks ){
-              console.log(
-                `第${fileItem.fileName}, ${index}个分片的解析完成, 开始第${
-                  index + 1
-                }个分片的解析`
-              );
+              // console.log(
+              //   `第${fileItem.fileName}, ${index}个分片的解析完成, 开始第${
+              //     index + 1
+              //   }个分片的解析`
+              // );
 
-              // let percent = Math.floor((index / chunks) * 100);
-              // fileItem.md5Progress = percent
+              let percent = Math.floor((index / chunks) * 100);
+              fileItem.md5Progress = percent
             }else{
-              
-              // let md5 = spark.end();
+              // console.log(`第${fileItem.fileName}, ${index}个分片的解析完成，完成全部解析`);
+
               fileItem.md5Progress = 100;
-              // file.status = STATUS.uploading.value;
-              // file.md5 = md5;
-              // spark.destroy();
-              console.log(`第${fileItem.fileName}, ${index}个分片的解析完成，完成全部解析`);
-              
             }
 
-            // 切割一下第一个，防止过长
-            resolve({
-              fileId: fileItem.uid.slice(0, 5),
-              file: blob,
-              fileName: fileItem.fileName,
-              filePid: 0,
-              fileMd5: spark.end(),
-              chunkIndex: index,
-              chunks: chunks
-            });
- 
+
+            if(updateFileItem(fileItem, getFileItem(fileItem.uid) as number)){
+              resolve({
+                fileId: fileItem.uid,
+                file: blob,
+                fileName: fileItem.fileName,
+                filePid: 0,
+                fileMd5: spark.end(),
+                chunkIndex: index,
+                chunks: chunks
+              });
+            }
           }
 
       })
@@ -261,18 +287,50 @@ const index = memo(() => {
      * 上传
      */
     const uploadFile = async (blobStream: any) =>{
+      // 拿着这个item的id
+      const fileId = blobStream[0].fileId
+      const item = getFileItem(fileId, false) as fileItemType
+      
       for (let i = 0; i < blobStream.length; i++) {
-        let res = await uploadChunkFile(blobStream[i])
-        if(i < blobStream.length - 1 ){
-          blobStream[i+1].fileId = res.data.data.fileId
-        }
 
-        if(res.data.data.status === 'upload_finish'){
-          dispatch(changeMessageApi({ type:'success', info:'上传成功' }))
+        // 对于i为0的时候，他的fileId是可以随机的，但是服务器有一个长度的判断，这里我们就截取一下
+        if(i === 0) blobStream[i].fileId = blobStream[i].fileId.slice(0, 10)
+
+        try {
+          const { data } = await uploadChunkFile(blobStream[i])
+
+          // 后端拼接所用，后一个的fileid对于前一个返回值的fileid
+          if(i < blobStream.length - 1 && data){
+            blobStream[i+1].fileId = data.data.fileId
+          }
+
+          let percent = Math.floor((i + 1 ) / blobStream.length * 100)
+          item.uploadProgress = percent
+          
+
+          if( data.status === 'error' ){
+            dispatch(changeMessageApi({ type:'error', info:'上传失败' }))
+          }
+
+          if( data.data.status === 'upload_finish'){
+            dispatch(changeMessageApi({ type:'success', info:'上传成功' }))
+            item.uploadProgress = 100
+
+            // 获取表格的最新内容
+            getDataMethod()
+            // 获取空间
+            getSpace()
+            
+          }
+
+          updateFileItem(item, getFileItem(item.uid) as number)
+
+        } catch (error) {
+          console.log(error)
         }
       }
     }
-    
+
       // 上传区域展示
     const showContent = () =>{
       return (
@@ -287,15 +345,15 @@ const index = memo(() => {
                       color:'#e6a23c'
                     }}><ClockCircleOutlined /> 解析中...</span>
                   </span>
-                  <Progress type="circle" percent={file.uploadProgress} status={file.status} size={60}/>
+                  <Progress type="circle" percent={file.md5Progress} status={file.status} size={60}/>
                 </div>
               ) : (
                 <div className='uploadShow' key={file.uid}>
                   <span className='top'>
                     <span>{file.fileName}</span>
                     <span style={{
-                      color:'#409eff'
-                    }}><CloudUploadOutlined /> 上传中...</span>
+                      color: file.uploadProgress === 100 ? '#67c23a' : '#409eff'
+                    }}><CloudUploadOutlined /> { file.uploadProgress === 100 ? '上传成功' : '上传中...'  } </span>
                   </span>
                   <div className='bottom'>
                     <div className='progress'>
@@ -316,12 +374,12 @@ const index = memo(() => {
 
     return (
       <>
-          <Popover content={fileList.length ? showContent : '暂无任务'} title="上传任务（仅展示本次上传任务）" trigger="click" overlayInnerStyle={{
-              width: '500px',
-              marginRight: '10px'
-          }} open={isPopoverShow} onOpenChange={()=>{setIsPopoverShow(!isPopoverShow)}}>
-              <SwapOutlined className='icon-transfer'/>
-          </Popover>
+        <Popover content={fileList.length ? showContent : '暂无任务'} title="上传任务（仅展示本次上传任务）" trigger="click" overlayInnerStyle={{
+            width: '500px',
+            marginRight: '10px'
+        }} open={isPopoverShow} onOpenChange={()=>{setIsPopoverShow(!isPopoverShow)}}>
+            <SwapOutlined className='icon-transfer'/>
+        </Popover>
       </>
     )
 })
