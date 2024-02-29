@@ -175,6 +175,8 @@ const index = memo(() => {
                         // 正则：必须既有数字也有字母
                         if (!/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,18}$/.test(value)) {
                           callback('密码必须要由数字和字母组成');
+                        }else{
+                          return Promise.resolve()
                         }
                       },
                     }

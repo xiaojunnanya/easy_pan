@@ -20,26 +20,24 @@ const index = memo(() => {
   }, [])
     
   const onFinish = async (values: any) => {
-        const result = await registerServer(values.username,  values.name, values.password, values.checkCode, values.emailCode)
-        if( result?.data.code === 200 && result?.data.info === '请求成功'){
-            dispatch(changeMode('login'))
-            dispatch(changeMessageApi({
-                type: 'success',
-                info: '注册成功,请返回登录'
-            }))
-        }else{
-            dispatch(changeMessageApi({
-                type: 'error',
-                info: result?.data.info || '服务器异常，请稍后重试'
-            }))
-            updateCode()
-            formRef.current?.resetFields(['checkCode']);
-        }
+      const result = await registerServer(values.username,  values.name, values.password, values.checkCode, values.emailCode)
+      if( result?.data.code === 200 && result?.data.info === '请求成功'){
+          dispatch(changeMode('login'))
+          dispatch(changeMessageApi({
+              type: 'success',
+              info: '注册成功,请返回登录'
+          }))
+      }else{
+          dispatch(changeMessageApi({
+              type: 'error',
+              info: result?.data.info || '服务器异常，请稍后重试'
+          }))
+          updateCode()
+          formRef.current?.resetFields(['checkCode']);
+      }
   };
 
-    const updateCode = () =>{
-        setCodeImg(checkCodeServer(0, new Date().getTime()))
-    }
+  const updateCode = () => setCodeImg(checkCodeServer(0, new Date().getTime()))
 
   const aClick = (e: any, index: number)=>{
     e.stopPropagation()
@@ -97,7 +95,6 @@ const index = memo(() => {
               </Form.Item>
               <Button type='primary' onClick={getEmailCode} disabled={btnName !== '获取验证码'}>{btnName}</Button>
           </div>
-          {/* 密码只能是数字，字母，特殊字符 8-18位 */}
           <Form.Item name="name"
               rules={[{ required: true, message: '请输入昵称' }]} >
               <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="请输入昵称" />
@@ -111,6 +108,8 @@ const index = memo(() => {
                     // 正则：必须既有数字也有字母
                     if (!/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,18}$/.test(value)) {
                       callback('密码必须要由数字和字母组成');
+                    }else{
+                      return Promise.resolve()
                     }
                   },
                 }
