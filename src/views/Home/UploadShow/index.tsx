@@ -23,6 +23,7 @@ import { UploadShowStyle } from './style';
 import { uploadChunkFile } from '@/service/modules/upload';
 import { changeMessageApi } from '@/store/modules/common';
 import { useOutletContext } from 'react-router-dom';
+import { getNowfilePid } from '@/utils';
 
 
 const STATUS = {
@@ -272,7 +273,7 @@ const index = memo(() => {
                 fileId: fileItem.uid,
                 file: blob,
                 fileName: fileItem.fileName,
-                filePid: 0,
+                filePid: getNowfilePid(),
                 fileMd5: spark.end(),
                 chunkIndex: index,
                 chunks: chunks
@@ -317,7 +318,9 @@ const index = memo(() => {
             item.uploadProgress = 100
 
             // 获取表格的最新内容
-            getDataMethod()
+            setTimeout(() => {
+              getDataMethod()
+            }, 500)
             // 获取空间
             getSpace()
             

@@ -57,3 +57,10 @@ export function setArr(str: string){
         return str
     }
 }
+
+// 获取当前位置的父id
+export const getNowfilePid = () =>{
+    const { search } = new URL( window.location.href)
+    const a = search.split('?path=')[1]
+    return a.split('/').pop()
+}
