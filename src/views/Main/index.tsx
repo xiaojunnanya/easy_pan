@@ -214,7 +214,7 @@ const All: FC= memo(() => {
           </div>
         ) : (
           <>
-            <NoData isShowFolder={category === 'all'}></NoData>
+            <NoData></NoData>
           </>
         )
       }
