@@ -19,7 +19,7 @@ import { createFolder, delFileToRecycle, getDataList } from '@/service/modules/h
 import type { DataType } from '@/components/Table/type'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useAppDispatch, useAppSelector, useAppShallowEqual } from '@/store'
-import { changeFilePid, changeGetDataMethod } from '@/store/modules/home'
+import { changeBtnDisabled, changeFilePid, changeGetDataMethod } from '@/store/modules/home'
 import {  changeLoading } from '@/store/modules/common'
 import HeaderBtn from '@/components/HeaderBtn'
 import { btnType } from '@/components/HeaderBtn/type'
@@ -117,6 +117,7 @@ const All: FC= memo(() => {
             icon: <ExclamationCircleFilled />,
             content: '你确定要删除这些文件吗？删除的文件可在10天内通过回收站还原',
             async onOk() {
+              dispatch(changeBtnDisabled(true))
               const res = await delFileToRecycle(selectKeys.join(","))
               if(res.data.status === 'success'){
                 getData()

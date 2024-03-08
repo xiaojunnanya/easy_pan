@@ -20,6 +20,7 @@ import HeaderBtn from '@/components/HeaderBtn'
 import { RecycleStyled } from './style'
 import { Modal } from 'antd'
 import { useOutletContext } from 'react-router-dom'
+import { changeBtnDisabled } from '@/store/modules/home'
 const { confirm } = Modal;
 
 
@@ -75,6 +76,7 @@ const Recycle = memo(() => {
             icon: <ExclamationCircleFilled />,
             content: '你确定要删除选中的文件？删除后将无法恢复',
             async onOk() {
+              dispatch(changeBtnDisabled(true))
               const res = await deleteFile(selectKeys.join(","))
               if(res.data.status === 'success'){
                 getData()
