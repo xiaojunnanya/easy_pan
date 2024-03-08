@@ -1,3 +1,5 @@
+import { disableReactDevTools } from "@/utils";
+
 /*
  * @Author: XJN
  * @Date: 2023-10-05 21:13:02
@@ -12,8 +14,8 @@ export const TIMEOUT = 10000
 // 设置开发环境和生产环境
 export let BASE_URL = '/api' 
 export let SHOW_BASE_URL = window.location.origin
-if(process.env.NODE_ENV === 'development'){
 
-}else{
-    
+// 线上环境禁用 React Components插件
+if(process.env.NODE_ENV == 'production'){
+    disableReactDevTools();
 }

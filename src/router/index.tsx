@@ -21,7 +21,6 @@ const NotFound = React.lazy(()=> import("@/views/NotFound"))
 const Shares = React.lazy(()=> import("@/views/ShareModule/Share"))
 const ShareModule = React.lazy(()=> import("@/views/ShareModule/ShareCheck"))
 const InvalidSharing = React.lazy(()=> import("@/views/ShareModule/InvalidSharing"))
-const Test = React.lazy(()=> import("@/views/Test"))
 
 const routes : RouteObject[] = [
     {
@@ -31,10 +30,6 @@ const routes : RouteObject[] = [
     {
         path:'/login',
         element: <Login></Login>
-    },
-    {
-        path:'/test',
-        element: <Test></Test>
     },
     {
         path:'/main',
