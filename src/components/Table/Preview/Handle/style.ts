@@ -41,3 +41,10 @@ export const XlsStyle = styled.div`
         }
     }
 `
+
+
+export const PdfStyle = styled.div`
+    canvas{
+        margin: 0px auto;
+    }
+`

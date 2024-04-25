@@ -162,7 +162,7 @@ const index = memo(() => {
             errorMsg: null
         };
 
-        let arr = [...fileList, fileItem]
+        let arr = [fileItem , ...fileList]
         // 初始结构将其放入
         setFileList(arr);
         // 这边多一个ref来存储数据，为了获取最新数组中的数据，我也不知道为什么在数据流的传递中，无法获取到最新的fileList
@@ -362,10 +362,10 @@ const index = memo(() => {
                     <div className='progress'>
                       <Progress percent={file.uploadProgress} status={file.status} />
                     </div>
-                    <div className='btn'>
+                    {/* <div className='btn'>
                       <PauseCircleTwoTone />
                       <CloseCircleTwoTone />
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               )

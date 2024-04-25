@@ -11,6 +11,7 @@ import { previewFile } from '@/service/modules/home';
 import React, { FC, memo, useState } from 'react'
 
 import { Document, Page, pdfjs } from 'react-pdf';
+import { PdfStyle } from './style';
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/legacy/build/pdf.worker.min.js`
 
 
@@ -26,11 +27,13 @@ const PrePdf: FC<IProps> = memo((props) => {
     const show = new Array(numPages).fill('').map((item, index) =><Page key={index} pageNumber={index+1} />)
 
     return (
-        <Document file={previewFile(props.fileId)} loading='加载中...' onLoadSuccess={onDocumentLoadSuccess}>
-            {
-                show
-            }
-        </Document>
+        <PdfStyle>
+            <Document file={previewFile(props.fileId)} loading='加载中...' onLoadSuccess={onDocumentLoadSuccess}>
+                {
+                    show
+                }
+            </Document>
+        </PdfStyle>
     )
 })
 
