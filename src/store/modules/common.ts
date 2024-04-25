@@ -11,12 +11,15 @@ const countSlice = createSlice({
         },
     },
     reducers:{
+        // 内容区域的加载
         changeLoading(state, action){
             state.isLoading = action.payload
         },
+        // 表格选择数据
         changeSelectKeys(state, action){
             state.selectKeys = action.payload
         },
+        // 全局消息提示
         changeMessageApi(state, action){
             state.messageApi = action.payload
         }

@@ -19,10 +19,11 @@ import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { space } from '@/service/modules/home'
 import { setSize } from '@/utils'
 import { useAppDispatch } from '@/store'
-import { changeFilePid } from '@/store/modules/home'
-import { changeLoading } from '@/store/modules/common'
+import { changeBtnDisabled, changeFilePid } from '@/store/modules/home'
+import { changeLoading, changeMessageApi, changeSelectKeys } from '@/store/modules/common'
 import HeadImg from './HeadImg'
 import UploadShow from './UploadShow'
+import { changeIsPopoverShow } from '@/store/modules/upload'
 
 
 interface menuType{
@@ -187,9 +188,18 @@ const Home = memo(() => {
 
   const oneMenu = (item: menuType) =>{
     setShowSecondaryMenu(item)
-    naviage(item.path)
-    // 恢复最大的列表
+    
+    // 恢复最外侧的列表
     dispatch(changeFilePid('0'))
+    // 关闭全局提示
+    dispatch(changeMessageApi({info:'', type:''}))
+    // 清空表格选中数据
+    dispatch(changeSelectKeys([]))
+    dispatch(changeBtnDisabled(true))
+    // 关闭上传列表
+    dispatch(changeIsPopoverShow(false))
+
+    naviage(item.path)
   }
 
   const twoMenu = (item: any) =>{ 

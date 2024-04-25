@@ -18,9 +18,11 @@ const countSlice = createSlice({
         }
     },
     reducers:{
+        // 上传弹窗区域的展示
         changeIsPopoverShow(state, { payload }){
             state.isPopoverShow = payload
         },
+        // 文件信息
         changeFile( state, { payload }){
             state.file = payload
         }

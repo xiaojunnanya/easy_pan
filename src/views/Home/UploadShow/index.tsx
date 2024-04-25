@@ -14,7 +14,7 @@
  * @前端实习生: 鲸落
  */
 import { useAppDispatch, useAppSelector } from '@/store';
-import { ClockCircleOutlined, CloseCircleTwoTone, CloudUploadOutlined, PauseCircleTwoTone, SwapOutlined } from '@ant-design/icons'
+import { ClockCircleOutlined, CloudUploadOutlined, SwapOutlined } from '@ant-design/icons'
 import { Popover, Progress } from 'antd'
 import React, { memo, useEffect, useRef, useState } from 'react'
 import SparkMD5 from "spark-md5";
@@ -95,7 +95,7 @@ interface fileItemType{
 }
 
 // 切片大小
-const CHUNK_SIZE = 1024 * 1024 * 3;
+const CHUNK_SIZE = 1024 * 1024 * 5;
 
 const index = memo(() => {
   const getSpace = useOutletContext() as ()=>{};

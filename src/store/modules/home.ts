@@ -36,6 +36,7 @@ const countSlice = createSlice({
     name:"home",
     initialState,
     reducers:{
+        // 关于文件夹预览目录的设置
         changeFilePid(state, { payload }){
             // 因为历史问题，这里改为用字符串的方式来处理，同时再设置一个参数来改为数组形式
             state.filePid = payload
@@ -51,9 +52,11 @@ const countSlice = createSlice({
             a.push(payload)
             state.fileInfo.fileName = a
         },
+        // 按钮是否禁用
         changeBtnDisabled(state, { payload }){
             state.btnDisabled = payload
         },
+        // src\views\Main\index.tsx：200
         changeGetDataMethod(state, { payload }){
             state.getDataMethod = payload
         }
