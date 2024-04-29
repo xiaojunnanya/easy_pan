@@ -1,7 +1,7 @@
 import React, { memo, useEffect, useMemo, useRef, useState } from 'react'
 import type { FC } from 'react'
-import { DeleteOutlined, DownloadOutlined, DragOutlined, FormOutlined, ShareAltOutlined } from '@ant-design/icons'
-import { Table, ConfigProvider, Popconfirm } from 'antd';
+import { CheckSquareTwoTone, CloseSquareTwoTone, DeleteOutlined, DownloadOutlined, DragOutlined, FormOutlined, ShareAltOutlined } from '@ant-design/icons'
+import { Table, ConfigProvider, Popconfirm, Form, Input, message } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { TableStyled } from './style';
 import zh_CN from 'antd/es/locale/zh_CN';
@@ -12,7 +12,7 @@ import { downLoadFile, setSize } from '@/utils'
 import type { DataType, propsType } from './type';
 import { changeBtnDisabled } from '@/store/modules/home';
 import { changeSelectKeys } from '@/store/modules/common';
-import { delFileToRecycle } from '@/service/modules/home';
+import { delFileToRecycle, renameApi } from '@/service/modules/home';
 import Share from './Handle/Share';
 import RenderName from './Handle/RenderName';
 import Remove from './Handle/Remove';
@@ -26,6 +26,14 @@ export interface ChildRemoveMethods {
   showModal: () => void;
 }
 
+interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
+  editing: boolean;
+  dataIndex: string;
+  title: any;
+  record: DataType;
+  index: number;
+  children: React.ReactNode;
+}
 
 // 封装表格
 // 行点击、行选中
@@ -41,6 +49,7 @@ const index: FC<propsType> = memo((props) => {
   const dispatch = useAppDispatch()
   // props data
   const [ showData, setShowData ] = useState<DataType[]>(data)
+  const [form] = Form.useForm();
 
   // ----- useState -----
   
@@ -52,6 +61,9 @@ const index: FC<propsType> = memo((props) => {
   // 展示操作部分
   const [ showHandleIndex, setShowHandleIndex ] = useState<number>(-1)
 
+  const [editingKey, setEditingKey] = useState('');
+  const isEditing = (record: DataType) => record.key === editingKey;
+
   // ----- stats -----
   const columns: ColumnsType<DataType> = useMemo(()=>{
     return [
@@ -61,6 +73,7 @@ const index: FC<propsType> = memo((props) => {
         render: (text, record) => {
           return <RenderName record={record} preview></RenderName>
         },
+        editable: true,
       },
       {
         dataIndex: 'handle',
@@ -188,7 +201,7 @@ const index: FC<propsType> = memo((props) => {
         break;
       // 重命名
       case 4:
-      
+        edit(record)
         
         break;
       // 移动
@@ -201,6 +214,76 @@ const index: FC<propsType> = memo((props) => {
         break;
     }
   }
+
+  // 重命名
+  const edit = (record: DataType) => {
+    const { fileName, folderType } = record
+
+    let name = fileName
+
+    // 文件去后缀名
+    if( folderType === 0 ){
+      const a = fileName.split('.')
+      a.pop()
+      name = a.join('.')
+    }
+    
+    form.setFieldsValue({
+      name,
+      ...record,
+    });
+    setEditingKey(record.key as string);
+  };
+
+  // 取消重命名
+  const cancel = () => {
+    setEditingKey('');
+  };
+
+  // 确定重命名
+  const save = async (key: string) => {
+    try {
+      // 重命名的数据
+      const row = await form.validateFields();
+
+      const newData = [...showData];
+      const index = newData.findIndex((item) => key === item.key);
+      if (index > -1) {
+        const item = newData[index];
+        const { fileName, folderType } = item
+        const { name } = row
+        let newName = name
+
+        // 文件加入后缀名
+        if( folderType === 0 ){
+          const a = fileName.split('.')
+          const c = a.pop()
+          newName = name + '.' + c
+        }
+        
+        const res = await renameApi(item.fileId, name)
+
+        if(res.data.code === 200){
+          newData.splice(index, 1, {
+            ...item,
+            fileName:newName,
+          });
+          setShowData(newData);
+        }else{
+          message.error(res.data.message)
+        }
+        
+        setEditingKey('');
+      } else {
+        newData.push(row);
+        setShowData(newData);
+        setEditingKey('');
+      }
+      
+    } catch (errInfo) {
+      console.log('Validate Failed:', errInfo);
+    }
+  };
 
   /**
    * 删除操作
@@ -218,6 +301,61 @@ const index: FC<propsType> = memo((props) => {
     onChange: onSelectChange,
   };
 
+
+  const EditableCell: React.FC<EditableCellProps> = ({
+    editing,
+    dataIndex,
+    title,
+    record,
+    index,
+    children,
+    ...restProps
+  }) => {
+    return (
+      <td {...restProps}>
+        {editing ? (
+          <Form.Item
+            name={dataIndex}
+            style={{ margin: 0 }}
+            rules={[
+              {
+                required: true,
+                message: `Please Input ${title}!`,
+              },
+            ]}
+          >
+              <Input addonAfter={
+                <>
+                  <CheckSquareTwoTone onClick={()=>{save(record.key as string)}}/>
+                  <CloseSquareTwoTone onClick={cancel}/> 
+                </>
+              }/>
+          </Form.Item>
+        ) : (
+          children
+        )}
+      </td>
+    );
+  };
+  
+
+  const mergedColumns = columns.map((col) => {
+    // @ts-ignore
+    if (!col.editable) {
+      return col;
+    }
+    return {
+      ...col,
+      onCell: (record: DataType) => ({
+        record,
+        // @ts-ignore
+        dataIndex: col.dataIndex,
+        title: col.title,
+        editing: isEditing(record),
+      }),
+    };
+  });
+
   return (
     <>
       <div style={{display:'none'}}>
@@ -227,28 +365,36 @@ const index: FC<propsType> = memo((props) => {
 
       <TableStyled height={newHeight + 57}>
         <ConfigProvider locale={zh_CN}>
-          <Table rowSelection={rowSelection} columns={columns} dataSource={showData} summary={()=>{
-            return (
-                <>
-                  <Table.Summary fixed='top'></Table.Summary>
-                </>
-            )
-          }} sticky={{ offsetHeader: 0 }} scroll={{y: newHeight, x:900}} pagination={{
-            position:['bottomRight'],
-            showSizeChanger: true,
-            showQuickJumper: true,
-            showTotal: (count) => `共 ${count} 条数据`,
-            onChange:pagiChange
-          }} onRow={(record, index)=>{
-            return {
-              onMouseEnter: () => {
-                index !== void 0 && setShowHandleIndex(index)
+          <Form form={form} component={false}>
+            {/* @ts-ignore */}
+            <Table rowSelection={rowSelection} columns={mergedColumns} dataSource={showData} summary={()=>{
+              return (
+                  <>
+                    <Table.Summary fixed='top'></Table.Summary>
+                  </>
+              )
+            }} sticky={{ offsetHeader: 0 }} scroll={{y: newHeight, x:900}} pagination={{
+              position:['bottomRight'],
+              showSizeChanger: true,
+              showQuickJumper: true,
+              showTotal: (count) => `共 ${count} 条数据`,
+              onChange:pagiChange
+            }} onRow={(record, index)=>{
+              return {
+                onMouseEnter: () => {
+                  index !== void 0 && setShowHandleIndex(index)
+                },
+                onMouseLeave: () => setShowHandleIndex(-1)
+              }
+            }} loading = { isLoading } 
+            components={{
+              body: {
+                cell: EditableCell,
               },
-              onMouseLeave: () => setShowHandleIndex(-1)
-            }
-          }} loading = { isLoading }
-          >
-          </Table>
+            }}
+            >
+            </Table>
+          </Form>
         </ConfigProvider>
       </TableStyled>
     </>

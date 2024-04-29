@@ -227,3 +227,12 @@ export const updatePassword = (password: string) =>{
         data:{password}
     })
 }
+
+// 重命名
+export const renameApi = (fileId: string, fileName: string) =>{
+    return jlReq.request({
+        method:'post',
+        url:'/file/rename',
+        data:{fileId, fileName}
+    })
+}

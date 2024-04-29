@@ -43,5 +43,16 @@ export const TableStyled = styled.div<propsType>`
     .ant-table{
         height: ${ props => props.height + 'px' }
     }
+
+    .ant-input-group-addon{
+        background-color: transparent;
+        border: none;
+
+        .anticon{
+            font-size: 24px;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+    }
 `
 
