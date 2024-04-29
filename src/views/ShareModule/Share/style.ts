@@ -12,7 +12,7 @@ import styled from "styled-components";
 export const ShareStyle = styled.div`
 
     .lo{
-        background-color: #0C95F7;
+        background-color: #06A7FF;
         height: 50px;
         line-height: 50px;
 

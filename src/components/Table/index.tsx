@@ -104,9 +104,9 @@ const index: FC<propsType> = memo((props) => {
                 <div className='handle' onClick={(e)=>{handleClick(e, record, 4)}}>
                   <FormOutlined /><span>重命名</span>
                 </div>
-                <div className='handle' onClick={(e)=>{handleClick(e, record, 5)}}>
+                {/* <div className='handle' onClick={(e)=>{handleClick(e, record, 5)}}>
                   <DragOutlined /><span>移动</span>
-                </div>
+                </div> */}
               </div>
             )
           )

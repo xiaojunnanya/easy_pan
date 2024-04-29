@@ -48,7 +48,7 @@ const index: FC<propsType> = memo((props) => {
   
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   // 获取当前可视区高度
-  const [ newHeight, setNewHeight ]  = useState(window.innerHeight - 240)
+  const [ newHeight, setNewHeight ]  = useState(window.innerHeight - 210)
 
   // props data
   const [ showData, setShowData ] = useState<DataType[]>(data)
@@ -191,7 +191,7 @@ const index: FC<propsType> = memo((props) => {
         <Preview ref={childRef}></Preview>
       </div>
 
-      <WaitStyled height={newHeight + 57}>
+      <WaitStyled height={newHeight}>
         <ConfigProvider locale={zh_CN}>
           <Table rowSelection={rowSelection} columns={columns} dataSource={showData} summary={()=>{
             return (

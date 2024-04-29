@@ -126,15 +126,15 @@ const All: FC= memo(() => {
           });
         }
       },
-      {
-        name: '批量移动',
-        icon:<DragOutlined />,
-        style:{
-          backgroundColor:'#E6A23C'
-        },
-        disabled: btnDisabled,
-        show: true,
-      }
+      // {
+      //   name: '批量移动',
+      //   icon:<DragOutlined />,
+      //   style:{
+      //     backgroundColor:'#E6A23C'
+      //   },
+      //   disabled: btnDisabled,
+      //   show: true,
+      // }
     ]
   }, [btnDisabled, category, selectKeys, data])
 
