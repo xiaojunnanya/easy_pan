@@ -23,7 +23,7 @@ import { changeBtnDisabled, changeFilePid, changeGetDataMethod } from '@/store/m
 import {  changeLoading } from '@/store/modules/common'
 import HeaderBtn from '@/components/HeaderBtn'
 import { btnType } from '@/components/HeaderBtn/type'
-import { CloudUploadOutlined, DeleteOutlined, DragOutlined, ExclamationCircleFilled, SnippetsOutlined } from '@ant-design/icons'
+import { CloudUploadOutlined, DeleteOutlined, ExclamationCircleFilled, SnippetsOutlined } from '@ant-design/icons'
 import { Modal } from 'antd'
 
 import { changeFile, changeIsPopoverShow } from '@/store/modules/upload'

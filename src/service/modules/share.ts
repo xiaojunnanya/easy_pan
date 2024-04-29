@@ -45,3 +45,22 @@ export const cancelShare = (shareIds: string) => {
         }
     })
 }
+
+
+/**
+ * 保存到我的网盘
+ * @param shareId 分享id
+ * @param shareFileIds 分享的文件ID
+ * @param myFolderId 我的网盘目录ID
+ * @returns 
+ */
+export const saveToMyDisk = (shareId: string, shareFileIds: string, myFolderId?: string) => {
+    return jlReq.request({
+        method:'POST',
+        url:'/showShare/saveShare',
+        data:{
+            shareId, shareFileIds,
+            myFolderId: '0'
+        }
+    })
+}

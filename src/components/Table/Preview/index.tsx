@@ -8,7 +8,7 @@
  * @前端实习生: 鲸落
  */
 import React, { forwardRef, memo, useImperativeHandle, useRef, useState } from 'react';
-import { Button, Modal, Spin, Watermark } from 'antd';
+import { Button, Modal, Spin } from 'antd';
 import PerPdf from './Handle/PrePdf'
 import PerDoc from './Handle/PreDoc'
 import PreXls from './Handle/PreXls'

@@ -5,8 +5,11 @@ import React, { memo, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { HeadImgStyle } from './style';
 import { RcFile } from 'antd/es/upload';
-import { changeMessageApi } from '@/store/modules/common';
+import { changeMessageApi, changeSelectKeys } from '@/store/modules/common';
 import { useAppDispatch } from '@/store';
+import { changeBtnDisabled, changeFileName, changeFilePid } from '@/store/modules/home';
+import { changeFile, changeIsPopoverShow } from '@/store/modules/upload';
+
 const { confirm } = Modal;
 const items: MenuProps['items'] = [
     {
@@ -90,9 +93,23 @@ const index = memo(() => {
         logout()
         sessionStorage.removeItem('userInfo')
         naviage('/login')
+        // 重置状态
+        resetState()
       },
     });
   };
+
+  // 重置状态
+  const resetState = () =>{
+    changeSelectKeys([])
+    changeBtnDisabled(true)
+    changeFilePid('0')
+    changeFileName('全部文件')
+    changeIsPopoverShow(false)
+    changeFile({
+        name:"",
+    })
+  }
 
   const handleOk = async () =>{
     let obj = form.getFieldsValue()

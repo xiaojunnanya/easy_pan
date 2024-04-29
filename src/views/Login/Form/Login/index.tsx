@@ -14,7 +14,7 @@ import { Button, Form, FormInstance, Input } from 'antd';
 import SparkMD5 from 'spark-md5'
 
 import { checkCodeServer, loginServer } from '@/service/modules/login';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAppDispatch } from '@/store';
 import { changeMode } from '@/store/modules/login';
 import { changeMessageApi } from '@/store/modules/common';
@@ -24,7 +24,9 @@ const index = memo(() => {
   const [ codeImg, setCodeImg ] = useState<string>('')
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
-
+  const [ searchParams ] = useSearchParams()
+  const { redirectUrl } = Object.fromEntries(searchParams.entries())
+  
   useEffect(()=>{
     updateCode()
   }, [])
@@ -35,9 +37,14 @@ const index = memo(() => {
       const password = spark.end()
       const result = await loginServer(values.username, password, values.checkCode)
       if( result?.data.code === 200 ){
-          navigate('/main/home/all')
-          dispatch(changeMessageApi({ type:'success', info:'登录成功' }))
           sessionStorage.setItem('userInfo', JSON.stringify(result.data.data))
+          if(redirectUrl){
+            // 我们跳转到分享的页面
+            navigate('/share/' + redirectUrl)
+          }else{
+            navigate('/main/home/all')
+            dispatch(changeMessageApi({ type:'success', info:'登录成功' }))
+          }
       }else{
           dispatch(changeMessageApi({ type:'error', info: result?.data.info || '服务器异常，请稍后重试' }))
           updateCode()

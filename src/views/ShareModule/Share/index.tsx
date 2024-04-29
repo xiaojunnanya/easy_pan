@@ -9,7 +9,7 @@
  */
 import { getShareLoginInfo, loadFileList } from '@/service/modules/shareModule'
 import React, { memo, useEffect, useMemo, useState } from 'react'
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { ShareStyle } from './style'
 import { CloudUploadOutlined, DeliveredProcedureOutlined, ExclamationCircleOutlined, StopOutlined } from '@ant-design/icons'
 import { getHeaderImg } from '@/service/modules/home'
@@ -17,18 +17,20 @@ import HeaderBtn from '@/components/HeaderBtn'
 import { btnType } from '@/components/HeaderBtn/type'
 import { useAppDispatch, useAppSelector, useAppShallowEqual } from '@/store'
 import Table from '@/components/Table/Wait/WSharedTable'
-import { cancelShare } from '@/service/modules/share'
+import { cancelShare, saveToMyDisk } from '@/service/modules/share'
 import { Modal } from 'antd'
-import { changeMessageApi } from '@/store/modules/common'
+import { changeMessageApi, changeSelectKeys } from '@/store/modules/common'
+import { changeBtnDisabled } from '@/store/modules/home'
 
 const index = memo(() => {
   const { id } = useParams()
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   
-  const {  btnDisabled } = useAppSelector(state =>{
+  const {  btnDisabled, selectKeys } = useAppSelector(state =>{
     return {
-      btnDisabled: state.home.btnDisabled
+      btnDisabled: state.home.btnDisabled,
+      selectKeys: state.common.selectKeys
     }
   }, useAppShallowEqual)
 
@@ -51,7 +53,7 @@ const index = memo(() => {
         icon:userInfo.currentUser ? <StopOutlined /> : <DeliveredProcedureOutlined />,
         disabled: btnDisabled,
         show: true,
-        onClick: ()=>{
+        onClick: async ()=>{
           if(userInfo.currentUser){
             // 取消分享
             modal.confirm({
@@ -74,6 +76,27 @@ const index = memo(() => {
             });
           }else{
             // 保存到我的网盘
+            // 先检查是否登录
+            if(!sessionStorage.getItem('userInfo')){
+              navigate('/login?redirectUrl=' + id)
+              return
+            }
+
+            // 登录了，保存到网盘中，这里我们默认保存到我的网盘根目录
+            const res = await saveToMyDisk(id || '', selectKeys.join(','))
+            if( res.data.code === 200){
+              dispatch(changeMessageApi({
+                type: 'success',
+                info: '保存成功'
+              }))
+              changeSelectKeys([])
+              changeBtnDisabled(false)
+            }else{
+              dispatch(changeMessageApi({
+                type: 'error',
+                info: res?.data.info || '服务器异常，请稍后重试'
+              }))
+            }
           }
         }
       }
@@ -91,7 +114,11 @@ const index = memo(() => {
       if( data.code === 200 && data.data ){
         setUserInfo(data.data)
         loadFileList(id, '0').then(res =>{
-          setData(res.data.data.list)
+          const { list } = res.data.data
+          list.forEach((item: any) =>{
+            item.key = item.fileId
+          })
+          setData(list)
         })
       }
     })

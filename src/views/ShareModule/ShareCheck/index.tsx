@@ -51,6 +51,11 @@ const index = memo(() => {
         id && await checkShareCode(id, res.code).then(res1 =>{
           if(res1.data.code === 200 && res1.data.status === 'success'){
             navigate(`/share/${id}`)
+          }else{
+            dispatch(changeMessageApi({
+              type: 'error',
+              info: res1?.data.info || '服务器异常，请稍后重试'
+            }))
           }
         })
       }).catch(err=>{})

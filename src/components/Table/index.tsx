@@ -1,6 +1,6 @@
 import React, { memo, useEffect, useMemo, useRef, useState } from 'react'
 import type { FC } from 'react'
-import { CheckSquareTwoTone, CloseSquareTwoTone, DeleteOutlined, DownloadOutlined, DragOutlined, FormOutlined, ShareAltOutlined } from '@ant-design/icons'
+import { CheckSquareTwoTone, CloseSquareTwoTone, DeleteOutlined, DownloadOutlined, FormOutlined, ShareAltOutlined } from '@ant-design/icons'
 import { Table, ConfigProvider, Popconfirm, Form, Input, message } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { TableStyled } from './style';
