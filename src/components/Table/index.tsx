@@ -31,10 +31,9 @@ export interface ChildRemoveMethods {
 // 行点击、行选中
 const index: FC<propsType> = memo((props) => {
   const { data } = props
-  const { isLoading, filePid } = useAppSelector(state =>{
+  const { isLoading } = useAppSelector(state =>{
     return {
-      isLoading: state.common.isLoading,
-      filePid: state.home.filePid
+      isLoading: state.common.isLoading
     }
   },useAppShallowEqual)
   const childShareRef = useRef<ChildShareMethods>(null)
@@ -47,7 +46,7 @@ const index: FC<propsType> = memo((props) => {
   
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   // 获取当前可视区高度
-  const [ newHeight, setNewHeight ]  = useState(window.innerHeight - 240)
+  const [ newHeight, setNewHeight ]  = useState(window.innerHeight - 240 - 32)
 
   
   // 展示操作部分

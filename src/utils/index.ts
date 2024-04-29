@@ -50,13 +50,18 @@ export function coppyUrl(
 
 
 // 将字符串携带'/'转为数组
-export function setArr(str: string){
-    if(str.includes('/')){
-        return str.split('/')
-    }else{
-        return str
-    }
+export function setIncludesBeforeArr(str: string){
+    return str.split('/').map((part, index, array) => {
+        // 将当前部分与前面所有部分拼接起来
+        return array.slice(0, index + 1).join('/');
+    });
 }
+
+// 字符串转数组
+export function setIncludesArr(str: string){
+    return str.split('/')
+}
+
 
 // 获取当前位置的父id
 export const getNowfilePid = () =>{

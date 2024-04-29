@@ -15,7 +15,7 @@ const items: MenuProps['items'] = [
     },
     {
       key: '2',
-      label: (<span> 修改账户密码 </span>),
+      label: (<span> 修改密码 </span>),
     },
     {
       key: '3',
@@ -147,7 +147,7 @@ const index = memo(() => {
             </Modal>
         </Modal>
 
-        <Modal title="修改账户密码" 
+        <Modal title="修改密码" 
           open={isPwdModalOpen} 
           onOk={handleOk}
           onCancel={()=>{setIsPwdModalOpen(false)}}>
@@ -157,13 +157,13 @@ const index = memo(() => {
                 autoComplete="off"
                 form={form}
               >
-                <Form.Item<FieldType>
+                {/* <Form.Item<FieldType>
                   label="昵称"
                   name="nickName"
                   rules={[{ required: true, message: '请输入昵称' }]}
                 >
                   <Input/>
-                </Form.Item>
+                </Form.Item> */}
                 <Form.Item<FieldType>
                   label="密码"
                   name="password"

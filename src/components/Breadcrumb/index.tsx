@@ -7,39 +7,48 @@
  * @Description: 
  * @前端实习生: 鲸落
  */
-import React, { memo, useEffect, useState } from 'react'
+import React, { memo, useEffect, useMemo, useState } from 'react'
 import { useAppDispatch, useAppSelector, useAppShallowEqual } from '../../store/index';
 import { BreadcrumbItemType } from 'antd/es/breadcrumb/Breadcrumb';
 import { Breadcrumb } from 'antd';
-import { setArr } from '@/utils';
+import { setIncludesBeforeArr, setIncludesArr } from '@/utils';
+import { useNavigate } from 'react-router-dom';
 
 
 const index = memo(() => {
-
+    const navigate = useNavigate()
     // 去仓库取id和名字的数据
-    const { filePid, fileName, fileInfo } = useAppSelector(state =>{
+    const { filePid, fileName } = useAppSelector(state =>{
         return {
           filePid: state.home.filePid,
-          fileName: state.home.fileName,
-          fileInfo: state.home.fileInfo,
+          fileName: state.home.fileName
         }
       }, useAppShallowEqual)
 
-    // 面包屑
-  const [ breadcrumb, setBreadcrumb ] = useState<BreadcrumbItemType[]>([
-    {
-      title: '全部文件',
-      href: '?path=0',
-    },
-    {
-      title:"1",
-      href: '?path=0/kBjuiyYNFf',
-    }
-  ]);
 
-  return (
-    <Breadcrumb separator=">" items={breadcrumb} />
-  )
+    const breadcrumb = useMemo(()=>{
+      const a = setIncludesBeforeArr(filePid)
+      const b = setIncludesArr(fileName)
+
+      let newArr = []
+
+      for(let i = 0; i < a.length; i++){
+        newArr.push({
+          title: b[i],
+          onClick: ()=>{
+            navigate(`?path=${a[i]}`)
+          }
+        })
+      }
+
+      return newArr
+
+    }, [ filePid, fileName])
+        
+
+    return (
+      <Breadcrumb separator=">" items={breadcrumb} style={{cursor:'pointer', marginBottom:'10px'}}/>
+    )
 })
 
 export default index

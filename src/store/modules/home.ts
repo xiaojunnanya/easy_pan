@@ -9,6 +9,11 @@
  */
 import { createSlice } from '@reduxjs/toolkit'
 
+/**
+ * filePid: 文件夹的pid
+ * fileName: 文件夹的名称，目前没有用到，先与filepid格式保持一致
+ * fileInfo: 关于面包屑的数组
+ */
 
 interface IState{
     filePid: string,
@@ -36,21 +41,16 @@ const countSlice = createSlice({
     name:"home",
     initialState,
     reducers:{
-        // 关于文件夹预览目录的设置
+        // 关于面包屑的设置
         changeFilePid(state, { payload }){
-            // 因为历史问题，这里改为用字符串的方式来处理，同时再设置一个参数来改为数组形式
             state.filePid = payload
-            let a: string[] = [...state.fileInfo.filePid]
-            a.push(payload)
-            state.fileInfo.filePid = a
+            // state.fileInfo.filePid.push(payload)
         },
         changeFileName(state, { payload }){
             // 保证 filepid 和 fileName 的格式相同
-            state.fileName = state.fileName + '/' + payload
-
-            let a: string[] = [...state.fileInfo.fileName]
-            a.push(payload)
-            state.fileInfo.fileName = a
+            const a = state.fileName + '/' + payload
+            state.fileName = a
+            // state.fileInfo.fileName.push(a)
         },
         // 按钮是否禁用
         changeBtnDisabled(state, { payload }){

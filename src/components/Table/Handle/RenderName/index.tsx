@@ -91,7 +91,7 @@ const index: FC<IProps> = memo((props) => {
     }else{
       // 文件夹，获取这个文件夹的数据
       // 修改path路由方式，采用'/'来分割纪录路由而不是直接展示
-      // path
+
       dispatch(changeFilePid(path + '/' + record.fileId))
       // 同时传递文件夹名字，在面包屑的地方使用
       dispatch(changeFileName(record.fileName))

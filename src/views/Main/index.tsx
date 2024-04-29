@@ -205,7 +205,7 @@ const All: FC= memo(() => {
     <AllStyled>
       <HeaderBtn showBtn={showBtn} getData={getData}></HeaderBtn>
 
-      {/* <Breadcrumb /> */}
+      <Breadcrumb />
 
       {
         totalCount ? (
