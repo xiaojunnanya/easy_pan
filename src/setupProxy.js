@@ -12,9 +12,8 @@ const { createProxyMiddleware } = require('http-proxy-middleware')
 
 module.exports = function(app) {
     app.use(
-        createProxyMiddleware('/api', { //`api`是需要转发的请求 
-            // target: 'http://localhost:7090/', // 这里是接口服务器地址，我乱填的
-            target: 'http://netdisk.kbws.xyz', // 这里是接口服务器地址，我乱填的
+        createProxyMiddleware('/api', { 
+            target: 'http://localhost:7090/',
             changeOrigin: true,
             pathRewrite: {
                 "^/api": "/api"

@@ -16,4 +16,13 @@ export const UserListStyle = styled.div<propsType>`
     .ant-table{
         height: ${ props => props.height + 'px' }
     }
+
+    .setSpace{
+        margin: 0 10px;
+    }
+`
+
+export const SetSpaceStyle = styled.div`
+    margin-left: 38px;
+    margin-bottom: 10px;
 `

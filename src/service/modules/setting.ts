@@ -106,3 +106,39 @@ export const saveSysSettings = (data: FieldType) => {
         data
     })
 }
+
+
+// 设置管理员
+export const setAdmin = (userId: string) => {
+    return jlReq.request({
+        url: '/admin/beAdmin',
+        method: 'post',
+        data: {
+            userId
+        }
+    })
+}
+
+
+// 取消管理员
+export const cancelAdmin = (userId: string) => {
+    return jlReq.request({
+        url: '/admin/unAdmin',
+        method: 'post',
+        data: {
+            userId
+        }
+    })
+}
+
+// 分配空间
+export const distributeSpace = (userId: string, changeSpace: string) => {
+    return jlReq.request({
+        url: '/admin/updateUserSpace',
+        method: 'post',
+        data: {
+            userId,
+            changeSpace
+        }
+    })
+}
