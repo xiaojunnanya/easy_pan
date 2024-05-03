@@ -76,7 +76,7 @@ const index: FC<propsType> = memo((props) => {
                 {/* 文件夹没有下载 */}
                 {
                   record.folderType === 0 && (
-                    <div className='handle' onClick={(e)=>{handleClick(e, record, 1)}}>
+                    <div className='handle' onClick={(e)=>{handleClick(e, record, 1)}} style={ { display: currentUser ? 'block' : 'none' } }>
                       <DownloadOutlined /><span>下载</span>
                     </div>
                   )
