@@ -1,6 +1,6 @@
 import { getHeaderImg, logout, updatePassword } from '@/service/modules/home'
 import { ExclamationCircleFilled, PlusOutlined } from '@ant-design/icons';
-import { Dropdown, Form, Input, MenuProps, Modal, Upload, UploadFile, UploadProps } from 'antd'
+import { Dropdown, Form, Image, Input, MenuProps, Modal, Upload, UploadFile, UploadProps } from 'antd'
 import React, { memo, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { HeadImgStyle } from './style';
@@ -210,7 +210,8 @@ const index = memo(() => {
           <Dropdown menu={{ items, onClick }} placement="bottom" arrow>
               <div className="user-info">
                   <div className="avatar">
-                      <img src={getHeaderImg(userId)} alt="" />
+                      <Image src={getHeaderImg(userId)} preview={false} alt="头像"
+                      fallback="http://www.xiaojunnan.cn/img/logo.webp"></Image>
                   </div>
                   <div className="nick-name">{ nickName }</div>
               </div>
