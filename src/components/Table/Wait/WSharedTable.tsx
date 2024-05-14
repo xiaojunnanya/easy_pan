@@ -22,8 +22,10 @@ import { downLoadFile, setSize } from '@/utils'
 import Preview from '../Preview';
 import type { DataType, propsType } from '../type';
 import { changeBtnDisabled } from '@/store/modules/home';
-import { changeSelectKeys } from '@/store/modules/common';
+import { changeMessageApi, changeSelectKeys } from '@/store/modules/common';
 import RenderName from '../Handle/RenderName';
+import { useNavigate, useParams } from 'react-router-dom';
+import { saveToMyDisk } from '@/service/modules/share';
 
 
 
@@ -35,6 +37,8 @@ interface ChildMethods {
 // 行点击、行选中
 const index: FC<propsType> = memo((props) => {
   const { data, currentUser = true } = props
+  const { id } = useParams()
+  const navigate = useNavigate()
   const { isLoading } = useAppSelector(state =>{
     return {
       isLoading: state.common.isLoading
@@ -82,12 +86,8 @@ const index: FC<propsType> = memo((props) => {
                   )
                 }
 
-                <div className='handle' style={ { display: currentUser ? 'none' : 'block' } }>
-                  <Popconfirm title="提示" description={`你确定要删除【${record.fileName}】吗`}
-                    onConfirm={(e)=>{handleClick(e, record, 2)}}
-                    okText="确定" cancelText="取消">
+                <div className='handle' onClick={(e)=>{handleClick(e, record, 2)}} style={ { display: currentUser ? 'none' : 'block' } }>
                     <DeliveredProcedureOutlined /> <span>保存到我的网盘</span>
-                  </Popconfirm>
                 </div>
               </div>
             )
@@ -170,10 +170,36 @@ const index: FC<propsType> = memo((props) => {
         break;
       // 保存到我的网盘
       case 2:
+        saveStorage(record.fileId)
         break;
     
       default:
         break;
+    }
+  }
+
+  const saveStorage = async (fileId: string) =>{
+    // 保存到我的网盘
+    // 先检查是否登录
+    if(!sessionStorage.getItem('userInfo')){
+      navigate('/login?redirectUrl=' + id)
+      return
+    }
+
+    // 登录了，保存到网盘中，这里我们默认保存到我的网盘根目录
+    const res = await saveToMyDisk(id || '', fileId)
+    if( res.data.code === 200){
+      dispatch(changeMessageApi({
+        type: 'success',
+        info: '保存成功'
+      }))
+      changeSelectKeys([])
+      changeBtnDisabled(false)
+    }else{
+      dispatch(changeMessageApi({
+        type: 'error',
+        info: res?.data.info || '服务器异常，请稍后重试'
+      }))
     }
   }
 
